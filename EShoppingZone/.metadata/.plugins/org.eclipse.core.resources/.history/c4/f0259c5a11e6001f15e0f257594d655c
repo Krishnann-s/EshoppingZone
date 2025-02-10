@@ -1,0 +1,46 @@
+package com.eshopingzone.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+
+import com.eshopingzone.filter.JwtAuthenticationFilter;
+
+
+@Configuration
+@EnableWebFluxSecurity
+public class SecurityConfig {
+	private final JwtAuthenticationFilter filter;
+
+	public SecurityConfig(JwtAuthenticationFilter filter) {
+		this.filter = filter;
+	}
+
+	@Bean
+	public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+		return http.authorizeExchange(exchanges -> exchanges
+				// .pathMatchers("/public/**").permitAll() // Public routes, no auth required
+				.pathMatchers("/Profile-Service/profiles/login", "/Profile-Service/profiles/register").permitAll() 
+//				.pathMatchers(HttpMethod.GET, "/Product-Service/products").hasRole("ROLE_user")
+//				.pathMatchers(HttpMethod.POST, "/Product-Service/products/addProducts").hasRole("ROLE_admin")
+//				.pathMatchers(HttpMethod.GET, "Product-Service/products/{id}").hasRole("ROLE_user")
+//				.pathMatchers(HttpMethod.POST, "/order-service/order").hasRole("ROLE_admin")
+//				.pathMatchers("/order-service/loadbalance/**").hasRole("ROLE_admin") 
+//				.pathMatchers("/order-service/feign/**").hasRole("ROLE_user") 
+				.anyExchange().authenticated() // All other routes require authentication
+		).addFilterAt(filter, SecurityWebFiltersOrder.AUTHENTICATION) // Add JWT filter
+				.csrf().disable() // Disable CSRF for stateless APIs
+				.build();
+	}
+	
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+	    return new BCryptPasswordEncoder();
+	}
+}

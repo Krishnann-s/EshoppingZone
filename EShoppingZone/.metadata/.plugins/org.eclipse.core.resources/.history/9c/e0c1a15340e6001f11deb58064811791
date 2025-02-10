@@ -1,0 +1,9 @@
+spring.application.name=EShoppingZone-Gateway
+spring.cloud.gateway.discovery.locator.enabled=true
+spring.cloud.gateway.discovery.locator.lower-case-service-id=true
+spring.cloud.gateway.httpclient.resolver.nameservers=8.8.8.8
+spring.cloud.gateway.httpclient.resolver.search-domains=true
+
+eureka.instance.prefer-ip-address=true
+
+server.port=8000

@@ -1,0 +1,58 @@
+package com.eshopingzone.productservice.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import com.eshopingzone.productservice.modal.Products;
+import com.eshopingzone.productservice.modal.Rating;
+import com.eshopingzone.productservice.repository.ProductsRepository;
+import com.eshopingzone.productservice.repository.RatingRepository;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+@Service
+public class ProductsServiceImpl implements ProductsService {
+
+    @Autowired
+    private ProductsRepository productsRepository;
+
+    @Autowired
+    private RatingRepository ratingRepository;
+
+    @Autowired
+    private WebClient.Builder webClientBuilder; // For fetching external API
+
+    @Override
+    public Flux<Products> getAllProducts() {
+        return productsRepository.findAll()
+                .flatMap(product -> ratingRepository.findById(product.getRatingId())
+                        .defaultIfEmpty(new Rating(0, 0.0, 0)) // Default rating if not found
+                        .map(rating -> {
+                            product.setRatingId(rating.getId()); // Manually associate
+                            return product;
+                        })
+                );
+    }
+
+    @Override
+    public Mono<Products> fetchAndSaveProducts() {
+        return webClientBuilder.build()
+                .get()
+                .uri("https://fakestoreapi.com/products")
+                .retrieve()
+                .bodyToFlux(Products.class)
+                .flatMap(product -> {
+                    Rating rating = new Rating(null, product.getRatingRate(), product.getRatingCount());
+                    
+                    return ratingRepository.save(rating) // Save rating first
+                            .map(savedRating -> {
+                                product.setRatingId(savedRating.getId()); // Assign foreign key
+                                return product;
+                            });
+                })
+                .flatMap(productsRepository::save)
+                .then(Mono.empty()); // Return empty since it's async
+    }
+}

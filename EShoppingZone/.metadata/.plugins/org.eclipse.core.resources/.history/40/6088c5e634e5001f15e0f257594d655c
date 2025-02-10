@@ -1,0 +1,80 @@
+package com.eshopingzone.profileservice.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.eshopingzone.profileservice.Dto.ProfileUpdate;
+import com.eshopingzone.profileservice.exception.ResourceNotFoundException;
+import com.eshopingzone.profileservice.model.UserProfile;
+import com.eshopingzone.profileservice.repository.UserProfileRepository;
+
+@Service
+public class UserProfileServiceImpl implements UserProfileService {
+
+	@Autowired
+	private UserProfileRepository userRepo;
+
+
+	@Override
+	public UserProfile addNewCustomerProfile(UserProfile userProfile) {
+		
+		return userRepo.save(userProfile);
+	}
+
+	@Override
+	public List<UserProfile> getAllProfiles() {
+		List<UserProfile> allUsers = userRepo.findAll();
+		if(allUsers.isEmpty()) {
+			throw new ResourceNotFoundException("No Users Found");
+		}
+		return allUsers;
+	}
+
+	@Override
+	public UserProfile getByProfileId(int id) {
+		if(id <= 0) {
+			throw new ResourceNotFoundException("User Id with Id: " + id + " not found!.");
+		}
+		return userRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Id: " + id + " Not Found."));
+	}
+
+	@Override
+	public void updateProfile(ProfileUpdate profileUpdate) {
+		UserProfile existingUser = userRepo.findByFullName(profileUpdate.getFullName());
+
+		if (existingUser != null) {
+			existingUser.setFullName(profileUpdate.getFullName());
+			existingUser.setMobileNumber(profileUpdate.getMobileNumber());
+			userRepo.save(existingUser);
+		} else {
+			throw new ResourceNotFoundException("User not found to update");
+		}
+
+	}
+
+	@Override
+	public void deleteProfile(int id) {
+		if (!userRepo.existsById(id)) {
+			throw new ResourceNotFoundException("Id: " + id + "Not Found.");
+		}
+		userRepo.deleteById(id);
+
+	}
+
+	@Override
+	public void addNewAdminProfile(UserProfile userProfile) {
+		userRepo.save(userProfile);
+
+	}
+
+	public boolean userExists(String email) {
+		return userRepo.findByEmail(email) != null;
+	}
+
+
+
+}

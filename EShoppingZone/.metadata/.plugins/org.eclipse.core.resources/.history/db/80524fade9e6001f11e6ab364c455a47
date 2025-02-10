@@ -1,0 +1,7 @@
+spring.application.name=EShoppingZone-Gateway
+spring.cloud.gateway.discovery.locator.enabled=true
+
+
+eureka.instance.instance-id=${spring.application.name}:${spring.application.instance_id:${random.value}}
+
+server.port=8000

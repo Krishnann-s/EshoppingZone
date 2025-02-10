@@ -1,0 +1,30 @@
+package com.eshopingzone.productservice.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.eshopingzone.productservice.modal.Products;
+import com.eshopingzone.productservice.service.ProductsService;
+
+@RestController
+@RequestMapping("eshoppingzone/products")
+public class ProductsController {
+
+	@Autowired
+	private ProductsService prodService;
+	
+	@PostMapping("/fetch")
+	public List<Products> fetchProducts() {
+		return prodService.fetchAndSaveProducts()
+	}
+	
+	@GetMapping
+	public List<Products> getProducts() {
+		return prodService.getAllProducts()
+	}
+}

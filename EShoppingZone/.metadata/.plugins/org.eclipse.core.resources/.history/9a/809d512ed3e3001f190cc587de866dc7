@@ -1,0 +1,12 @@
+package com.eshopingzone.productservice.repository;
+
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+
+import com.eshopingzone.productservice.modal.Rating;
+
+import reactor.core.publisher.Mono;
+
+public interface RatingRepository extends ReactiveCrudRepository<Rating, Integer>{
+
+	Mono<Rating> findbyId (Integer id);
+}

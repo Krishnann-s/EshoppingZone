@@ -1,0 +1,50 @@
+package com.eshopingzone.productservice.service;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import com.eshopingzone.productservice.modal.Products;
+import com.eshopingzone.productservice.repository.ProductsRepository;
+
+import reactor.core.publisher.Mono;
+
+@Service
+public class ProductsServiceImpl implements ProductsService {
+
+    private final ProductsRepository prodRepo;
+    private final WebClient webClient;
+
+    @Autowired
+    public ProductsServiceImpl(ProductsRepository prodRepo, WebClient.Builder webClientBuilder) {
+        this.prodRepo = prodRepo;
+        this.webClient = webClientBuilder.baseUrl("https://fakestoreapi.com").build();
+    }
+
+    @Override
+    public List<Products> fetchAndSaveProducts() {
+        String apiUrl = "/products";
+
+        // Fetch products from FakeStore API
+        Mono<Products[]> responseMono = webClient.get()
+                .uri(apiUrl)
+                .retrieve()
+                .bodyToMono(Products[].class);
+
+        // Convert to list and save
+        Products[] productsArray = responseMono.block(); // Blocking call to get actual data
+        
+        if (productsArray != null) {
+            return prodRepo.saveAll(Arrays.asList(productsArray));
+        }
+        return List.of(); // Return an empty list if null
+    }
+
+    @Override
+    public List<Products> getAllProducts() {
+        return prodRepo.findAll();
+    }
+}

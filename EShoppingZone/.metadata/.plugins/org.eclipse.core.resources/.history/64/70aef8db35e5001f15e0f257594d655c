@@ -1,0 +1,18 @@
+package com.eshopingzone.profileservice.service;
+
+import java.util.List;
+
+import com.eshopingzone.profileservice.Dto.ProfileUpdate;
+import com.eshopingzone.profileservice.model.UserProfile;
+
+public interface UserProfileService {
+	
+	UserProfile addNewCustomerProfile(UserProfile userProfile);
+	List<UserProfile> getAllProfiles();
+	UserProfile getByProfileId(int id);
+	void updateProfile(ProfileUpdate userProfile);
+	void deleteProfile(int id);
+	void addNewAdminProfile(UserProfile userProfile);
+	boolean userExists(String emailId);
+
+}

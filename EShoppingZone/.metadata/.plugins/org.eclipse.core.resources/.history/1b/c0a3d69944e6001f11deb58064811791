@@ -1,0 +1,12 @@
+spring.application.name=EShoppingZone-Gateway
+spring.cloud.gateway.discovery.locator.enabled=true
+spring.cloud.gateway.discovery.locator.lower-case-service-id=true
+spring.cloud.gateway.routes[0].id=profile-service
+spring.cloud.gateway.routes[0].uri=lb://profile-service
+spring.cloud.gateway.routes[0].predicates[0]=Path=/profile-service/**
+eureka.client.service-url.defaultZone=http://localhost:8761/eureka/
+
+
+eureka.instance.prefer-ip-address=true
+
+server.port=8002

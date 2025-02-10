@@ -1,0 +1,98 @@
+package com.eshopingzone.profileservice.controller;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.DeleteMapping;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.eshopingzone.profileservice.Dto.LoginDto;
+import com.eshopingzone.profileservice.Dto.ProfileUpdate;
+import com.eshopingzone.profileservice.Dto.ResponseDto;
+import com.eshopingzone.profileservice.exception.ResourceNotFoundException;
+import com.eshopingzone.profileservice.model.Address;
+import com.eshopingzone.profileservice.model.UserProfile;
+import com.eshopingzone.profileservice.repository.UserProfileRepository;
+import com.eshopingzone.profileservice.service.UserProfileService;
+
+@RestController
+@RequestMapping("/eshoppingzone/profile")
+public class UserProfileController {
+
+	@Autowired
+	private UserProfileService userService;
+
+	@Autowired
+	private UserProfileRepository userRepo;
+
+
+
+	// Register User
+	@PostMapping("/register")
+	public ResponseEntity<UserProfile> register(@RequestBody UserProfile userProfile) {
+		try {
+			if (userProfile.getEmail() == null || userProfile.getEmail().isEmpty()) {
+				throw new ResourceNotFoundException("Email cannot be nul or empty");
+			}
+			if (userProfile.getAddress() != null) {
+				for (Address addr : userProfile.getAddress()) {
+					addr.setUserProfile(userProfile);
+				}
+			}
+
+			UserProfile newUser = userService.addNewCustomerProfile(userProfile);
+			return new ResponseEntity<>(newUser, HttpStatus.CREATED);
+		} catch (ResourceNotFoundException e) {
+
+			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+		} catch (Exception e) {
+
+			throw new ResourceNotFoundException("Internal server error occurred while registering user");
+		}
+	}
+
+	// Login User
+	@PostMapping("/login")
+	public ResponseDto login(@RequestBody LoginDto loginDto) {
+		
+		return null;
+	}
+
+	// Get All User
+	@GetMapping
+	public ResponseEntity<List<UserProfile>> getAllProfiles() {
+		List<UserProfile> profiles = userService.getAllProfiles();
+		return ResponseEntity.ok(profiles);
+	}
+
+	// Get User by ID
+	@GetMapping("/{id}")
+	public ResponseEntity<UserProfile> getProfileById(@PathVariable int id) {
+		UserProfile profiles = userService.getByProfileId(id);
+		return ResponseEntity.ok(profiles);
+	}
+
+	// Update User
+	@PutMapping("/update")
+	public ResponseEntity<String> updateProfile(@RequestBody ProfileUpdate userProfile) {
+		userService.updateProfile(userProfile);
+		return ResponseEntity.ok("Profile updated successfully");
+	}
+
+	// Delete user by ID
+	@DeleteMapping("/{id}")
+	public ResponseEntity<String> deleteProfile(@PathVariable int id) {
+		userService.deleteProfile(id);
+		return ResponseEntity.ok("Profile deleted successfully");
+	}
+
+}

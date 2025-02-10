@@ -1,0 +1,5 @@
+package com.eshopingzone.productservice.repository;
+
+public class ProductsRepository {
+
+}

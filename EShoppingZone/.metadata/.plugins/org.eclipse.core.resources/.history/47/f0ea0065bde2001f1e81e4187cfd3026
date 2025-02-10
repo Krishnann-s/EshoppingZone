@@ -1,0 +1,92 @@
+package com.eshopingzone.profileservice.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.eshopingzone.profileservice.Dto.ProfileUpdate;
+import com.eshopingzone.profileservice.exception.ResourceNotFoundException;
+import com.eshopingzone.profileservice.model.UserProfile;
+import com.eshopingzone.profileservice.repository.UserProfileRepository;
+
+@Service
+public class UserProfileServiceImpl implements UserProfileService {
+
+	@Autowired
+	private UserProfileRepository userRepo;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	@Override
+	public UserProfile addNewCustomerProfile(UserProfile userProfile) {
+		userProfile.setPassword(passwordEncoder.encode(userProfile.getPassword()));
+		return userRepo.save(userProfile);
+	}
+
+	@Override
+	public List<UserProfile> getAllProfiles() {
+		return userRepo.findAll();
+	}
+
+	@Override
+	public UserProfile getByProfileId(int id) {
+		return userRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Id: " + id + " Not Found."));
+	}
+
+	@Override
+	public void updateProfile(ProfileUpdate profileUpdate) {
+		UserProfile existingUser = userRepo.findByFullName(profileUpdate.getFullName());
+
+		// If the user exists, update only the specified fields
+		if (existingUser != null) {
+			existingUser.setFullName(profileUpdate.getFullName());
+
+			// Save the updated user profile back to the database
+			userRepo.save(existingUser);
+		} else {
+			throw new ResourceNotFoundException("User not found to update");
+		}
+
+	}
+
+	@Override
+	public void deleteProfile(int id) {
+		if (!userRepo.existsById(id)) {
+			throw new ResourceNotFoundException("Id: " + id + "Not Found.");
+		}
+		userRepo.deleteById(id);
+
+	}
+
+	@Override
+	public void addNewAdminProfile(UserProfile userProfile) {
+		userRepo.save(userProfile);
+
+	}
+
+	public boolean userExists(String email) {
+		return userRepo.findByEmail(email) != null;
+	}
+
+	@Override
+	public String generateToken(String email, String role) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public void validateToken(String token) {
+		// TODO Auto-generated method stub
+		
+	}
+	
+
+
+
+}

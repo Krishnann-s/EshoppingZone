@@ -1,0 +1,62 @@
+package com.eshopingzone.config;
+
+import java.util.Arrays;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.eshopingzone.filter.JwtAuthenticationFilter;
+
+
+@Configuration
+@EnableWebFluxSecurity
+public class SecurityConfig {
+	private final JwtAuthenticationFilter filter;
+
+	public SecurityConfig(JwtAuthenticationFilter filter) {
+		this.filter = filter;
+	}
+
+	 @Bean
+	    public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+	        return http
+	            .cors(cors -> cors.configurationSource(
+	                exchange -> {
+	                    CorsConfiguration config = new CorsConfiguration();
+	                    config.setAllowedOrigins(Arrays.asList("http://localhost:5173"));
+	                    config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
+	                    config.setAllowedHeaders(Arrays.asList("*"));
+	                    config.setExposedHeaders(Arrays.asList("Authorization"));
+	                    config.setAllowCredentials(true);
+	                    config.setMaxAge(3600L);
+	                    return config;
+	                }
+	            ))
+	            .and()
+	            .authorizeExchange(exchanges -> exchanges
+	                .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
+	                .pathMatchers("/profile-service/eshoppingzone/profile/login", 
+	                             "/profile-service/eshoppingzone/profile/register").permitAll()
+	                .pathMatchers(HttpMethod.GET, "/product-service/eshoppingzone/products").hasAuthority("ROLE_user")
+	                .anyExchange().authenticated()
+	            )
+	            .addFilterAt(filter, SecurityWebFiltersOrder.AUTHENTICATION)
+	            .csrf().disable()
+	            .build();
+	    }
+	
+	@Bean
+	public PasswordEncoder passwordEncoder() {
+	    return new BCryptPasswordEncoder();
+	}
+}
+
+

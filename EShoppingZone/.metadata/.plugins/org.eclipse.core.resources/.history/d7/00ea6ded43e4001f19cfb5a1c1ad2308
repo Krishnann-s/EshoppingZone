@@ -1,0 +1,47 @@
+package com.eshopingzone.productservice.Dto;
+
+import java.io.InputStream;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import com.eshopingzone.productservice.modal.Products;
+import com.eshopingzone.productservice.repository.ProductsRepository;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
+@Component
+public class JsonDataLoaderImpl {
+
+	@Autowired
+	private ProductsRepository prodRepo;
+	
+	@Autowired
+	private ObjectMapper objectMapper;
+	
+	public void run(String... args) throws Exception {
+        if (prodRepo.count() == 0) {
+            // Load data only if database is empty
+            loadProductData();
+        }
+    }
+
+	private void loadProductData() {
+		try {
+            // Read JSON file from resources
+            InputStream inputStream = TypeReference.class.getResourceAsStream("/products.json");
+            List<ProductsDto> productDTOs = objectMapper.readValue(inputStream, new TypeReference<List<ProductsDto>>() {});
+            
+            // Convert DTOs to entities and save
+            List<Products> products = productDTOs.stream().map(this::convertToEntity).toList();
+            prodRepo.saveAll(products);
+            
+            System.out.println("Product data loaded successfully!");
+        } catch (IOException e) {
+            System.err.println("Failed to load product data: " + e.getMessage());
+            throw new RuntimeException("Failed to load product data", e);
+        }
+		
+	}
+}

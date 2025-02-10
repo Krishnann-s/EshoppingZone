@@ -1,0 +1,10 @@
+spring:
+  cloud:
+    gateway:
+      routes:
+        - id: Profile-Service
+          uri: lb://Profile-Service
+          predicates:
+            - Path=/eshoppingzone/user/**
+					filters:
+						- AuthenticationFilter

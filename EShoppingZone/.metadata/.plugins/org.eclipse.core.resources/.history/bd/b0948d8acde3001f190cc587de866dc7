@@ -1,0 +1,5 @@
+package com.eshopingzone.productservice.controller;
+
+public class ProductsController {
+
+}

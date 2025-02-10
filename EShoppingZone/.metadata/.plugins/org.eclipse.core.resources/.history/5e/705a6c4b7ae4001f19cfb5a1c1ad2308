@@ -1,0 +1,13 @@
+package com.eshopingzone.profileservice.client;
+
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import com.eshopingzone.profileservice.Dto.LoginDto;
+import com.eshopingzone.profileservice.Dto.ResponseDto;
+
+@FeignClient(name = "EShoppingZone-Gateway", url="http://localhost:8000/eshoppingzone")
+public class ApiGatewayClient {
+
+	ResponseDto login(@RequestBody LoginDto loginDto)
+}

@@ -1,0 +1,8 @@
+spring.application.name=EShoppingZone-Gateway
+spring.cloud.gateway.discovery.locator.enabled=true
+spring.cloud.gateway.discovery.locator.lower-case-service-id=true
+
+
+eureka.instance.hostname = localhost
+
+server.port=8002

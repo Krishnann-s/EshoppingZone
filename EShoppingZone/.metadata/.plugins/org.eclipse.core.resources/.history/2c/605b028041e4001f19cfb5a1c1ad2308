@@ -1,0 +1,21 @@
+package com.eshopingzone.productservice.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.eshopingzone.productservice.modal.Products;
+import com.eshopingzone.productservice.service.ProductsService;
+
+@RestController
+public class ProductsController {
+	
+	@Autowired
+	private ProductsService prodService;
+
+	public ResponseEntity<Products> addNewProducts(@RequestBody Products products) {
+		
+	}
+}

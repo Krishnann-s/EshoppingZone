@@ -1,0 +1,41 @@
+package com.eshopingzone.productservice.service;
+
+import java.util.Arrays;
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import com.eshopingzone.productservice.modal.Products;
+import com.eshopingzone.productservice.repository.ProductsRepository;
+
+import reactor.core.publisher.Flux;
+import reactor.core.publisher.Mono;
+
+@Service
+public class ProductsServiceImpl implements ProductsService {
+
+    private final ProductsRepository prodRepo;
+    private final WebClient webClient;
+
+    @Autowired
+    public ProductsServiceImpl(ProductsRepository prodRepo, WebClient.Builder webClientBuilder) {
+        this.prodRepo = prodRepo;
+        this.webClient = webClientBuilder.baseUrl("https://fakestoreapi.com").build();
+    }
+
+    @Override
+    public Flux<Products> fetchAndSaveProducts() {
+        return webClient.get()
+                .uri("/products")
+                .retrieve()
+                .bodyToFlux(Products.class) // Get a Flux<Products>
+                .flatMap(prodRepo::save);  // Save each product reactively
+    }
+
+    @Override
+    public List<Products> getAllProducts() {
+        return prodRepo.findAll();
+    }
+}

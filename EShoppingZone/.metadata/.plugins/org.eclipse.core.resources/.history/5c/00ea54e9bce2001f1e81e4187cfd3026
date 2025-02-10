@@ -1,0 +1,24 @@
+package com.eshopingzone.profileservice.service;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.eshopingzone.profileservice.model.UserProfile;
+import com.eshopingzone.profileservice.repository.UserProfileRepository;
+
+@Service
+public class AuthService {
+
+	@Autowired
+	private UserProfileRepository userRepo;
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	@Autowired
+	private JwtService jwtService;
+	
+	public void saveUser(UserProfile credentials) {
+		credentials.setPassword(passwordEncoder.encode(credentials.getPassword()));
+		userRepo.save(credentials);
+	}
+}

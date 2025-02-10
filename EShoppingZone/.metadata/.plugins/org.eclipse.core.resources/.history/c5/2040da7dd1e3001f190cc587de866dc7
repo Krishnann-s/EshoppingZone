@@ -1,0 +1,34 @@
+package com.eshopingzone.productservice.modal;
+
+import java.math.BigDecimal;
+
+import org.springframework.data.annotation.Id;
+import org.springframework.data.relational.core.mapping.Column;
+import org.springframework.data.relational.core.mapping.Table;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Table("products")
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class Products {
+
+	@Id
+	private int id;
+	
+	private String title;
+	
+	private BigDecimal price;
+	
+	@Column("description")
+	private String description;
+	
+	private String category;
+	
+	private String image;
+	
+	private int ratingId;
+}

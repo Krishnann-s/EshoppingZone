@@ -1,0 +1,5 @@
+package com.eshopingzone.productservice.service;
+
+public class ProductsServiceImpl {
+
+}

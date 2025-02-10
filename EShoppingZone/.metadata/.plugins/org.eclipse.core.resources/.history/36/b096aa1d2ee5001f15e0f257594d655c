@@ -1,0 +1,5 @@
+package com.eshopingzone.profileservice;
+
+public class CorsConfig {
+
+}

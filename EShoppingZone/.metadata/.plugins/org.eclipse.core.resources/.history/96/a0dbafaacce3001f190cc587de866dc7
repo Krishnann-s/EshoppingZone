@@ -1,0 +1,35 @@
+package com.eshopingzone.productservice.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.web.reactive.function.client.WebClient;
+
+import com.eshopingzone.productservice.modal.Products;
+import com.eshopingzone.productservice.repository.ProductsRepository;
+
+import reactor.core.publisher.Mono;
+
+@Service
+public class ProductsServiceImpl implements ProductsService{
+	
+	@Autowired
+	private ProductsRepository prodRepo;
+
+	@Override
+	public List<Products> fetchAndSaveProducts() {
+		String apiUrl = "https://fakestoreapi.com/products";
+		
+		Mono<Products[]> responseMono = WebClient.get().uri("/products").retrieve().bodyToMono(Products[].class);
+		
+		return prodRepo.saveAll(List.of(responseMono));
+	}
+
+	@Override
+	public List<Products> getAllProducts() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+}

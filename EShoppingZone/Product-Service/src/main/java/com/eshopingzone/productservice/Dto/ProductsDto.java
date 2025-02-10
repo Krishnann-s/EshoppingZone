@@ -1,0 +1,24 @@
+package com.eshopingzone.productservice.Dto;
+
+import java.math.BigDecimal;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class ProductsDto {
+
+	
+	private int id;
+    private String title;
+    private BigDecimal price;
+    private String description;
+    private String category;
+    private String image;
+    private RatingDto rating;
+    
+    
+}

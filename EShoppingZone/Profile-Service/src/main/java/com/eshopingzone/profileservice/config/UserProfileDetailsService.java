@@ -1,0 +1,28 @@
+package com.eshopingzone.profileservice.config;
+
+import java.util.Optional;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.stereotype.Component;
+
+import com.eshopingzone.profileservice.model.UserProfile;
+import com.eshopingzone.profileservice.repository.UserProfileRepository;
+
+@Component
+public class UserProfileDetailsService implements UserDetailsService {
+	
+	@Autowired
+	private UserProfileRepository userRepo;
+
+	@Override
+	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
+		Optional<UserProfile> credentials = userRepo.findByEmail(email);
+		
+		return credentials.map(UserProfileDetails::new)
+				.orElseThrow(() -> new UsernameNotFoundException( "User not found with mail id: "+ email));
+	}
+
+}

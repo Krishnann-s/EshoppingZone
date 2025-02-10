@@ -1,0 +1,11 @@
+package com.eshopingzone.productservice.repository;
+
+import org.springframework.data.repository.reactive.ReactiveCrudRepository;
+import org.springframework.stereotype.Repository;
+
+import com.eshopingzone.productservice.modal.Products;
+
+@Repository
+public interface ProductsRepository extends ReactiveCrudRepository<Products, Integer>{
+
+}

@@ -1,0 +1,5 @@
+package com.eshopingzone.profileservice.config;
+
+public class CustomerUserDetails {
+
+}

@@ -1,0 +1,108 @@
+package com.eshopingzone.profileservice.service;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.stereotype.Service;
+
+import com.eshopingzone.profileservice.Dto.ProfileUpdate;
+import com.eshopingzone.profileservice.exception.ResourceNotFoundException;
+import com.eshopingzone.profileservice.model.UserProfile;
+import com.eshopingzone.profileservice.repository.UserProfileRepository;
+
+@Service
+public class UserProfileServiceImpl implements UserProfileService {
+	
+	@Autowired
+	private JwtService jwtService;
+
+	@Autowired
+	private UserProfileRepository userRepo;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
+	@Override
+	public UserProfile addNewCustomerProfile(UserProfile userProfile) {
+		userProfile.setPassword(passwordEncoder.encode(userProfile.getPassword()));
+		return userRepo.save(userProfile);
+	}
+
+	@Override
+	public List<UserProfile> getAllProfiles() {
+		List<UserProfile> allUsers = userRepo.findAll();
+		if(allUsers.isEmpty()) {
+			throw new ResourceNotFoundException("No Users Found");
+		}
+		return allUsers;
+	}
+
+	@Override
+	public UserProfile getByProfileId(int id) {
+		return userRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("Id: " + id + " Not Found."));
+	}
+
+	@Override
+	public void updateProfile(ProfileUpdate profileUpdate) {
+		UserProfile existingUser = userRepo.findByFullName(profileUpdate.getFullName());
+
+		if (existingUser != null) {
+			existingUser.setFullName(profileUpdate.getFullName());
+			existingUser.setMobileNumber(profileUpdate.getMobileNumber());
+			userRepo.save(existingUser);
+		} else {
+			throw new ResourceNotFoundException("User not found to update");
+		}
+
+	}
+
+	@Override
+	public void deleteProfile(int id) {
+		if (!userRepo.existsById(id)) {
+			throw new ResourceNotFoundException("Id: " + id + "Not Found.");
+		}
+		userRepo.deleteById(id);
+
+	}
+
+	@Override
+	public void addNewAdminProfile(UserProfile userProfile) {
+		userRepo.save(userProfile);
+
+	}
+
+	public boolean userExists(String email) {
+		return userRepo.findByEmail(email) != null;
+	}
+
+	@Override
+	public String generateToken(String email, String role) {
+		if(email == null || email.trim().isEmpty()) {
+			throw new ResourceNotFoundException("Email Id cannot be empty");
+		}
+		if(role == null || role.trim().isEmpty()) {
+			throw new ResourceNotFoundException("Role cannot be empty");
+		}
+		return jwtService.generateToken(email, role);
+	}
+
+	@Override
+	public void validateToken(String token) {
+		if(token == null || token.trim().isEmpty()) {
+			throw new ResourceNotFoundException("Token cannot be empty");
+		}
+		try {
+			jwtService.validateToken(token);
+		} catch(ResourceNotFoundException e) {
+			throw new ResourceNotFoundException("Invalid Token: " + e.getMessage());
+		}
+	}
+	
+
+
+
+}

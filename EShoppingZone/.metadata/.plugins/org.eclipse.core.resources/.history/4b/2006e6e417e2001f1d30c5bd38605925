@@ -1,0 +1,37 @@
+package com.eshopingzone.config;
+
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.web.reactive.EnableWebFluxSecurity;
+import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
+import org.springframework.security.config.web.server.ServerHttpSecurity;
+import org.springframework.security.web.server.SecurityWebFilterChain;
+
+import com.eshopingzone.filter.JwtAuthenticationFilter;
+
+
+@Configuration
+@EnableWebFluxSecurity
+public class SecurityConfig {
+	private final JwtAuthenticationFilter filter;
+
+	public SecurityConfig(JwtAuthenticationFilter filter) {
+		this.filter = filter;
+	}
+
+	@Bean
+	public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
+		return http.authorizeExchange(exchanges -> exchanges
+				// .pathMatchers("/public/**").permitAll() // Public routes, no auth required
+				.pathMatchers("/Profile-Service/api/login", "/identity-service/auth/register").permitAll() 
+				.pathMatchers(HttpMethod.GET, "/order-service/order").hasRole("ROLE_user")
+				.pathMatchers(HttpMethod.POST, "/order-service/order").hasRole("ROLE_admin")
+				.pathMatchers("/order-service/loadbalance/**").hasRole("ROLE_admin") // ADMIN role only for /admin/**
+				.pathMatchers("/order-service/feign/**").hasRole("ROLE_user") // USER role only for /user/**
+				.anyExchange().authenticated() // All other routes require authentication
+		).addFilterAt(filter, SecurityWebFiltersOrder.AUTHENTICATION) // Add JWT filter
+				.csrf().disable() // Disable CSRF for stateless APIs
+				.build();
+	}
+}

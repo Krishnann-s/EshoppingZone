@@ -1,0 +1,5 @@
+package com.eshopingzone.config;
+
+public class CorsConfig {
+
+}
