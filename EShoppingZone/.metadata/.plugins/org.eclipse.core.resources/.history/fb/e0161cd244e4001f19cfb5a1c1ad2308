@@ -1,6 +1,0 @@
-package com.eshopingzone.productservice.exception;
-
-public class Snippet {
-	Cannot infer type argument(s) for <R> map(Function<? super T,? extends R>)
-}
-

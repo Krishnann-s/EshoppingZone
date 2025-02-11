@@ -1,5 +1,0 @@
-package com.eshopingzone.productservice.exception;
-
-public class ProductNotFoundException {
-
-}

@@ -1,5 +1,0 @@
-package com.eshopingzone.profileservice.client;
-
-public class ApiGatewayClient {
-
-}

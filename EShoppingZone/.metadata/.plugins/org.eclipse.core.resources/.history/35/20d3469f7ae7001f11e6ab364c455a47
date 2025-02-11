@@ -1,7 +1,0 @@
-spring:
-  webflux:
-    cors:
-      allowed-origins: "http://localhost:5173"
-      allowed-methods: "*"
-      allowed-headers: "*"
-      allow-credentials: true

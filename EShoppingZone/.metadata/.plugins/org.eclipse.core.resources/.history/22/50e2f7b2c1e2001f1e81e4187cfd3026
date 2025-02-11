@@ -1,5 +1,0 @@
-package com.eshopingzone.profileservice.config;
-
-public class CustomUserDetailsService {
-
-}

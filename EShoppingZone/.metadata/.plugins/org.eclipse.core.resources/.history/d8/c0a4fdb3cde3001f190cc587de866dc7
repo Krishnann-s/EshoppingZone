@@ -1,5 +1,0 @@
-package com.eshopingzone.productservice.config;
-
-public class WebClientConfig {
-
-}

@@ -1,5 +1,0 @@
-package com.eshopingzone.productservice.Dto;
-
-public class RatingDto {
-
-}
