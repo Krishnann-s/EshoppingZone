@@ -5215,3 +5215,22 @@ Caused by: org.codehaus.plexus.util.xml.pull.XmlPullParserException: expected ST
 2025-02-10 12:29:16,412 [Worker-208: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\ks74\OneDrive - Capgemini\Documents\FS-CaseStudy\EShoppingZone\EShoppingZone-Gateway\src\test\resources
 2025-02-10 15:00:25,710 [Worker-3: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is out-of-date. Trying to update.
 2025-02-10 15:00:41,863 [SonarLint Client RPC request executor] INFO  o.e.m.c.i.p.WorkspaceClassifierResolverManager - Resolving P/Cart-Service: com.eshopingzone:Cart-Service:0.0.1-SNAPSHOT with classifier  to /Cart-Service/target/classes
+2025-02-11 09:12:18,850 [Worker-1: Loading available Gradle versions] INFO  o.e.b.c.i.u.g.PublishedGradleVersions - Gradle version information cache is up-to-date. Trying to read.
+2025-02-11 09:12:40,564 [SonarLint Client RPC request executor] INFO  o.e.m.c.i.p.WorkspaceClassifierResolverManager - Resolving P/Cart-Service: com.eshopingzone:Cart-Service:0.0.1-SNAPSHOT with classifier  to /Cart-Service/target/classes
+2025-02-11 09:17:33,165 [Worker-8: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-02-11 09:17:33,190 [Worker-8: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-02-11 09:17:33,199 [Worker-8: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\ks74\OneDrive - Capgemini\Documents\FS-CaseStudy\EShoppingZone\EShoppingZone-Gateway\src\test\resources
+2025-02-11 09:19:04,608 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-02-11 09:19:04,640 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-02-11 09:19:04,651 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\ks74\OneDrive - Capgemini\Documents\FS-CaseStudy\EShoppingZone\Product-Service\src\test\resources
+2025-02-11 09:19:11,835 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-02-11 09:19:11,847 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-02-11 09:19:11,854 [Worker-3: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\ks74\OneDrive - Capgemini\Documents\FS-CaseStudy\EShoppingZone\Product-Service\src\test\resources
+2025-02-11 09:51:53,880 [Start Help Server] INFO  org.eclipse.jetty.server.Server - jetty-12.0.12; built: 2024-07-25T21:58:37.668Z; git: cc6f1b74db755fed228b50701ad967aeaa68e83f; jvm 21.0.4+7-LTS
+2025-02-11 09:51:53,961 [Start Help Server] INFO  o.e.j.server.handler.ContextHandler - Started oeje8n.ContextHandler$CoreContextHandler@30548a83{/help,/help,b=null,a=AVAILABLE,h=oeje8n.ContextHandler$CoreContextHandler$CoreToNestedHandler@784efcde{STARTED}}
+2025-02-11 09:51:53,962 [Start Help Server] INFO  o.e.j.s.DefaultSessionIdManager - Session workerName=node0
+2025-02-11 09:51:53,985 [Start Help Server] INFO  o.e.jetty.server.AbstractConnector - Started ServerConnector@4f67a3e{HTTP/1.1, (http/1.1)}{127.0.0.1:55676}
+2025-02-11 09:51:53,993 [Start Help Server] INFO  org.eclipse.jetty.server.Server - Started oejs.Server@4b1ce71{STARTING}[12.0.12,sto=0] @2398654ms
+2025-02-11 10:21:28,873 [Worker-42: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 1 resource from src\main\resources to target\classes
+2025-02-11 10:21:28,912 [Worker-42: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - Copying 0 resource from src\main\resources to target\classes
+2025-02-11 10:21:28,927 [Worker-42: Building] INFO  o.a.m.s.f.DefaultMavenResourcesFiltering - skip non existing resourceDirectory C:\Users\ks74\OneDrive - Capgemini\Documents\FS-CaseStudy\EShoppingZone\Profile-Service\src\test\resources

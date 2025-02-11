@@ -10,5 +10,6 @@ import lombok.NoArgsConstructor;
 public class ProfileUpdate {
 
 	private String fullName;
+	private String about;
 	private Long mobileNumber;
 }
