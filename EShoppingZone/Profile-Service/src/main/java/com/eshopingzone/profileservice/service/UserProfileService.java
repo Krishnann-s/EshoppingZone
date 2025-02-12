@@ -12,8 +12,9 @@ public interface UserProfileService {
 	UserProfile loginProfile(LoginDto loginDto);
 	List<UserProfile> getAllProfiles();
 	UserProfile getByProfileId(int id);
-	void updateProfile(ProfileUpdate userProfile);
+	UserProfile updateProfile(ProfileUpdate userProfile, int id);
 	void deleteProfile(int id);
 	String generateToken(String email, String role);
 	void validateToken(String token);
+	int getUserIdByEmail(String email);
 }
