@@ -72,7 +72,7 @@ public class UserProfileController {
 			UserProfile user = userRepo.findByEmail(loginDto.getEmail()).orElseThrow(
 					() -> new ResourceNotFoundException("User with email id: " + loginDto.getEmail() + " not found"));
 			
-			String token = userService.generateToken(user.getProfileId() + "", user.getRole());
+			String token = userService.generateToken(user.getProfileId() + "",user.getEmail(), user.getRole());
 			
 			ResponseDto resDto = new ResponseDto();
 			resDto.setToken(token);

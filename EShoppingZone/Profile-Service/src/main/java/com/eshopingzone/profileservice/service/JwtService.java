@@ -17,10 +17,12 @@ public class JwtService {
 
 	public static final String SECRET_KEY = "Lg5T0sBf1n/6ZQW2RpXyZaPqxTeL3P1Axq95mUFTj6E=";
 	
-	public String generateToken(String email, String role) {
+	public String generateToken(String userId, String email, String role) {
 		Map<String, Object> claims = new HashMap<>();
 		claims.put("role", "ROLE_" + role);
-		return createtoken(claims, email);
+		claims.put("userId", userId); // Add userId to the claims
+        claims.put("email", email); // Add email to the claims
+        return createtoken(claims, email);
 	}
 	
 	

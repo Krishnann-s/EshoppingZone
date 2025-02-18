@@ -82,8 +82,8 @@ public class UserProfileServiceImpl implements UserProfileService {
 		userRepo.deleteById(id);
 	}
 	
-	public String generateToken(String email, String role) {
-		return jwtService.generateToken(email, role);
+	public String generateToken(String userId, String email, String role) {
+		return jwtService.generateToken(userId,email, role);
 	}
 	
 	public void validateToken(String token) {
