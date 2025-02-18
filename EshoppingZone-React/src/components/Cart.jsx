@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import jwt_decode from "jwt-decode";
+import { jwtDecode } from "jwt-decode";
 import { useEffect, useState } from "react";
 
 export default function Cart() {
@@ -18,10 +18,11 @@ export default function Cart() {
           navigate("/login");
           return;
         }
-        const decodeToken = jwt_decode(token);
-        const userId = decodeToken.sub;
+        const decodeToken = jwtDecode(token);
+        const userId = decodeToken.userId;
         const response = await axios.get(
-          `http://localhost:8000/cart-service/eshoppingzone/cart/viewCart?userId=${userId}`
+          `http://localhost:8000/cart-service/eshoppingzone/cart/viewCart?userId=${userId}`,
+          { headers: { Authorization: `Bearer ${token}` } }
         );
         setCartItems(response.data);
         setError(null);
@@ -38,7 +39,7 @@ export default function Cart() {
   const addToCart = async (item) => {
     try {
       const token = localStorage.getItem("token");
-      const decodedToken = jwt_decode(token);
+      const decodedToken = jwtDecode(token);
       const userId = decodedToken.sub; // Extract user ID from token
       await axios.post(
         "http://localhost:8000/product-service/eshoppingzone/cart/addProducts",
@@ -66,7 +67,7 @@ export default function Cart() {
   const removeFromCart = async (item) => {
     try {
       const token = localStorage.getItem("token");
-      const decodedToken = jwt_decode(token);
+      const decodedToken = jwtDecode(token);
       const userId = decodedToken.sub; // Extract user ID from token
       await axios.delete("/eshoppingzone/cart/deleteProduct", {
         params: { userId, productId: item.productId },
@@ -82,8 +83,8 @@ export default function Cart() {
   const clearCart = async () => {
     try {
       const token = localStorage.getItem("token");
-      const decodedToken = jwt_decode(token);
-      const userId = decodedToken.sub; // Extract user ID from token
+      const decodedToken = jwtDecode(token);
+      const userId = decodedToken.userId; // Extract user ID from token
       await axios.delete("/eshoppingzone/cart/emptyCart", {
         params: { userId },
       });
