@@ -8,6 +8,8 @@ import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,22 +22,24 @@ import lombok.NoArgsConstructor;
 public class Products {
 
 	@Id
-    private int productId;
+    private Long productId;
 	
-    private String title;
+    private String productName;
     
-    private BigDecimal price;
+    private double price;
+    private double discount;
+    private double specialPrice;
     
     @Column(columnDefinition = "TEXT")
     private String description;
     
-    private String category;
+    private Integer quantity;
     
     @Column(columnDefinition = "LONGTEXT")
     private String image;
     
-    @OneToOne(mappedBy = "products", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonManagedReference
-    private Rating rating;
+    @ManyToOne
+    @JoinColumn(name = "category_id")
+    private Category category;
 
 }

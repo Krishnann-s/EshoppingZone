@@ -1,21 +1,24 @@
 package com.eshopingzone.productservice.service;
 
-import java.util.List;
+
+import java.io.IOException;
 
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
-import com.eshopingzone.productservice.Dto.ProductsDto;
-import com.eshopingzone.productservice.Dto.RatingDto;
 import com.eshopingzone.productservice.model.Products;
-import com.eshopingzone.productservice.model.Rating;
+import com.eshopingzone.productservice.payload.ProductDTO;
+import com.eshopingzone.productservice.payload.ProductResponse;
 
 @Service
 public interface ProductsService {
 
-	Products addProducts(Products products);
-	List<Products> viewProducts();
-	Products viewProductsById(int id);
-	Products updateProducts(Products products, int id);
-	void deleteProducts(int id);
-	Rating addRatingToProduct(int productId, Rating rating);
+	ProductDTO addProducts(Long categoryId, ProductDTO productDto);
+	ProductResponse viewAllProducts();
+	Products viewProductsById(Long id);
+	ProductDTO updateProducts(ProductDTO productDto, Long id);
+	ProductDTO deleteProducts(Long id);
+	ProductResponse searchByCategory(Long categoryId);
+	ProductResponse searchProductsByKeyword(String keyword);
+	ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException;
 }

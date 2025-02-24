@@ -9,7 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import com.eshopingzone.productservice.exception.APIException;
-import com.eshopingzone.productservice.exception.CategoryNotFoundException;
+import com.eshopingzone.productservice.exception.ResourceNotFoundException;
 import com.eshopingzone.productservice.model.Category;
 import com.eshopingzone.productservice.payload.CategoryDTO;
 import com.eshopingzone.productservice.payload.CategoryResponse;
@@ -71,7 +71,7 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public CategoryDTO deleteCategory(Long categoryId) {
 		Category deletedCategory = categoryRepo.findById(categoryId)
-				.orElseThrow(() -> new CategoryNotFoundException("Category with id: " + categoryId + " not found!"));
+				.orElseThrow(() -> new ResourceNotFoundException("Category","categoryId", categoryId));
 
 		categoryRepo.delete(deletedCategory);
 
@@ -83,7 +83,7 @@ public class CategoryServiceImpl implements CategoryService {
 
 		Category mapCategory = modelMapper.map(categoryDto, Category.class);
 		Category category = categoryRepo.findById(categoryId)
-				.orElseThrow(() -> new CategoryNotFoundException("Category with id: " + categoryId + " not found!"));
+				.orElseThrow(() -> new ResourceNotFoundException("Category","categoryId", categoryId));
 
 		category.setCategoryName(category.getCategoryName());
 		category = categoryRepo.save(mapCategory);

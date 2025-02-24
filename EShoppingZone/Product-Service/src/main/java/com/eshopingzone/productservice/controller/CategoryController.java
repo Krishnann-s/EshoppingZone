@@ -21,7 +21,7 @@ import com.eshopingzone.productservice.config.AppConstants;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("/eshoppingzone")
+@RequestMapping("/api")
 public class CategoryController {
 
 	@Autowired
