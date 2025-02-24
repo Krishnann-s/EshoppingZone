@@ -17,8 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.eshopingzone.productservice.Dto.ProductsDto;
 import com.eshopingzone.productservice.Dto.RatingDto;
-import com.eshopingzone.productservice.modal.Products;
-import com.eshopingzone.productservice.modal.Rating;
+import com.eshopingzone.productservice.model.Products;
+import com.eshopingzone.productservice.model.Rating;
 import com.eshopingzone.productservice.proxy.CartClient;
 import com.eshopingzone.productservice.proxy.UserProfileClient;
 import com.eshopingzone.productservice.service.ProductsService;

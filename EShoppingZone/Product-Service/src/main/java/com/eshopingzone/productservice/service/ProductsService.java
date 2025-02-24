@@ -6,8 +6,8 @@ import org.springframework.stereotype.Service;
 
 import com.eshopingzone.productservice.Dto.ProductsDto;
 import com.eshopingzone.productservice.Dto.RatingDto;
-import com.eshopingzone.productservice.modal.Products;
-import com.eshopingzone.productservice.modal.Rating;
+import com.eshopingzone.productservice.model.Products;
+import com.eshopingzone.productservice.model.Rating;
 
 @Service
 public interface ProductsService {
