@@ -1,8 +1,5 @@
 package com.eshopingzone.cartservice.model;
 
-import java.math.BigDecimal;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,11 +21,13 @@ public class CartItem {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int id;
-	private int userId;
-	private int productId;
-	private String productName;
-	private String productImage;
-	private BigDecimal productPrice;
+	private int cartItemId;
+	private double productPrice;
 	private int quantity;
+	private double discount;
+	private int productId;
+	
+	@ManyToOne
+	@JoinColumn(name = "cart_id")
+	private Cart cart;
 }

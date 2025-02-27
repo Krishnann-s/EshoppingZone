@@ -14,11 +14,11 @@ import com.eshopingzone.productservice.payload.ProductResponse;
 public interface ProductsService {
 
 	ProductDTO addProducts(Long categoryId, ProductDTO productDto);
-	ProductResponse viewAllProducts();
+	ProductResponse viewAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 	Products viewProductsById(Long id);
 	ProductDTO updateProducts(ProductDTO productDto, Long id);
 	ProductDTO deleteProducts(Long id);
-	ProductResponse searchByCategory(Long categoryId);
-	ProductResponse searchProductsByKeyword(String keyword);
+	ProductResponse searchByCategory(Long categoryId, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
+	ProductResponse searchProductsByKeyword(String keyword, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 	ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException;
 }

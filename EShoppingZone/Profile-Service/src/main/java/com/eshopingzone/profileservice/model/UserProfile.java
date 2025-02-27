@@ -4,7 +4,6 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import jakarta.persistence.CascadeType;
@@ -15,8 +14,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
-import jakarta.validation.constraints.Digits;
+import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,19 +29,26 @@ import lombok.ToString;
 @NoArgsConstructor
 @ToString
 @Entity
+@Table(name = "user_profile", uniqueConstraints = {
+		@UniqueConstraint(columnNames = "email"),
+		@UniqueConstraint(columnNames = "mobile_number")
+})
 public class UserProfile {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private int profileId;
 
+	@NotBlank
+	@Size(min = 25)
 	private String fullName;
 
-	@Column(unique = true, nullable = false)
+	@Column(name = "email", unique = true, nullable = false)
 	@Email
+	@Size(min = 50)
 	private String email;
 
-	@Column(unique = true, nullable = false)
+	@Column(name = "mobile_number" , unique = true, nullable = false)
 	private Long mobileNumber;
 
 	@JsonProperty("dob")
@@ -51,12 +60,12 @@ public class UserProfile {
 
 	private String role;
 
-	@Column(nullable = false)
+	@Column(name = "password",nullable = false)
+	@Size(min = 8, max = 50, message = "Password must contain atleast 8 characters")
 	private String password;
 
-	@OneToMany(mappedBy = "userProfile", cascade = CascadeType.ALL)
-	@JsonProperty("address")
-	@JsonManagedReference
+	@OneToMany(mappedBy = "user_profile" , cascade = CascadeType.ALL)
+	@JoinColumn(name = "profile_id")
 	private List<Address> address;
 
 }
