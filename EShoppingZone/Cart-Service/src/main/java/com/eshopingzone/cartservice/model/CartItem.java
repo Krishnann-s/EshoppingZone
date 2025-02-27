@@ -21,11 +21,11 @@ public class CartItem {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int cartItemId;
+	private Long cartItemId;
 	private double productPrice;
-	private int quantity;
+	private Integer quantity;
 	private double discount;
-	private int productId;
+	private Long productId;
 	
 	@ManyToOne
 	@JoinColumn(name = "cart_id")

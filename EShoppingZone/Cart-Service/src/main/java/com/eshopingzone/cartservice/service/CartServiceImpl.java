@@ -1,23 +1,41 @@
 package com.eshopingzone.cartservice.service;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
 import java.util.List;
 
+import com.eshopingzone.cartservice.model.Cart;
+import com.eshopingzone.cartservice.payload.CartDTO;
+import com.eshopingzone.cartservice.util.AuthUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.eshopingzone.cartservice.model.CartItem;
-import com.eshopingzone.cartservice.repository.CartDtoRepository;
+import com.eshopingzone.cartservice.repository.CartRepository;
 
 @Service
 public class CartServiceImpl implements CartService {
 
 	@Autowired
-	private CartDtoRepository cartRepo;
+	private CartRepository cartRepo;
+
+	@Autowired
+	private AuthUtil authUtil;
+
+	private Cart createCart() {
+		Cart userCart = cartRepo.findByEmail(authUtil.loggedInEmail());
+		if(userCart != null) {
+			return userCart;
+		}
+		Cart cart = new Cart();
+		cart.setTotalPrice(0.0);
+		cart.setProfileId(authUtil.loggedInUserId());
+		Cart newCart = cartRepo.save(cart);
+
+		return newCart;
+	}
 
 	@Override
-	public void addOrUpdateProductsInCart(int userId, int productId, String productName, String productImage, BigDecimal productPrice, int quantity) {
+	public CartDTO addProductsToCart(Long productId, int quantity) {
 		List<CartItem> cart = cartRepo.findByUserId(userId);
 
         boolean productExists = false;
