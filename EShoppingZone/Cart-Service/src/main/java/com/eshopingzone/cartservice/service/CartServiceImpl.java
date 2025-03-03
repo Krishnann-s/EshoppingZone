@@ -2,10 +2,17 @@ package com.eshopingzone.cartservice.service;
 
 import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Stream;
 
+import com.eshopingzone.cartservice.client.ProductClient;
+import com.eshopingzone.cartservice.exception.APIException;
 import com.eshopingzone.cartservice.model.Cart;
 import com.eshopingzone.cartservice.payload.CartDTO;
+import com.eshopingzone.cartservice.payload.ProductDTO;
+import com.eshopingzone.cartservice.repository.CartItemRepository;
 import com.eshopingzone.cartservice.util.AuthUtil;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,6 +27,15 @@ public class CartServiceImpl implements CartService {
 
 	@Autowired
 	private AuthUtil authUtil;
+
+    @Autowired
+    private CartItemRepository cartItemRepository;
+
+	@Autowired
+	private ModelMapper modelMapper;
+
+	@Autowired
+	private ProductClient productClient;
 
 	private Cart createCart() {
 		Cart userCart = cartRepo.findByEmail(authUtil.loggedInEmail());
@@ -36,28 +52,35 @@ public class CartServiceImpl implements CartService {
 
 	@Override
 	public CartDTO addProductsToCart(Long productId, int quantity) {
-		List<CartItem> cart = cartRepo.findByUserId(userId);
+		Cart cart = createCart();
+		ProductDTO product = productClient.getProductById(productId);
 
-        boolean productExists = false;
-        for (CartItem item : cart) {
-            if (item.getProductId() == productId) {
-                item.setQuantity(item.getQuantity() + quantity);
-                productExists = true;
-                break;
-            }
-        }
+		Optional<CartItem> cartItem = cartItemRepository.findByProductIdAndCart_CartId(productId, cart.getCartId());
+		if(cartItem != null) {
+			throw new APIException("Product already present");
+		}
+		CartItem newCartItem = new CartItem();
 
-        if (!productExists) {
-            CartItem item = new CartItem();
-            item.setUserId(userId);
-            item.setProductId(productId);
-            item.setProductName(productName);
-            item.setProductImage(productImage);
-            item.setProductPrice(productPrice);
-            item.setQuantity(quantity);
-            cartRepo.save(item);
-        }
+		newCartItem.setProductId(product.getProductId());
+		newCartItem.setCart(cart);
+		newCartItem.setQuantity(quantity);
+		newCartItem.setDiscount(product.getDiscount());
+		newCartItem.setProductPrice(product.getSpecialPrice());
 
+		cartItemRepository.save(newCartItem);
+		product.setQuantity(product.getQuantity());
+
+		cart.setTotalPrice(cart.getTotalPrice() + (product.getSpecialPrice() * quantity));
+		cartRepo.save(cart);
+
+		CartDTO cartDto = modelMapper.map(cart, CartDTO.class);
+		cartDto.setProducts(cart.getCartItems().stream().map(item -> {
+			ProductDTO prodDto = modelMapper.map(item, ProductDTO.class);
+			prodDto.setQuantity(item.getQuantity());
+			return prodDto;
+		}).toList());
+
+		return cartDto;
 	}
 
 	public void deleteProductFromCart(int userId, int productId) {
