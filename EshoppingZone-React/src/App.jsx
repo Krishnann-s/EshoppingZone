@@ -5,6 +5,7 @@ import Register from "./components/Register";
 import { Routes, Route } from "react-router-dom";
 
 function App() {
+  // Routes for the application are defined here
   return (
     <Routes>
       <Route path="/" element={<Product />}></Route>
