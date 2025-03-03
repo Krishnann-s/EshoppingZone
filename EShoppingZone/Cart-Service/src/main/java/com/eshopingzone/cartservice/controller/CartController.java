@@ -3,34 +3,27 @@ package com.eshopingzone.cartservice.controller;
 import java.math.BigDecimal;
 import java.util.List;
 
+import com.eshopingzone.cartservice.payload.CartDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import com.eshopingzone.cartservice.model.CartItem;
 import com.eshopingzone.cartservice.service.CartService;
 
 @RestController
-@RequestMapping("/eshoppingzone/cart")
+@RequestMapping("/api")
 public class CartController {
 
 	@Autowired
 	private CartService cartService;
 
 	// adding products to car
-	@PostMapping("/addProducts")
-	public ResponseEntity<Void> addProductsToCart(@RequestParam("userId") int userId,
-			@RequestParam("productId") int productId, @RequestParam String productName,
-			@RequestParam String productImage, @RequestParam BigDecimal price, @RequestParam("quantity") int quantity) {
-
-		cartService.addOrUpdateProductsInCart(userId, productId, productName, productImage, price, quantity);
-		return new ResponseEntity<>(HttpStatus.OK);
+	@PostMapping("/carts/products/{productId}/quantity/{quantity}")
+	public ResponseEntity<CartDTO> addProductsToCart(@PathVariable Long productId,
+													 @PathVariable Integer quantity) {
+		CartDTO cartDto = cartService.addProductsToCart(productId, quantity);
+		return new ResponseEntity<>(cartDto, HttpStatus.CREATED);
 	}
 
 	// view products in cart
