@@ -18,7 +18,7 @@ function Login() {
     const loginData = { email, password };
     try {
       const response = await axios.post(
-        "http://localhost:8000/profile-service/eshoppingzone/profile/login",
+        "http://localhost:8000/profile-service/eshoppingzone/profile/login", // Profile service endpoint
         loginData
       );
       if (response.data.token) {
