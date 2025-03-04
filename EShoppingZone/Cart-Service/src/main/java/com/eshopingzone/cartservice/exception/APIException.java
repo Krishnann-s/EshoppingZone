@@ -1,14 +1,5 @@
 package com.eshopingzone.cartservice.exception;
 
-public class APIException extends RuntimeException{
+public class APIException {
 
-    private static final Long serailVersionUID = 1L;
-
-    public APIException() {
-
-    }
-
-    public APIException(String msg) {
-        super(msg);
-    }
 }
