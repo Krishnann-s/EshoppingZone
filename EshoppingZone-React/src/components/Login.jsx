@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 
+// Login Page Component
 function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -17,7 +18,7 @@ function Login() {
     const loginData = { email, password };
     try {
       const response = await axios.post(
-        "http://localhost:8000/profile-service/eshoppingzone/profile/login",
+        "http://localhost:8000/profile-service/eshoppingzone/profile/login", // Profile service endpoint
         loginData
       );
       if (response.data.token) {

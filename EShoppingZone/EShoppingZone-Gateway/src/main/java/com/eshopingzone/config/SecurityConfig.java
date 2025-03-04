@@ -43,6 +43,12 @@ public class SecurityConfig {
 				.pathMatchers("/profile-service/eshoppingzone/profile/login",
 						"/profile-service/eshoppingzone/profile/register").permitAll()
 				.pathMatchers(HttpMethod.GET, "/product-service/eshoppingzone/products/**").hasRole("user")
+				.pathMatchers(HttpMethod.POST, "/product-service/eshoppingzone/cart/**").hasRole("user")
+                .pathMatchers(HttpMethod.PUT, "/product-service/eshoppingzone/cart/**").hasRole("user")
+                .pathMatchers(HttpMethod.DELETE, "/product-service/eshoppingzone/cart/**").hasRole("user")
+                .pathMatchers(HttpMethod.GET,"/cart-service/eshoppinzone/cart/**").hasRole("user")
+                .pathMatchers(HttpMethod.POST,"/cart-service/eshoppinzone/cart/**").hasRole("user")
+                .pathMatchers(HttpMethod.DELETE,"/cart-service/eshoppinzone/cart/**").hasRole("user")
 				.anyExchange().authenticated().and().addFilterAt(filter, SecurityWebFiltersOrder.AUTHENTICATION)
 				.csrf().disable()
 				.build();

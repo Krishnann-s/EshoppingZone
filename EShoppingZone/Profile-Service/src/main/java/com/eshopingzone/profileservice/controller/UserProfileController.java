@@ -8,7 +8,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,6 +15,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eshopingzone.profileservice.Dto.LoginDto;
@@ -72,7 +72,7 @@ public class UserProfileController {
 			UserProfile user = userRepo.findByEmail(loginDto.getEmail()).orElseThrow(
 					() -> new ResourceNotFoundException("User with email id: " + loginDto.getEmail() + " not found"));
 			
-			String token = userService.generateToken(user.getProfileId() + "", user.getRole());
+			String token = userService.generateToken(user.getProfileId() + "",user.getEmail(), user.getRole());
 			
 			ResponseDto resDto = new ResponseDto();
 			resDto.setToken(token);
@@ -100,9 +100,9 @@ public class UserProfileController {
 	}
 
 	// Update User
-	@PutMapping("/update")
-	public ResponseEntity<String> updateProfile(@RequestBody ProfileUpdate userProfile) {
-		userService.updateProfile(userProfile);
+	@PutMapping("/update/{id}")
+	public ResponseEntity<String> updateProfile(@RequestBody ProfileUpdate userProfile, @PathVariable int id) {
+		userService.updateProfile(userProfile, id);
 		return ResponseEntity.ok("Profile updated successfully");
 	}
 
@@ -111,6 +111,11 @@ public class UserProfileController {
 	public ResponseEntity<String> deleteProfile(@PathVariable int id) {
 		userService.deleteProfile(id);
 		return ResponseEntity.ok("Profile deleted successfully");
+	}
+	
+	@GetMapping("/getUserId")
+	public int getUserId(@RequestParam("email") String email) {
+		return userService.getUserIdByEmail(email);
 	}
 
 }

@@ -1,11 +1,11 @@
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState } from "react";
 import axios from "axios";
-import { CartContext } from "../context/Cart";
 import { useNavigate } from "react-router-dom";
+import { jwtDecode } from "jwt-decode";
 
 function Product() {
   const [products, setProducts] = useState([]);
-  const { cartItems, addToCart } = useContext(CartContext);
+  const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ function Product() {
             },
           }
         );
-        setProducts(response.data);
+        setProducts(response.data || []);
         setError(null);
       } catch (error) {
         console.error("Error fetching products:", error);
@@ -44,6 +44,112 @@ function Product() {
     }
     getProducts();
   }, [navigate]);
+
+  useEffect(() => {
+    async function fetchCartItems() {
+      try {
+        const token = localStorage.getItem("token");
+        if (!token) {
+          navigate("/login");
+          return;
+        }
+        const decodedToken = jwtDecode(token);
+        const userId = decodedToken.userId;
+        const response = await axios.get(
+          `http://localhost:8000/cart-service/eshoppingzone/cart/viewCart?userId=${userId}`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        setCartItems(response.data);
+        setError(null);
+      } catch (err) {
+        console.error("Error fetching cart items:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    }
+    fetchCartItems();
+  }, [navigate]);
+
+  const addToCart = async (product) => {
+    try {
+      const token = localStorage.getItem("token");
+      const decodedToken = jwtDecode(token);
+      // const userId = decodedToken.sub;
+      const email = decodedToken.email; // Extract email from token
+      await axios.post(
+        "http://localhost:8000/product-service/eshoppingzone/cart",
+        null,
+        {
+          params: {
+            email,
+            productId: product.productId,
+            quantity: 1,
+          },
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+      setCartItems((prevItems) => {
+        const existingItem = prevItems.find(
+          (item) => item.productId === product.productId
+        );
+        if (existingItem) {
+          return prevItems.map((item) =>
+            item.productId === product.productId
+              ? { ...item, quantity: item.quantity + 1 }
+              : item
+          );
+        } else {
+          return [...prevItems, { ...product, quantity: 1 }];
+        }
+      });
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+    }
+  };
+
+  // const removeFromCart = async (product) => {
+  //   try {
+  //     const token = localStorage.getItem("token");
+  //     const decodedToken = jwtDecode(token);
+  //     const userId = decodedToken.sub;
+  //     await axios.delete(
+  //       "http://localhost:8000/cart-service/eshoppingzone/cart/deleteProduct",
+  //       {
+  //         params: { userId, productId: product.productId },
+  //       }
+  //     );
+  //     setCartItems((prevItems) =>
+  //       prevItems.filter((item) => item.productId !== product.productId)
+  //     );
+  //   } catch (error) {
+  //     console.error("Error removing from cart:", error);
+  //   }
+  // };
+
+  // const clearCart = async () => {
+  //   try {
+  //     const token = localStorage.getItem("token");
+  //     const decodedToken = jwtDecode(token);
+  //     const userId = decodedToken.sub;
+  //     await axios.delete(
+  //       "http://localhost:8000/cart-service/eshoppingzone/cart/emptyCart",
+  //       {
+  //         params: { userId },
+  //       }
+  //     );
+  //     setCartItems([]);
+  //   } catch (error) {
+  //     console.error("Error clearing cart:", error);
+  //   }
+  // };
 
   if (loading) return <div>Loading...</div>;
   if (error) {

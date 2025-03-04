@@ -61,13 +61,13 @@ public class UserProfileServiceImpl implements UserProfileService {
 	}
 
 	@Override
-	public void updateProfile(ProfileUpdate profileUpdate) {
-		UserProfile existingUser = userRepo.findByFullName(profileUpdate.getFullName());
+	public UserProfile updateProfile(ProfileUpdate profileUpdate, int id) {
+		UserProfile existingUser = userRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
 		if (existingUser != null) {
 			existingUser.setFullName(profileUpdate.getFullName());
 			existingUser.setMobileNumber(profileUpdate.getMobileNumber());
-			userRepo.save(existingUser);
+			return userRepo.save(existingUser);
 		} else {
 			throw new ResourceNotFoundException("User not found to update");
 		}
@@ -82,8 +82,8 @@ public class UserProfileServiceImpl implements UserProfileService {
 		userRepo.deleteById(id);
 	}
 	
-	public String generateToken(String email, String role) {
-		return jwtService.generateToken(email, role);
+	public String generateToken(String userId, String email, String role) {
+		return jwtService.generateToken(userId,email, role);
 	}
 	
 	public void validateToken(String token) {
@@ -91,5 +91,10 @@ public class UserProfileServiceImpl implements UserProfileService {
 			throw new ResourceNotFoundException("Token cannot be null or empty");
 		}
 		jwtService.validateToken(token);
+	}
+
+	@Override
+	public int getUserIdByEmail(String email) {
+		return userRepo.findByEmail(email).get().getProfileId();
 	}
 }

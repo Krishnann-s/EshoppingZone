@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.springframework.stereotype.Component;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
@@ -13,7 +14,8 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtUtil {
 
-	public static final String SECRET_KEY = "Lg5T0sBf1n/6ZQW2RpXyZaPqxTeL3P1Axq95mUFTj6E=";
+	private static final Dotenv dotenv = Dotenv.load();
+    private static final String SECRET_KEY = dotenv.get("SECRET_KEY");
 
 	public static Claims validateToken(String token) {
 		return Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token).getBody();
