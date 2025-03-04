@@ -7,6 +7,7 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
+import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -15,7 +16,8 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtService {
 
-	public static final String SECRET_KEY = "Lg5T0sBf1n/6ZQW2RpXyZaPqxTeL3P1Axq95mUFTj6E=";
+	private static final Dotenv dotenv = Dotenv.load();
+    private static final String SECRET_KEY = dotenv.get("SECRET_KEY");
 	
 	public String generateToken(String userId, String email, String role) {
 		Map<String, Object> claims = new HashMap<>();
