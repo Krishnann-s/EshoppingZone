@@ -64,8 +64,7 @@ public class UserProfile {
 	@Size(min = 8, max = 50, message = "Password must contain atleast 8 characters")
 	private String password;
 
-	@OneToMany(mappedBy = "user_profile" , cascade = CascadeType.ALL)
-	@JoinColumn(name = "profile_id")
+	@OneToMany(mappedBy = "userProfile" , cascade = CascadeType.ALL)
 	private List<Address> address;
 
 }
