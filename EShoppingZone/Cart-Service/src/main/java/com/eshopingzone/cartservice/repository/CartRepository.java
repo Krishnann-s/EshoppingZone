@@ -12,8 +12,6 @@ import com.eshopingzone.cartservice.model.CartItem;
 @Repository
 public interface CartRepository extends JpaRepository<Cart, Long>{
 
-	List<CartItem> findByProfileId(Long profileId);
-	CartItem findByUserIdAndProductId(Long profileId, int productId);
-	void deleteByUserId(int userId);
-	Cart findByEmail(String email);
+	@Query("SELECT c FROM Cart c WHERE c.user.email = ?1")
+	Cart findCartByEmail(String email);
 }

@@ -38,7 +38,7 @@ public class CartServiceImpl implements CartService {
 	private ProductClient productClient;
 
 	private Cart createCart() {
-		Cart userCart = cartRepo.findByEmail(authUtil.loggedInEmail());
+		Cart userCart = cartRepo.findCartByEmail(authUtil.loggedInEmail());
 		if(userCart != null) {
 			return userCart;
 		}
@@ -56,12 +56,21 @@ public class CartServiceImpl implements CartService {
 		ProductDTO product = productClient.getProductById(productId);
 
 		Optional<CartItem> cartItem = cartItemRepository.findByProductIdAndCart_CartId(productId, cart.getCartId());
-		if(cartItem != null) {
+		
+		if(cartItem.isPresent()) {
 			throw new APIException("Product already present");
 		}
+		if(product.getQuantity() == 0) {
+			throw new APIException(product.getProductName() + " is not available");
+		}
+		if(product.getQuantity() < quantity) {
+			throw new APIException("Please make an order of " + product.getProductName()
+			+ " less than or equal to the quantity " + product.getQuantity() + ".");
+		}
+		
 		CartItem newCartItem = new CartItem();
 
-		newCartItem.setProductId(product.getProductId());
+		newCartItem.setProductId(productId);
 		newCartItem.setCart(cart);
 		newCartItem.setQuantity(quantity);
 		newCartItem.setDiscount(product.getDiscount());
@@ -82,37 +91,4 @@ public class CartServiceImpl implements CartService {
 
 		return cartDto;
 	}
-
-	public void deleteProductFromCart(int userId, int productId) {
-		CartItem cartItem = cartRepo.findByUserIdAndProductId(userId, productId);
-        if (cartItem != null) {
-            cartRepo.delete(cartItem);
-        }
-	}
-
-	public List<CartItem> getCartByUserId(int userId) {
-		return cartRepo.findByUserId(userId);
-	}
-
-	@Override
-	public void decreaseProductQuantity(int userId, int productId) {
-		List<CartItem> cart = cartRepo.findByUserId(userId);
-			for(CartItem item : cart) {
-				if(item.getProductId() == productId) {
-					if(item.getQuantity() > 1) {
-						item.setQuantity(item.getQuantity() - 1);
-						cartRepo.save(item);
-					} else {
-						cartRepo.delete(item);
-					}
-					return;
-				}
-			}
-	}
-
-	@Override
-	public void emptyCart(int userId) {
-		cartRepo.deleteByUserId(userId);
-	}
-
 }
