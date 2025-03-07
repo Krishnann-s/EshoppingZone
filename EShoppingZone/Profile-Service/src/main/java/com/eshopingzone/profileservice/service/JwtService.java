@@ -16,8 +16,7 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtService {
 
-	private static final Dotenv dotenv = Dotenv.load();
-    private static final String SECRET_KEY = dotenv.get("SECRET_KEY");
+    private static final String SECRET_KEY = System.getenv("SECRET_KEY");
 	
 	public String generateToken(String userId, String email, String role) {
 		Map<String, Object> claims = new HashMap<>();
