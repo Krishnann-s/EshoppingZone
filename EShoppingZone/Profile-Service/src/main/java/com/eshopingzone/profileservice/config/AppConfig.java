@@ -1,15 +1,14 @@
 package com.eshopingzone.profileservice.config;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import io.github.cdimascio.dotenv.Dotenv;
-
 @Configuration
-public class DotenvConfig {
+public class AppConfig {
 
 	@Bean
-	public Dotenv dotenv() {
-		return Dotenv.configure().ignoreIfMissing().load();
+	ModelMapper modelMapper() {
+		return new ModelMapper();
 	}
 }

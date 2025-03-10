@@ -11,5 +11,5 @@ import com.eshopingzone.profileservice.model.UserProfile;
 public interface UserProfileRepository extends JpaRepository<UserProfile, Integer>{
 
 	Optional<UserProfile> findByEmail(String email);
-	UserProfile findByFullName(String fullName);
+	Optional<UserProfile> findByUserName(String userName);
 }

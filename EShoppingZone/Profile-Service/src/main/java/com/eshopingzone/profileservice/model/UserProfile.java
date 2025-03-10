@@ -12,7 +12,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -41,7 +40,7 @@ public class UserProfile {
 
 	@NotBlank
 	@Size(min = 25)
-	private String fullName;
+	private String userName;
 
 	@Column(name = "email", unique = true, nullable = false)
 	@Email
@@ -64,7 +63,7 @@ public class UserProfile {
 	@Size(min = 8, max = 50, message = "Password must contain atleast 8 characters")
 	private String password;
 
-	@OneToMany(mappedBy = "userProfile" , cascade = CascadeType.ALL)
+	@OneToMany(mappedBy = "userProfile" , cascade = {CascadeType.PERSIST, CascadeType.MERGE, }, orphanRemoval = true)
 	private List<Address> address;
 
 }

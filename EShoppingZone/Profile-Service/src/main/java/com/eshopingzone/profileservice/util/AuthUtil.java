@@ -1,0 +1,45 @@
+package com.eshopingzone.profileservice.util;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth2.jwt.Jwt;
+import org.springframework.stereotype.Component;
+
+import com.eshopingzone.profileservice.exception.ResourceNotFoundException;
+import com.eshopingzone.profileservice.model.UserProfile;
+import com.eshopingzone.profileservice.repository.UserProfileRepository;
+
+@Component
+public class AuthUtil {
+
+    @Autowired
+    UserProfileRepository userRepository;
+
+//    public String loggedInEmail(){
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        UserProfile user = userRepository.findByUserName(authentication.getName())
+//                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + authentication.getName()));
+//
+//        return user.getEmail();
+//    }
+//
+//    public Long loggedInUserId(){
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        UserProfile user = userRepository.findByUserName(authentication.getName())
+//                .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + authentication.getName()));
+//
+//        return user.getUserId();
+//    }
+
+    public UserProfile loggedInUser(){
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+
+        UserProfile user = userRepository.findByUserName(authentication.getName())
+                .orElseThrow(() -> new ResourceNotFoundException("User Not Found with username: " + authentication.getName()));
+        return user;
+
+    }
+
+
+}
