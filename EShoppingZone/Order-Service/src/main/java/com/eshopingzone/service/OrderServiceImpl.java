@@ -8,10 +8,15 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.eshopingzone.client.AddressClient;
+import com.eshopingzone.client.CartClient;
 import com.eshopingzone.exception.ResourceNotFoundException;
 import com.eshopingzone.model.Order;
 import com.eshopingzone.model.OrderItem;
 import com.eshopingzone.model.Payment;
+import com.eshopingzone.payload.AddressDTO;
+import com.eshopingzone.payload.CartDTO;
+import com.eshopingzone.payload.CartItemDTO;
 import com.eshopingzone.payload.OrderDTO;
 import com.eshopingzone.payload.OrderItemDTO;
 import com.eshopingzone.repository.OrderItemRepository;
@@ -24,10 +29,10 @@ import jakarta.transaction.Transactional;
 public class OrderServiceImpl implements OrderService{
 	
 	@Autowired
-	private CartRepository cartRepo;
+	private CartClient cartClient;
 	
 	@Autowired
-	private AddressRepository addressRepo;
+	private AddressClient addressClient;
 	
 	@Autowired
 	private OrderItemRepository orderItemRepo;
@@ -41,20 +46,17 @@ public class OrderServiceImpl implements OrderService{
 	@Autowired
 	private ModelMapper modelMapper;
 	
-	@Autowired
-	private CartService cartService;
-
 	@Transactional
 	@Override
 	public OrderDTO placeOrder(String emailId, Long addressId, String paymentMethod, String pgName, String pgPaymentId,
 			String pgStatus, String pgResponseMessage) {
 		
-		Cart cart = cartRepo.findCartByEmail(emailId);
-		if(cart == null) {
+		CartDTO cart = cartClient.getCartByEmail(emailId);
+		if(cart == null || cart.getCartItems().isEmpty()) {
 			throw new ResourceNotFoundException("Cart is emtpy");
 		}
 		
-		Address address = addressRepo.findById(addressId);
+		AddressDTO address = addressClient.getAddressById(addressId);
 		
 		Order order = new Order();
 		order.setEmail(emailId);
@@ -70,15 +72,15 @@ public class OrderServiceImpl implements OrderService{
 		
 		Order savedOrder = orderRepo.save(order);
 		
-		List<CartItem> cartItems = cart.getCartItems();
-		if(cartItems.isEmpty()) {
-			throw new ResourceNotFoundException("Cart is Empty");
-		}
+//		List<CartItem> cartItems = cart.getCartItems();
+//		if(cartItems.isEmpty()) {
+//			throw new ResourceNotFoundException("Cart is Empty");
+//		}
 		
 		List<OrderItem> orderItems = new ArrayList<>();
-		for(CartItems cartitem : cartItems) {
+		for(CartItemDTO cartItem : cart.getCartItems()) {
 			OrderItem orderItem = new OrderItem();
-			orderItem.setProductId(cartItem.getProduct());
+			orderItem.setProductId(cartItem.getProductId());
 			orderItem.setQuantity(cartItem.getQuantity());
 			orderItem.setDiscount(cartItem.getDiscount());
 			orderItem.setOrderedProductPrice(cartItem.getProductPrice());
@@ -87,17 +89,16 @@ public class OrderServiceImpl implements OrderService{
 		}
 		orderItems = orderItemRepo.saveAll(orderItems);
 		
-		cart.getCartItems().forEach(item -> {
-			int quantity = item.getQuantity();
-			Product product = item.getProduct();
-			cartService .deleteProductFromCart(cart.getCartId(), item.getProduct());
-		});
+//		cart.getCartItems().forEach(item -> {
+//			int quantity = item.getQuantity();
+//			Product product = item.getProduct();
+//			cartService .deleteProductFromCart(cart.getCartId(), item.getProduct());
+//		});
 		
 		OrderDTO orderDto = modelMapper.map(savedOrder, OrderDTO.class);
 		orderItems.forEach(item -> orderDto.getOrderItems().add(modelMapper.map(item, OrderItemDTO.class)));
 		
 		orderDto.setAddressId(addressId);
-		
 		return orderDto;
 	}
 
