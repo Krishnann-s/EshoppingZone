@@ -1,4 +1,4 @@
-package com.eshopingzone.productservice.payload;
+package com.eshopingzone.payload;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,14 +7,11 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ProductDTO {
+public class CartItemDTO {
 
 	private Long productId;
 	private String productName;
-	private String image;
-	private Integer quantity;
-    private String description;
-	private double price;
+	private int quantity;
 	private double discount;
-	private double specialPrice;
+	private double productPrice;
 }

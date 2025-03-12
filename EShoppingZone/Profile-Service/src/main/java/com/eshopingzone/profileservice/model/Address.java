@@ -23,9 +23,10 @@ import lombok.ToString;
 @Entity
 @Table(name = "address")
 public class Address {
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int address_id;
+	private Long addressId;
 	
 	@NotBlank
 	@Size(min = 12, message = "street name must be 12 characters")
@@ -45,7 +46,7 @@ public class Address {
 	
 	@NotBlank
 	@Digits(integer = 6, fraction = 0, message = "Pincode must be a 6-Digit number")
-	private int pincode;
+	private String pincode;
 	
 	@ManyToOne
 	@JoinColumn(name = "profile_id")

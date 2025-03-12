@@ -21,4 +21,6 @@ public interface ProductsService {
 	ProductResponse searchByCategory(Long categoryId, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 	ProductResponse searchProductsByKeyword(String keyword, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
 	ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException;
+	
+	ProductDTO getProductById(Long productId);
 }

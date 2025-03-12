@@ -65,7 +65,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 		UserProfile existingUser = userRepo.findById(id).orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
 		if (existingUser != null) {
-			existingUser.setFullName(profileUpdate.getFullName());
+			existingUser.setUserName(profileUpdate.getUserName());
 			existingUser.setMobileNumber(profileUpdate.getMobileNumber());
 			return userRepo.save(existingUser);
 		} else {

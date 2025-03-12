@@ -182,4 +182,13 @@ public class ProductsServiceImpl implements ProductsService {
 
 		return modelMapper.map(updatedProduct, ProductDTO.class);
 	}
+	
+	@Override
+	public ProductDTO getProductById(Long productId) {
+        Products product = prodRepo.findById(productId)
+                .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+        return new ProductDTO(product.getProductId(), product.getProductName(), product.getImage(),
+                product.getQuantity(), product.getDescription(), product.getPrice(),
+                product.getDiscount(), product.getSpecialPrice());
+    }
 }
