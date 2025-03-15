@@ -12,6 +12,7 @@
 	<groupId>com.eshopingzone</groupId>
 	<artifactId>Profile-Service</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
 	<name>Profile-Service</name>
 	<description>Eshopping Zone&apos;s Profile Service </description>
 	<url />
