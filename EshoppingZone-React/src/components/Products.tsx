@@ -1,41 +1,19 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Alert from "@mui/material/Alert";
 import ProductCart from "./ProductCard";
 import { AlertTitle } from "@mui/material";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts } from "../store/action";
 
 export default function Products() {
   const isLoading = false;
   const errorMessage = "";
+  const { products } = useSelector((state) => state.products);
+  const dispatch = useDispatch();
 
-  const products = [
-    {
-      id: 1,
-      title: "Product 1",
-      price: 100,
-      specialPrice: 90,
-      description: "Product 1 Description",
-      category: "Product 1 Category",
-      image: "https://www.dummyimage.com/600x400/000/fff",
-    },
-    {
-      id: 2,
-      title: "Product 2",
-      price: 200,
-      specialPrice: 150,
-      description: "Product 2 Description",
-      category: "Product 2 Category",
-      image: "https://www.dummyimage.com/600x400/000/fff",
-    },
-    {
-      id: 3,
-      title: "Product 3",
-      price: 300,
-      specialPrice: 250,
-      description: "Product 3 Description",
-      category: "Product 3 Category",
-      image: "https://www.dummyimage.com/600x400/000/fff",
-    },
-  ];
+  useEffect(() => {
+    dispatch(fetchProducts());
+  }, [dispatch]);
 
   return (
     <div className="lg:px-14 sm:px-8 px-4 py-14 2xl:w-[90%] 2xl:mx-auto bg-custom-background">
