@@ -13,7 +13,7 @@ public interface ProductClient {
 
 	@GetMapping("/api/products/{productId}")
 	ProductDTO getProductById(@PathVariable Long productId);
-
+	
 	@PutMapping("/api/products")
-    void updateProduct(@RequestBody ProductDTO productDto);
+	void updateProduct(@RequestBody ProductDTO productDto);
 }
