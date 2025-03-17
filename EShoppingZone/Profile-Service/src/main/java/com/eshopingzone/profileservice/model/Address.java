@@ -1,6 +1,8 @@
 package com.eshopingzone.profileservice.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -29,19 +31,19 @@ public class Address {
 	private Long addressId;
 	
 	@NotBlank
-	@Size(min = 12, message = "street name must be 12 characters")
+	@Size(min = 4, message = "street name must be 4 characters")
 	private String street;
 	
 	@NotBlank
-	@Size(min = 12, message = "City name must be 12 characters")
+	@Size(min = 4, message = "City name must be 4 characters")
 	private String city;
 	
 	@NotBlank
-	@Size(min = 12, message = "State name must be 12 characters")
+	@Size(min = 4, message = "State name must be 4 characters")
 	private String state;
 	
 	@NotBlank
-	@Size(min = 12, message = "Country name must be 12 characters")
+	@Size(min = 4, message = "Country name must be 4 characters")
 	private String country;
 	
 	@NotBlank
@@ -50,5 +52,6 @@ public class Address {
 	
 	@ManyToOne
 	@JoinColumn(name = "profile_id")
+	@JsonIgnore
 	private UserProfile userProfile;
 }

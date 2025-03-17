@@ -11,8 +11,6 @@ import io.github.cdimascio.dotenv.Dotenv;
 public class CartServiceApplication {
 
 	public static void main(String[] args) {
-		Dotenv dotenv = Dotenv.load();
-		System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
 		SpringApplication.run(CartServiceApplication.class, args);
 	}
 

@@ -1,7 +1,5 @@
 package com.eshopingzone.productservice.controller;
 
-import java.io.IOException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -72,6 +70,7 @@ public class ProductsController {
 		return new ResponseEntity<ProductResponse>(productResponse, HttpStatus.OK);
 	}
 
+	// Get All Products using Keyword
 	@GetMapping("/public/products/keyword/{keyword}")
 	public ResponseEntity<ProductResponse> getProductsByKeyword(@PathVariable String keyword,
 			@RequestParam(name = "pageNumber", defaultValue = AppConstants.PAGE_NUMBER, required = false) Integer pageNumber,
@@ -82,11 +81,11 @@ public class ProductsController {
 		return new ResponseEntity<ProductResponse>(productResponse, HttpStatus.OK);
 	}
 
-	// View Products by Id
-	@GetMapping("/{id}")
-	public ResponseEntity<Products> getProductsById(@PathVariable Long id) {
-		Products product = prodService.viewProductsById(id);
-		return new ResponseEntity<Products>(product, HttpStatus.OK);
+	// Get Products by Id
+	@GetMapping("/public/products/{productId}")
+	public ResponseEntity<ProductDTO> getProductsById(@PathVariable Long productId) {
+		ProductDTO productdto = prodService.viewProductsById(productId);
+		return new ResponseEntity<>(productdto, HttpStatus.OK);
 	}
 
 	// Update Products by Id
@@ -108,7 +107,7 @@ public class ProductsController {
 	public ResponseEntity<Void> addProductToCart(@RequestParam String email, @RequestParam Long productId,
 			@RequestParam int quantity) {
 		int userId = userProfileClient.getUserId(email);
-		Products product = prodService.viewProductsById(productId);
+		ProductDTO product = prodService.viewProductsById(productId);
 		cartClient.addProductsToCart(userId, productId, product.getProductName(), product.getImage(),
 				product.getPrice(), quantity);
 		return new ResponseEntity<>(HttpStatus.OK);
@@ -122,19 +121,12 @@ public class ProductsController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-	@PutMapping("/products/{productId}/image")
-	public ResponseEntity<ProductDTO> updateProductImage(@PathVariable Long productId,
-			@RequestParam("image") MultipartFile image) throws IOException {
-
-		ProductDTO updatedProduct = prodService.updateProductImage(productId, image);
-
-		return new ResponseEntity<ProductDTO>(updatedProduct, HttpStatus.OK);
-	}
-	
-	@GetMapping("/{productId}")
-    public ResponseEntity<ProductDTO> getProductById(@PathVariable Long productId) {
-        ProductDTO productDto = prodService.getProductById(productId);
-        return new ResponseEntity<>(productDto, HttpStatus.OK);
-    }
-
+//	@PutMapping("/products/{productId}/image")
+//	public ResponseEntity<ProductDTO> updateProductImage(@PathVariable Long productId,
+//			@RequestParam("image") MultipartFile image) throws IOException {
+//
+//		ProductDTO updatedProduct = prodService.updateProductImage(productId, image);
+//
+//		return new ResponseEntity<ProductDTO>(updatedProduct, HttpStatus.OK);
+//	}
 }
