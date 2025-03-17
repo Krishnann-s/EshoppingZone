@@ -57,7 +57,7 @@ public class SecurityConfig {
                 // Public APIs
                 .pathMatchers("/profile-service/api/user/login", "/profile-service/api/user/register").permitAll()
 
-                // Secured APIs
+                // Profile Service Authorization
                 .pathMatchers(HttpMethod.GET, "/profile-service/api/users").hasRole("admin")
                 .pathMatchers(HttpMethod.GET, "/profile-service/api/user/**").hasRole("user")
                 .pathMatchers(HttpMethod.PUT, "/profile-service/api/update/user/**").hasRole("user")
