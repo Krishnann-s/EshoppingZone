@@ -33,18 +33,18 @@ public class ProductsServiceImpl implements ProductsService {
 	@Autowired
 	private ModelMapper modelMapper;
 
-	@Autowired
-	private FileService fileService;
+//	@Autowired
+//	private FileService fileService;
 
-	@Value("${project.image}")
-	private String path;
+//	@Value("${project.image}")
+//	private String path;
 
 	@Override
 	public ProductDTO addProducts(Long categoryId, ProductDTO productDto) {
 		Category category = categoryRepo.findById(categoryId)
 				.orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
 
-		boolean isProductNotPresent = false;
+		boolean isProductNotPresent = true;
 		List<Products> prods = category.getProducts();
 		for (Products value : prods) {
 			if (value.getProductName().equals(productDto.getProductName())) {
@@ -133,11 +133,12 @@ public class ProductsServiceImpl implements ProductsService {
 		return prodResponse;
 	}
 
+	// Get Products by ID
 	@Override
-	public Products viewProductsById(Long productId) {
+	public ProductDTO viewProductsById(Long productId) {
 		Products prod = prodRepo.findById(productId)
 				.orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
-		return prod;
+		return modelMapper.map(prod, ProductDTO.class);
 	}
 
 	@Override
@@ -169,26 +170,17 @@ public class ProductsServiceImpl implements ProductsService {
 		return modelMapper.map(product, ProductDTO.class);
 	}
 
-	@Override
-	public ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException {
-		Products existingProduct = prodRepo.findById(productId)
-				.orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
-
-		// upload image to server and get file name of uploaded image
-		String fileName = fileService.uploadImage(path, image);
-
-		existingProduct.setImage(fileName);
-		Products updatedProduct = prodRepo.save(existingProduct);
-
-		return modelMapper.map(updatedProduct, ProductDTO.class);
-	}
-	
-	@Override
-	public ProductDTO getProductById(Long productId) {
-        Products product = prodRepo.findById(productId)
-                .orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
-        return new ProductDTO(product.getProductId(), product.getProductName(), product.getImage(),
-                product.getQuantity(), product.getDescription(), product.getPrice(),
-                product.getDiscount(), product.getSpecialPrice());
-    }
+//	@Override
+//	public ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException {
+//		Products existingProduct = prodRepo.findById(productId)
+//				.orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+//
+//		// upload image to server and get file name of uploaded image
+//		String fileName = fileService.uploadImage(path, image);
+//
+//		existingProduct.setImage(fileName);
+//		Products updatedProduct = prodRepo.save(existingProduct);
+//
+//		return modelMapper.map(updatedProduct, ProductDTO.class);
+//	}
 }

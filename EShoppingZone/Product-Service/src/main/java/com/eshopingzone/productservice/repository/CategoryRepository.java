@@ -5,7 +5,6 @@ import org.springframework.stereotype.Repository;
 
 import com.eshopingzone.productservice.model.Category;
 
-
 @Repository
 public interface CategoryRepository extends JpaRepository<Category, Long>{
 

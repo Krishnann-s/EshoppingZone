@@ -28,7 +28,9 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		return http.csrf().disable().authorizeHttpRequests().requestMatchers("/**").permitAll().and().build();
+		http.csrf().disable().authorizeHttpRequests().requestMatchers("/**").permitAll()
+				.and().oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("http://localhost:3000/products", true));
+		return http.build();
 	}
 	
 	@Bean

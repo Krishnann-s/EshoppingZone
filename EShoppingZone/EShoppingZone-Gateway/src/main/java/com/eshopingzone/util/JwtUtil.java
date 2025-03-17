@@ -3,7 +3,11 @@ package com.eshopingzone.util;
 import java.security.Key;
 import java.util.Date;
 
+import org.springframework.context.annotation.Bean;
+import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
+import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 import org.springframework.stereotype.Component;
+
 
 import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;
@@ -15,12 +19,14 @@ import io.jsonwebtoken.security.Keys;
 public class JwtUtil {
 
     private static final String SECRET_KEY = System.getenv("SECRET_KEY");
-
+    
+   
 	public static Claims validateToken(String token) {
 		return Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token).getBody();
 	}
 
 	private static Key getSignKey() {
+		System.out.println("Secret_key" + SECRET_KEY);
 		byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
 		return Keys.hmacShaKeyFor(keyBytes);
 	}

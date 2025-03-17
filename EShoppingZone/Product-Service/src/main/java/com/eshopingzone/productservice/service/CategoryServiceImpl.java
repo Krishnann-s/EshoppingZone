@@ -26,31 +26,31 @@ public class CategoryServiceImpl implements CategoryService {
 
 	@Override
 	public CategoryResponse getAllCategories(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
-		
-		Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc")
-				? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
-				
-		Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
-		Page<Category> categoryPage = categoryRepo.findAll(pageDetails);
-		
-		List<Category> categories = categoryPage.getContent();
+	    
+	    Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc")
+	            ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+	            
+	    Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
+	    Page<Category> categoryPage = categoryRepo.findAll(pageDetails);
+	    
+	    List<Category> categories = categoryPage.getContent();
 
-		if (categories.isEmpty()) {
-			throw new APIException("No Categories Created.");
-		}
+	    if (categories.isEmpty()) {
+	        throw new APIException("No Categories Created.");
+	    }
 
-		List<CategoryDTO> categoryDto = categories.stream()
-				.map(category -> modelMapper.map(categories, CategoryDTO.class)).toList();
+	    List<CategoryDTO> categoryDto = categories.stream()
+	            .map(category -> modelMapper.map(category, CategoryDTO.class)).toList();
 
-		CategoryResponse categoryResponse = new CategoryResponse();
-		categoryResponse.setContent(categoryDto);
-		categoryResponse.setPageNumber(categoryPage.getNumber());
-		categoryResponse.setPageSize(categoryPage.getSize());
-		categoryResponse.setTotalElements(categoryPage.getTotalElements());
-		categoryResponse.setTotalPages(categoryPage.getTotalPages());
-		categoryResponse.setLastPage(categoryPage.isLast());
+	    CategoryResponse categoryResponse = new CategoryResponse();
+	    categoryResponse.setContent(categoryDto);
+	    categoryResponse.setPageNumber(categoryPage.getNumber());
+	    categoryResponse.setPageSize(categoryPage.getSize());
+	    categoryResponse.setTotalElements(categoryPage.getTotalElements());
+	    categoryResponse.setTotalPages(categoryPage.getTotalPages());
+	    categoryResponse.setLastPage(categoryPage.isLast());
 
-		return categoryResponse;
+	    return categoryResponse;
 	}
 
 	@Override
@@ -81,16 +81,20 @@ public class CategoryServiceImpl implements CategoryService {
 	@Override
 	public CategoryDTO updateCategory(CategoryDTO categoryDto, Long categoryId) {
 
-		Category mapCategory = modelMapper.map(categoryDto, Category.class);
-		Category category = categoryRepo.findById(categoryId)
-				.orElseThrow(() -> new ResourceNotFoundException("Category","categoryId", categoryId));
+	    Category category = categoryRepo.findById(categoryId)
+	            .orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
 
-		category.setCategoryName(category.getCategoryName());
-		category = categoryRepo.save(mapCategory);
+	    // Update the existing category object with new values
+	    category.setCategoryName(categoryDto.getCategoryName());
+	    // Update other fields as necessary
 
-		CategoryDTO catDto = modelMapper.map(category, CategoryDTO.class);
+	    // Save the updated category object
+	    Category updatedCategory = categoryRepo.save(category);
 
-		return catDto;
+	    // Map the updated category object to CategoryDTO
+	    CategoryDTO catDto = modelMapper.map(updatedCategory, CategoryDTO.class);
+
+	    return catDto;
 	}
 
 }

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 @FeignClient(name = "profile-service")
 public interface UserProfileClient {
 
-	@GetMapping("/eshoppingzone/profile/getUserId")
+	@GetMapping("/api/user")
 	int getUserId(@RequestParam("email") String email);
 
 }

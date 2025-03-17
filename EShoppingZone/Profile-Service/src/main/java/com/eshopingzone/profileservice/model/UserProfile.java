@@ -5,6 +5,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -32,6 +33,7 @@ import lombok.ToString;
 		@UniqueConstraint(columnNames = "email"),
 		@UniqueConstraint(columnNames = "mobile_number")
 })
+@JsonPropertyOrder({ "profileId", "userName", "email", "mobileNumber", "dob", "gender", "role", "password", "address" })
 public class UserProfile {
 
 	@Id
@@ -39,12 +41,12 @@ public class UserProfile {
 	private int profileId;
 
 	@NotBlank
-	@Size(min = 25)
+	@Size(min = 5 , max = 25)
 	private String userName;
 
 	@Column(name = "email", unique = true, nullable = false)
 	@Email
-	@Size(min = 50)
+	@Size(min = 10 , max = 50)
 	private String email;
 
 	@Column(name = "mobile_number" , unique = true, nullable = false)
@@ -60,7 +62,7 @@ public class UserProfile {
 	private String role;
 
 	@Column(name = "password",nullable = false)
-	@Size(min = 8, max = 50, message = "Password must contain atleast 8 characters")
+//	@Size(min = 8, max = 50, message = "Password must contain atleast 8 characters")
 	private String password;
 
 	@OneToMany(mappedBy = "userProfile" , cascade = {CascadeType.PERSIST, CascadeType.MERGE, }, orphanRemoval = true)

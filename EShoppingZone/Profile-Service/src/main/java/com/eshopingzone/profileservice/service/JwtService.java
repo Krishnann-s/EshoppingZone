@@ -16,7 +16,15 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtService {
 
-    private static final String SECRET_KEY = System.getenv("SECRET_KEY");
+    private static final String SECRET_KEY;
+    
+    static {
+    	String envKey = System.getenv("SECRET_KEY");
+    	if(envKey == null || envKey.isEmpty()) {
+    		throw new IllegalStateException("Secret Key env is not set");
+    	}
+    	SECRET_KEY = envKey;
+    }
 	
 	public String generateToken(String userId, String email, String role) {
 		Map<String, Object> claims = new HashMap<>();

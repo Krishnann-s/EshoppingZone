@@ -27,8 +27,10 @@ import com.eshopingzone.profileservice.model.UserProfile;
 import com.eshopingzone.profileservice.repository.UserProfileRepository;
 import com.eshopingzone.profileservice.service.UserProfileService;
 
+import jakarta.validation.Valid;
+
 @RestController
-@RequestMapping("/eshoppingzone/profile")
+@RequestMapping("/api")
 public class UserProfileController {
 
 	@Autowired
@@ -42,8 +44,8 @@ public class UserProfileController {
 	
 
 	// Register User
-	@PostMapping("/register")
-	public ResponseEntity<UserProfile> register(@RequestBody UserProfile userProfile) {
+	@PostMapping("/user/register")
+	public ResponseEntity<UserProfile> register(@Valid @RequestBody UserProfile userProfile) {
 		try {
 			if (userProfile.getEmail() == null || userProfile.getEmail().isEmpty()) {
 				throw new ResourceNotFoundException("Email cannot be nul or empty");
@@ -63,7 +65,7 @@ public class UserProfileController {
 	}
 
 	// Login User
-	@PostMapping("/login")
+	@PostMapping("/user/login")
 	public ResponseDto login(@RequestBody LoginDto loginDto) {
 		Authentication authenticate = authManager
 				.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
@@ -86,36 +88,30 @@ public class UserProfileController {
 	}
 
 	// Get All User
-	@GetMapping
+	@GetMapping("/users")
 	public ResponseEntity<List<UserProfile>> getAllProfiles() {
 		List<UserProfile> profiles = userService.getAllProfiles();
 		return ResponseEntity.ok(profiles);
 	}
 
 	// Get User by ID
-	@GetMapping("/{id}")
+	@GetMapping("/user/{id}")
 	public ResponseEntity<UserProfile> getProfileById(@PathVariable int id) {
 		UserProfile profiles = userService.getByProfileId(id);
 		return ResponseEntity.ok(profiles);
 	}
 
 	// Update User
-	@PutMapping("/update/{id}")
+	@PutMapping("/update/user/{id}")
 	public ResponseEntity<String> updateProfile(@RequestBody ProfileUpdate userProfile, @PathVariable int id) {
 		userService.updateProfile(userProfile, id);
 		return ResponseEntity.ok("Profile updated successfully");
 	}
 
 	// Delete user by ID
-	@DeleteMapping("/{id}")
+	@DeleteMapping("/delete/user/{id}")
 	public ResponseEntity<String> deleteProfile(@PathVariable int id) {
 		userService.deleteProfile(id);
 		return ResponseEntity.ok("Profile deleted successfully");
 	}
-	
-	@GetMapping("/getUserId")
-	public int getUserId(@RequestParam("email") String email) {
-		return userService.getUserIdByEmail(email);
-	}
-
 }

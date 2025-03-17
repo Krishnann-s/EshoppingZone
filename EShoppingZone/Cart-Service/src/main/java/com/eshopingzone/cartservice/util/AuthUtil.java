@@ -12,7 +12,9 @@ public class AuthUtil {
     }
 
     public Long loggedInUserId() {
+    	System.out.println("loggedInUserId() method is called");
         Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        return Long.parseLong(jwt.getClaim("profileId")); // Extract userId from JWT
+        System.out.println("JWT claims: " + jwt.getClaims());
+        return Long.parseLong(jwt.getClaim("userId")); // Extract userId from JWT
     }
 }

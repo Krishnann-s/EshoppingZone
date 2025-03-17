@@ -9,6 +9,6 @@ import com.eshopingzone.payload.ProductDTO;
 @FeignClient(name = "product-service")
 public interface ProductClient {
 
-	@GetMapping("/api/products/{productId}")
+	@GetMapping("/api/product/{productId}")
 	ProductDTO getProductById(@PathVariable Long productId);
 }
