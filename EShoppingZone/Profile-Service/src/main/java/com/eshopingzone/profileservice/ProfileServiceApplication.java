@@ -12,8 +12,6 @@ import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 public class ProfileServiceApplication {
 
 	public static void main(String[] args) {
-		Dotenv dotenv = Dotenv.load();
-		System.setProperty("DB_PASSWORD", dotenv.get("DB_PASSWORD"));
 		SpringApplication.run(ProfileServiceApplication.class, args);
 	}
 
