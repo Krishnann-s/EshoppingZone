@@ -30,49 +30,48 @@ import io.jsonwebtoken.Claims;
 
 @Component
 public class JwtAuthenticationFilter implements WebFilter {
-    
-	@Override
+
+    @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
-        
+
         if (request.getMethod() == HttpMethod.OPTIONS) {
             return chain.filter(exchange);
         }
 
         String authHeader = request.getHeaders().getFirst(HttpHeaders.AUTHORIZATION);
-        
+
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
             try {
                 Claims claims = JwtUtil.validateToken(token);
-                
+
                 if (!JwtUtil.isTokenExpired(claims)) {
                     String username = JwtUtil.getEmail(claims);
                     String role = JwtUtil.getRoles(claims);
-                    
+
                     // Debug logging
                     System.out.println("Token validated successfully");
                     System.out.println("Username: " + username);
                     System.out.println("Role from token: " + role);
-                    
+
                     List<SimpleGrantedAuthority> authorities = new ArrayList<>();
-                    // Don't modify the role string, use it exactly as it is in the token
                     authorities.add(new SimpleGrantedAuthority(role));
-                    
+
                     System.out.println("Granted Authorities: " + authorities);
-                    
-                    UsernamePasswordAuthenticationToken auth = 
-                        new UsernamePasswordAuthenticationToken(username, null, authorities);
-                    
+
+                    UsernamePasswordAuthenticationToken auth =
+                            new UsernamePasswordAuthenticationToken(username, null, authorities);
+
                     return chain.filter(exchange)
-                        .contextWrite(ReactiveSecurityContextHolder.withAuthentication(auth));
+                            .contextWrite(ReactiveSecurityContextHolder.withAuthentication(auth));
                 }
             } catch (Exception e) {
                 System.err.println("JWT Authentication error: " + e.getMessage());
                 e.printStackTrace();
             }
         }
-        
+
         return chain.filter(exchange);
     }
 }

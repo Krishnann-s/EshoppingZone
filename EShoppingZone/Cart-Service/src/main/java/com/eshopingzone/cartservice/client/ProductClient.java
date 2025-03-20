@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 import com.eshopingzone.cartservice.payload.ProductDTO;
 
-@FeignClient(name = "product-service")
+@FeignClient(name = "product-service-config")
 public interface ProductClient {
 
 	@GetMapping("/api/product/{productId}")

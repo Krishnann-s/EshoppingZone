@@ -47,29 +47,29 @@ public class SecurityConfig {
                 .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                 // Public APIs
-                .pathMatchers("/profile-service/api/user/login", "/profile-service/api/user/register").permitAll()
+                .pathMatchers("/profile-service-config/api/user/login", "/profile-service-config/api/user/register", "/cart-service-config/api/**").permitAll()
 
                 // Profile Service Authorization
-                .pathMatchers(HttpMethod.GET, "/profile-service/api/users").hasRole("admin")
-                .pathMatchers(HttpMethod.GET, "/profile-service/api/user/**").hasRole("user")
-                .pathMatchers(HttpMethod.PUT, "/profile-service/api/update/user/**").hasRole("user")
-                .pathMatchers(HttpMethod.DELETE, "/profile-service/api/delete/user/**").hasAnyRole("user", "admin")
+                .pathMatchers(HttpMethod.GET, "/profile-service-config/api/users").hasRole("admin")
+                .pathMatchers(HttpMethod.GET, "/profile-service-config/api/user/**").hasRole("user")
+                .pathMatchers(HttpMethod.PUT, "/profile-service-config/api/update/user/**").hasRole("user")
+                .pathMatchers(HttpMethod.DELETE, "/profile-service-config/api/delete/user/**").hasAnyRole("user", "admin")
 
                 // Product Service Authorization
-                .pathMatchers(HttpMethod.GET, "/product-service/api/public/products/**").hasAnyRole("user", "admin")
-                .pathMatchers(HttpMethod.GET, "/product-service/api/public/categories/**").hasAnyRole("user", "admin")
-                .pathMatchers(HttpMethod.POST, "/product-service/api/admin/categories/**").hasRole("admin")
-                .pathMatchers(HttpMethod.PUT, "/product-service/api/public/categories/**").hasRole("admin")
-                .pathMatchers(HttpMethod.DELETE, "/product-service/api/admin/categories/**").hasRole("admin")
-                .pathMatchers(HttpMethod.PUT, "/product-service/api/admin/product/**").hasRole("admin")
-                .pathMatchers(HttpMethod.DELETE, "/product-service/api/admin/products/**").hasRole("admin")
+                .pathMatchers(HttpMethod.GET, "/product-service-config/api/public/products/**").hasAnyRole("user", "admin")
+                .pathMatchers(HttpMethod.GET, "/product-service-config/api/public/categories/**").hasAnyRole("user", "admin")
+                .pathMatchers(HttpMethod.POST, "/product-service-config/api/admin/categories/**").hasRole("admin")
+                .pathMatchers(HttpMethod.PUT, "/product-service-config/api/public/categories/**").hasRole("admin")
+                .pathMatchers(HttpMethod.DELETE, "/product-service-config/api/admin/categories/**").hasRole("admin")
+                .pathMatchers(HttpMethod.PUT, "/product-service-config/api/admin/product/**").hasRole("admin")
+                .pathMatchers(HttpMethod.DELETE, "/product-service-config/api/admin/products/**").hasRole("admin")
 
                 // Cart Service Authorization
-                .pathMatchers(HttpMethod.GET, "/cart-service/api/carts/**").hasRole("user")
-                .pathMatchers(HttpMethod.GET, "/cart-service/api/test-auth").hasRole("user")
-                .pathMatchers(HttpMethod.POST, "/cart-service/api/carts/products/**").hasRole("user")
-                .pathMatchers(HttpMethod.PUT, "/cart-service/api/cart/products/**").hasRole("user")
-                .pathMatchers(HttpMethod.DELETE, "/cart-service/api/carts/**").hasRole("user")
+                .pathMatchers(HttpMethod.GET, "/cart-service-config/api/carts/**").hasRole("user")
+                .pathMatchers(HttpMethod.GET, "/cart-service-config/api/test-auth").hasRole("user")
+                .pathMatchers(HttpMethod.POST, "/cart-service-config/api/carts/products/**").hasRole("user")
+                .pathMatchers(HttpMethod.PUT, "/cart-service-config/api/cart/products/**").hasRole("user")
+                .pathMatchers(HttpMethod.DELETE, "/cart-service-config/api/carts/**").hasRole("user")
 
                 // Everything else requires authentication
                 .anyExchange().authenticated()

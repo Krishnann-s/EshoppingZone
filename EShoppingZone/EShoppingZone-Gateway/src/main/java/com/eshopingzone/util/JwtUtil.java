@@ -18,31 +18,33 @@ import io.jsonwebtoken.security.Keys;
 @Component
 public class JwtUtil {
 
-    private static final String SECRET_KEY = System.getenv("SECRET_KEY");
-    
-   
-	public static Claims validateToken(String token) {
-		return Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token).getBody();
-	}
+    private static final String SECRET_KEY = "a25b2770a7b1a7f9ee971bfe7e5a9eda12c3d3f022b1a5373d472afca0561316";
 
-	private static Key getSignKey() {
-		System.out.println("Secret_key" + SECRET_KEY);
-		byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
-		return Keys.hmacShaKeyFor(keyBytes);
-	}
+    public static Claims validateToken(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSignKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+    }
 
-	// Check if the token is expired
-	public static boolean isTokenExpired(Claims claims) {
-		return claims.getExpiration().before(new Date());
-	}
+    private static Key getSignKey() {
+        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        return Keys.hmacShaKeyFor(keyBytes);
+    }
 
-	// Extract username (subject) from token
-	public static String getEmail(Claims claims) {
-		return claims.getSubject();
-	}
+    // Check if the token is expired
+    public static boolean isTokenExpired(Claims claims) {
+        return claims.getExpiration().before(new Date());
+    }
 
-	// Extract roles from token
-	public static String getRoles(Claims claims) {
-		return claims.get("role", String.class);
-	}
+    // Extract username (subject) from token
+    public static String getEmail(Claims claims) {
+        return claims.getSubject();
+    }
+
+    // Extract roles from token
+    public static String getRoles(Claims claims) {
+        return claims.get("role", String.class);
+    }
 }
