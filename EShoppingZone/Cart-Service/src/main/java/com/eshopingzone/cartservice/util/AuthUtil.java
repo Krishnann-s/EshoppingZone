@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AuthUtil {
+	
     public String loggedInEmail() {
         Jwt jwt = (Jwt) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
         return jwt.getClaim("email"); // Extract email from JWT

@@ -1,10 +1,7 @@
 package com.eshopingzone.config;
 
-import java.security.Key;
 import java.util.Arrays;
 
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -17,14 +14,9 @@ import org.springframework.security.config.annotation.web.reactive.EnableWebFlux
 import org.springframework.security.config.web.server.SecurityWebFiltersOrder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.oauth2.jwt.JwtDecoders;
-import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
-import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
 
 import com.eshopingzone.filter.JwtAuthenticationFilter;
 
-import io.jsonwebtoken.io.Decoders;
-import io.jsonwebtoken.security.Keys;
 
 @Configuration
 @EnableWebFluxSecurity
