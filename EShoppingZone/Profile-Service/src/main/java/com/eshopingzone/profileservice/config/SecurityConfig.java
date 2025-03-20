@@ -28,16 +28,18 @@ public class SecurityConfig {
 
 	@Bean
 	public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-		http.csrf().disable().authorizeHttpRequests().requestMatchers("/**").permitAll()
-				.and().oauth2Login(oauth2 -> oauth2.defaultSuccessUrl("http://localhost:3000/products", true));
+		http.csrf().disable()
+				.authorizeHttpRequests(auth -> auth.requestMatchers("/**").permitAll());
+
 		return http.build();
 	}
-	
+
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration config) throws Exception {
 		return config.getAuthenticationManager();
 	}
-	
+
+	@Bean
 	public AuthenticationProvider authenticationProvider() {
 		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 		authProvider.setUserDetailsService(userDetailService());
