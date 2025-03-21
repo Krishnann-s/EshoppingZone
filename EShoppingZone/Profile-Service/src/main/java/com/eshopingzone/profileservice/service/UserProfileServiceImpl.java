@@ -33,9 +33,13 @@ public class UserProfileServiceImpl implements UserProfileService {
 
 	@Override
 	public UserProfile loginProfile(LoginDto loginDto) {
+        System.out.println("Before findByEmail: userRepo = " + userRepo);
+        if (userRepo == null) {
+            throw new IllegalStateException("userRepo is null");
+        }
 		UserProfile user = userRepo.findByEmail(loginDto.getEmail()).orElseThrow(
 				() -> new ResourceNotFoundException("Email id: " + loginDto.getEmail() + " is not found."));
-
+	     System.out.println("After findByEmail: user = " + user);
 		if (passwordEncoder.matches(loginDto.getPassword(), user.getPassword())) {
 			return user;
 		} else {

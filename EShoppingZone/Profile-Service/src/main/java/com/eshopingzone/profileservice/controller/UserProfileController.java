@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eshopingzone.profileservice.Dto.LoginDto;
@@ -24,7 +23,6 @@ import com.eshopingzone.profileservice.Dto.ResponseDto;
 import com.eshopingzone.profileservice.exception.ResourceNotFoundException;
 import com.eshopingzone.profileservice.model.Address;
 import com.eshopingzone.profileservice.model.UserProfile;
-import com.eshopingzone.profileservice.repository.UserProfileRepository;
 import com.eshopingzone.profileservice.service.UserProfileService;
 
 import jakarta.validation.Valid;
@@ -36,8 +34,6 @@ public class UserProfileController {
 	@Autowired
 	private UserProfileService userService;
 
-	@Autowired
-	private UserProfileRepository userRepo;
 
 	@Autowired
 	private AuthenticationManager authManager;
@@ -67,12 +63,13 @@ public class UserProfileController {
 	// Login User
 	@PostMapping("/user/login")
 	public ResponseDto login(@RequestBody LoginDto loginDto) {
+
 		Authentication authenticate = authManager
 				.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
 		
 		if (authenticate.isAuthenticated()) {
-			UserProfile user = userRepo.findByEmail(loginDto.getEmail()).orElseThrow(
-					() -> new ResourceNotFoundException("User with email id: " + loginDto.getEmail() + " not found"));
+			
+			UserProfile user = userService.loginProfile(loginDto);
 			
 			String token = userService.generateToken(user.getProfileId() + "",user.getEmail(), user.getRole());
 			

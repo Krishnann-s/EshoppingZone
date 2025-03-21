@@ -3,13 +3,9 @@ package com.eshopingzone.util;
 import java.security.Key;
 import java.util.Date;
 
-import org.springframework.context.annotation.Bean;
-import org.springframework.security.oauth2.jwt.NimbusReactiveJwtDecoder;
-import org.springframework.security.oauth2.jwt.ReactiveJwtDecoder;
+
 import org.springframework.stereotype.Component;
 
-
-import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
