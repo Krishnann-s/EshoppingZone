@@ -47,7 +47,7 @@ public class SecurityConfig {
                 .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                 // Public APIs
-                .pathMatchers("/profile-service/api/user/login", "/profile-service/api/user/register").permitAll()
+                .pathMatchers("/profile-service/api/user/login", "/profile-service/api/user/register", "/cart-service/api/test-auth").permitAll()
 
                 // Profile Service Authorization
                 .pathMatchers(HttpMethod.GET, "/profile-service/api/users").hasRole("admin")
@@ -67,7 +67,7 @@ public class SecurityConfig {
                 // Cart Service Authorization
                 .pathMatchers(HttpMethod.GET, "/cart-service/api/carts/**").hasRole("user")
                 .pathMatchers(HttpMethod.GET, "/cart-service/api/test-auth").hasRole("user")
-//                .pathMatchers(HttpMethod.POST, "/cart-service/api/carts/products/**").hasRole("user")
+                .pathMatchers(HttpMethod.POST, "/cart-service/api/**").hasAnyRole("user", "admin")
                 .pathMatchers(HttpMethod.PUT, "/cart-service/api/cart/products/**").hasRole("user")
                 .pathMatchers(HttpMethod.DELETE, "/cart-service/api/carts/**").hasRole("user")
 

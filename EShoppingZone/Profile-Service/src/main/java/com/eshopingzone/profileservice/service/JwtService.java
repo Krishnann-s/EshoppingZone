@@ -40,7 +40,8 @@ public class JwtService {
         Jwts.parserBuilder()
                 .setSigningKey(getSignKey())
                 .build()
-                .parseClaimsJws(token);
+                .parseClaimsJws(token)
+                .getBody();
     }
 
     private Key getSignKey() {

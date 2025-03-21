@@ -17,6 +17,7 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfig {
 
+	@Bean
 	public UserDetailsService userDetailService() {
 		return new UserProfileDetailsService();
 	}

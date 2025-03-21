@@ -57,11 +57,15 @@ public class JwtAuthenticationFilter implements WebFilter {
 
                     return chain.filter(exchange)
                             .contextWrite(ReactiveSecurityContextHolder.withAuthentication(auth));
+                } else {
+                    System.err.println("Token is expired");
                 }
             } catch (Exception e) {
                 System.err.println("JWT Authentication error: " + e.getMessage());
                 e.printStackTrace();
             }
+        } else {
+            System.err.println("Authorization header is missing or does not start with Bearer");
         }
 
         return chain.filter(exchange);

@@ -1,8 +1,6 @@
 package com.eshopingzone.profileservice.service;
 
 import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -16,14 +14,15 @@ import com.eshopingzone.profileservice.repository.UserProfileRepository;
 @Service
 public class UserProfileServiceImpl implements UserProfileService {
 
-	@Autowired
-	private UserProfileRepository userRepo;
-
-	@Autowired
-	private PasswordEncoder passwordEncoder;
+	private final UserProfileRepository userRepo;
+	private final PasswordEncoder passwordEncoder;
+	private final JwtService jwtService;
 	
-	@Autowired
-	private JwtService jwtService;
+	public UserProfileServiceImpl(UserProfileRepository userRepo, PasswordEncoder passwordEncoder, JwtService jwtService) {
+		this.userRepo = userRepo;
+		this.passwordEncoder = passwordEncoder;
+		this.jwtService = jwtService;
+	}
 
 	@Override
 	public UserProfile addNewCustomerProfile(UserProfile userProfile) {
