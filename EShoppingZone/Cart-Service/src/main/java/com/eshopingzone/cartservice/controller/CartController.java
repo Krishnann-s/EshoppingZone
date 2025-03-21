@@ -63,7 +63,7 @@ public class CartController {
 		return new ResponseEntity<>(cartDto, HttpStatus.OK);
 	}
 
-	// Update products in cart
+	// Update products in cart by passing operations
 	@PutMapping("/cart/products/{productId}/quantity/{operation}")
 	public ResponseEntity<CartDTO> updateCartProduct(@PathVariable Long productId, @PathVariable String operation) {
 
@@ -82,9 +82,13 @@ public class CartController {
 	}
 	
 	@GetMapping("/test-auth")
-	public ResponseEntity<String> testAuth(@RequestHeader HttpHeaders headers) {
-		System.out.println("Received Headers: " + headers);
-		return new ResponseEntity<String>("Auth Headers Received", HttpStatus.OK);
+	public ResponseEntity<String> testAuth() {
+	    try {
+	        Long userId = authUtil.loggedInUserId();
+	        return ResponseEntity.ok("Successfully parsed user ID: " + userId);
+	    } catch (Exception e) {
+	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+	            .body("Failed to parse token: " + e.getMessage());
+	    }
 	}
-	
 }
