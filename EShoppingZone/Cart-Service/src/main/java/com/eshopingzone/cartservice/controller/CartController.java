@@ -78,15 +78,4 @@ public class CartController {
 		String status = cartService.deleteProductFromCart(cartId, productId);
 		return new ResponseEntity<>(status, HttpStatus.OK);
 	}
-	
-	@GetMapping("/test-auth")
-	public ResponseEntity<String> testAuth() {
-	    try {
-	        Long userId = authUtil.loggedInUserId();
-	        return ResponseEntity.ok("Successfully parsed user ID: " + userId);
-	    } catch (Exception e) {
-	        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-	            .body("Failed to parse token: " + e.getMessage());
-	    }
-	}
 }
