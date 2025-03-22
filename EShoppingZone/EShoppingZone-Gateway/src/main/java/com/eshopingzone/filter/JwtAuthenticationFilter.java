@@ -26,8 +26,13 @@ public class JwtAuthenticationFilter implements WebFilter {
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
+        String path = request.getURI().getPath();
 
-        if (request.getMethod() == HttpMethod.OPTIONS) {
+        // Skip JWT validation for public paths and OPTIONS requests
+        if (request.getMethod() == HttpMethod.OPTIONS || 
+            path.startsWith("/profile-service/api/user/login") || 
+            path.startsWith("/profile-service/api/user/register") || 
+            path.startsWith("/product-service/api/public/products")) {
             return chain.filter(exchange);
         }
 
@@ -57,10 +62,9 @@ public class JwtAuthenticationFilter implements WebFilter {
                 System.err.println("JWT Authentication error: " + e.getMessage());
                 e.printStackTrace();
             }
-        } else {
-            System.err.println("Authorization header is missing or does not start with Bearer");
         }
 
+        // Continue the chain without authentication for requests without a valid token
         return chain.filter(exchange);
     }
 }

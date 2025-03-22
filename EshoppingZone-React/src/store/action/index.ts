@@ -1,8 +1,9 @@
-import api from "../../api/api";
+// import axios from "axios";
+import { product_api } from "../../api/api";
 
 export const fetchProducts = () => async (dispatch) => {
   try {
-    const { data } = await api.get("/public/products");
+    const { data } = await product_api.get("/public/products?sortBy=productId");
     dispatch({
       type: "FETCH_PRODUCTS",
       payload: data.content,

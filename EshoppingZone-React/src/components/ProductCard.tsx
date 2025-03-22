@@ -7,7 +7,7 @@ import Box from "@mui/material/Box";
 import ProductViewModel from "./ProductViewModal";
 
 const ProductCart = ({
-  title,
+  productName,
   price,
   description,
   category,
@@ -26,8 +26,8 @@ const ProductCart = ({
     }, 2000);
   };
 
-  const handleProductView = (product) => {
-    setSelectedViewProduct(product);
+  const handleProductView = (products) => {
+    setSelectedViewProduct(products);
     setOpenProductViewModal(true);
   };
 
@@ -35,14 +35,20 @@ const ProductCart = ({
     <div className="rounded-lg shadow-xl overflow-hidden transition-shadow duration-300 bg-white">
       <div
         onClick={() => {
-          handleProductView({ title, price, description, category, image });
+          handleProductView({
+            productName,
+            price,
+            description,
+            category,
+            image,
+          });
         }}
         className="w-full overflow-hidden aspect-[3/2]"
       >
         <img
           className="w-full h-full cursor-pointer transition-transform duration-300 transform hover:scale-105"
           src={image}
-          alt={title}
+          alt={productName}
         />
       </div>
       <div className="p-4">
@@ -50,7 +56,7 @@ const ProductCart = ({
           className="text-lg mb-2 font-semibold cursor-pointer"
           onClick={() => {
             handleProductView({
-              title,
+              productName,
               price,
               description,
               category,
@@ -59,7 +65,7 @@ const ProductCart = ({
             });
           }}
         >
-          {title}
+          {productName}
         </h2>
         <div className="min-h-20 max-h-20">
           <p className="text-gray-600 text-sm">{description}</p>

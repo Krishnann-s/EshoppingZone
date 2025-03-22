@@ -47,7 +47,7 @@ public class SecurityConfig {
                 .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                 // Public APIs
-                .pathMatchers("/profile-service/api/user/login", "/profile-service/api/user/register", "/cart-service/api/test-auth").permitAll()
+                .pathMatchers("/profile-service/api/user/login", "/profile-service/api/user/register", "/product-service/api/public/products/**").permitAll()
 
                 // Profile Service Authorization
                 .pathMatchers(HttpMethod.GET, "/profile-service/api/users").hasRole("admin")
@@ -56,7 +56,7 @@ public class SecurityConfig {
                 .pathMatchers(HttpMethod.DELETE, "/profile-service/api/delete/user/**").hasAnyRole("user", "admin")
 
                 // Product Service Authorization
-                .pathMatchers(HttpMethod.GET, "/product-service/api/public/products/**").hasAnyRole("user", "admin")
+//                .pathMatchers(HttpMethod.GET, "/product-service/api/public/products/**").hasAnyRole("user", "admin")
                 .pathMatchers(HttpMethod.GET, "/product-service/api/public/categories/**").hasAnyRole("user", "admin")
                 .pathMatchers(HttpMethod.POST, "/product-service/api/admin/categories/**").hasRole("admin")
                 .pathMatchers(HttpMethod.PUT, "/product-service/api/public/categories/**").hasRole("admin")
