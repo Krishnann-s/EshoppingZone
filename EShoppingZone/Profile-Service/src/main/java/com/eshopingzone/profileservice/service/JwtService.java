@@ -7,7 +7,6 @@ import java.util.Map;
 
 import org.springframework.stereotype.Component;
 
-import io.github.cdimascio.dotenv.Dotenv;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;

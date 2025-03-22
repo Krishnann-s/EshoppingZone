@@ -42,15 +42,8 @@ public class JwtAuthenticationFilter implements WebFilter {
                     String username = JwtUtil.getEmail(claims);
                     String role = JwtUtil.getRoles(claims);
 
-                    // Debug logging
-                    System.out.println("Token validated successfully");
-                    System.out.println("Username: " + username);
-                    System.out.println("Role from token: " + role);
-
                     List<SimpleGrantedAuthority> authorities = new ArrayList<>();
                     authorities.add(new SimpleGrantedAuthority(role));
-
-                    System.out.println("Granted Authorities: " + authorities);
 
                     UsernamePasswordAuthenticationToken auth =
                             new UsernamePasswordAuthenticationToken(username, null, authorities);
