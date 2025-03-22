@@ -15,7 +15,6 @@ import org.springframework.security.web.SecurityFilterChain;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 
-
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
