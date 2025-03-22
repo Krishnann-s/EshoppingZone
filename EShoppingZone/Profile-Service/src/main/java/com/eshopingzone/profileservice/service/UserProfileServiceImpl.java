@@ -97,7 +97,7 @@ public class UserProfileServiceImpl implements UserProfileService {
 	}
 
 	@Override
-	public int getUserIdByEmail(String email) {
+	public Long getProfileIdByEmail(String email) {
 		return userRepo.findByEmail(email).get().getProfileId();
 	}
 }

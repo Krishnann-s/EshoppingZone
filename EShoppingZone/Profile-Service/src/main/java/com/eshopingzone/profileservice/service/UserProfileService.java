@@ -16,5 +16,5 @@ public interface UserProfileService {
 	void deleteProfile(int id);
 	String generateToken(String userId, String email, String role);
 	void validateToken(String token);
-	int getUserIdByEmail(String email);
+	Long getProfileIdByEmail(String email);
 }

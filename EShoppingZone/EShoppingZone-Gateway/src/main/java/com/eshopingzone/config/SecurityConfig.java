@@ -69,7 +69,10 @@ public class SecurityConfig {
                 .pathMatchers(HttpMethod.POST, "/cart-service/api/**").hasAnyRole("user", "admin") // Authorization for adding products to cart
                 .pathMatchers(HttpMethod.PUT, "/cart-service/api/cart/products/**").hasRole("user") // Authorization for updating products in cart
                 .pathMatchers(HttpMethod.DELETE, "/cart-service/api/carts/**").hasRole("user") // Authorization for deleting products in Cart
-
+                
+                // Order Service Authorization
+                .pathMatchers(HttpMethod.POST, "/order-service/api/order/users/payments/**").hasRole("user")
+                
                 // Everything else requires authentication
                 .anyExchange().authenticated()
             )

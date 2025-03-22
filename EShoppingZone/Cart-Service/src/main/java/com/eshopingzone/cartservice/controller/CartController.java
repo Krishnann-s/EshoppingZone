@@ -1,9 +1,9 @@
 package com.eshopingzone.cartservice.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
-
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.eshopingzone.cartservice.client.UserClient;
+import com.eshopingzone.cartservice.exception.APIException;
 import com.eshopingzone.cartservice.model.Cart;
 import com.eshopingzone.cartservice.payload.CartDTO;
 import com.eshopingzone.cartservice.repository.CartRepository;
@@ -29,6 +31,9 @@ public class CartController {
 
 	@Autowired
 	private CartRepository cartRepo;
+	
+	@Autowired
+	private UserClient userClient;
 
 	@Autowired
 	private AuthUtil authUtil;
@@ -77,5 +82,32 @@ public class CartController {
 														@PathVariable Long productId) {
 		String status = cartService.deleteProductFromCart(cartId, productId);
 		return new ResponseEntity<>(status, HttpStatus.OK);
+	}
+	
+	// Delete Products in cart by email
+	@DeleteMapping("/carts/user/{email}/products")
+	public ResponseEntity<String> deleteProductsForUserByEmail(@PathVariable String email) {
+
+	    String status = cartService.deleteUserProductsByEmail(email);
+	    return new ResponseEntity<>(status, HttpStatus.OK);
+	}
+	
+	// Get cart By Email
+	@GetMapping("/carts/user/{email}")
+	public ResponseEntity<CartDTO> getCartByEmail(@PathVariable String email) {
+	    // Get profileId from user service
+	    Long profileId = userClient.getProfileIdByEmail(email);
+	    Cart cart = cartRepo.findCartByProfileId(profileId);
+	    
+	    if (cart == null) {
+	        throw new APIException("Cart not found for user: " + email);
+	    }
+	    
+	    // Call the service method instead of a non-existent controller method
+	    CartDTO cartDto = cartService.getCart(profileId, cart.getCartId());
+	    if (cartDto.getCartItems() == null) {
+	        cartDto.setCartItems(new ArrayList<>());
+	    }
+	    return new ResponseEntity<>(cartDto, HttpStatus.OK);
 	}
 }

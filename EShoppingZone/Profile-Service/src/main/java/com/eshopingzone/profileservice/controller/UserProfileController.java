@@ -119,6 +119,13 @@ public class UserProfileController {
 		UserProfile profiles = userService.getByProfileId(id);
 		return ResponseEntity.ok(profiles);
 	}
+	
+	// Get Profile Id by Email
+	@GetMapping("/users/profile/{email}")
+	public ResponseEntity<Long> getProfileIdByEmail(@PathVariable String email) {
+	    Long profileId = userService.getProfileIdByEmail(email);
+	    return new ResponseEntity<>(profileId, HttpStatus.OK);
+	}
 
 	// Update User
 	@PutMapping("/update/user/{id}")

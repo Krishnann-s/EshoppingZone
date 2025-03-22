@@ -42,7 +42,7 @@ public class UserProfile {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private int profileId;
+	private Long profileId;
 
 	@NotBlank
 	@Size(min = 5 , max = 25)

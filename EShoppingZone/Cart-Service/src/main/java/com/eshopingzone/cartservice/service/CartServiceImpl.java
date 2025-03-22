@@ -4,24 +4,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import com.eshopingzone.cartservice.client.ProductClient;
-import com.eshopingzone.cartservice.exception.APIException;
-import com.eshopingzone.cartservice.model.Cart;
-import com.eshopingzone.cartservice.payload.CartDTO;
-import com.eshopingzone.cartservice.payload.ProductDTO;
-import com.eshopingzone.cartservice.repository.CartItemRepository;
-import com.eshopingzone.cartservice.util.AuthUtil;
-
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.transaction.Transactional;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
+import com.eshopingzone.cartservice.client.ProductClient;
+import com.eshopingzone.cartservice.client.UserClient;
+import com.eshopingzone.cartservice.exception.APIException;
+import com.eshopingzone.cartservice.model.Cart;
 import com.eshopingzone.cartservice.model.CartItem;
+import com.eshopingzone.cartservice.payload.CartDTO;
+import com.eshopingzone.cartservice.payload.CartItemDTO;
+import com.eshopingzone.cartservice.payload.ProductDTO;
+import com.eshopingzone.cartservice.repository.CartItemRepository;
 import com.eshopingzone.cartservice.repository.CartRepository;
+import com.eshopingzone.cartservice.util.AuthUtil;
+
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.transaction.Transactional;
 
 @Service
 public class CartServiceImpl implements CartService {
@@ -40,6 +41,9 @@ public class CartServiceImpl implements CartService {
 
 	@Autowired
 	private ProductClient productClient;
+	
+	@Autowired
+	private UserClient userClient;
 
 	@Autowired
 	private HttpServletRequest request;
@@ -188,7 +192,17 @@ public class CartServiceImpl implements CartService {
 		}
 
 		CartDTO cartDto = modelMapper.map(cart, CartDTO.class);
-
+		
+		if (cartDto.getCartItems() == null) {
+	        cartDto.setCartItems(new ArrayList<>());
+	    }
+		
+		List<CartItemDTO> cartItemDTOs = cart.getCartItems().stream().map(cartItem -> {
+	        CartItemDTO cartItemDTO = modelMapper.map(cartItem, CartItemDTO.class);
+	        // Set additional properties if needed
+	        return cartItemDTO;
+	    }).collect(Collectors.toList());
+		
 		// Map CartItems to ProductDTOs
 		List<ProductDTO> productDTOs = cart.getCartItems().stream().map(cartItem -> {
 			ProductDTO productDTO = productClient.getProductById(cartItem.getProductId(),
@@ -311,5 +325,38 @@ public class CartServiceImpl implements CartService {
 	    cartRepo.save(cart);
 	    
 	    return "Product " + productName + " removed from cart.";
+	}
+
+	// Delete Products by Email
+	@Transactional
+	@Override
+	public String deleteUserProductsByEmail(String email) {
+	    // Query for the user's profile ID based on email
+	    Long profileId = userClient.getProfileIdByEmail(email);
+	    
+	    // Find the cart using the profile ID
+	    Cart cart = cartRepo.findCartByProfileId(profileId);
+	    
+	    if (cart == null) {
+	        throw new APIException("Cart not found for user: " + email);
+	    }
+	    
+	    // Get item count before clearing
+	    int itemCount = cart.getCartItems().size();
+	    
+	    // Clear the collection first (this maintains Hibernate session consistency)
+	    cart.getCartItems().clear();
+	    
+	    // Update total price
+	    cart.setTotalPrice(0.0);
+	    
+	    // Save the cart with cleared items
+	    cartRepo.save(cart);
+	    
+	    // Only after saving the cart with cleared collection, delete from the database
+	    // This is now a separate operation from the Hibernate session
+	    cartItemRepository.deleteByCart_CartId(cart.getCartId());
+	    
+	    return "Successfully removed " + itemCount + " items from cart for user: " + email;
 	}
 }

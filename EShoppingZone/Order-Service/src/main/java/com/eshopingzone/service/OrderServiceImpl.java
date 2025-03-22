@@ -6,6 +6,7 @@ import java.util.List;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.stereotype.Service;
 
 import com.eshopingzone.client.AddressClient;
@@ -23,9 +24,12 @@ import com.eshopingzone.repository.OrderItemRepository;
 import com.eshopingzone.repository.OrderRepository;
 import com.eshopingzone.repository.PaymentRepository;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 
 @Service
+@Slf4j
 public class OrderServiceImpl implements OrderService{
 	
 	@Autowired
@@ -44,6 +48,9 @@ public class OrderServiceImpl implements OrderService{
 	private PaymentRepository paymentRepo;
 	
 	@Autowired
+	private HttpServletRequest request;
+	
+	@Autowired
 	private ModelMapper modelMapper;
 	
 	@Transactional
@@ -51,13 +58,21 @@ public class OrderServiceImpl implements OrderService{
 	public OrderDTO placeOrder(String emailId, Long addressId, String paymentMethod, String pgName, String pgPaymentId,
 			String pgStatus, String pgResponseMessage) {
 		
-		CartDTO cart = cartClient.getCartByEmail(emailId);
+		 String token = request.getHeader(HttpHeaders.AUTHORIZATION);
+		
+		// Fetch Cart details
+		CartDTO cart = cartClient.getCartByEmail(emailId, token);
 		if(cart == null || cart.getCartItems().isEmpty()) {
 			throw new ResourceNotFoundException("Cart is emtpy");
 		}
 		
+		// Fetch Address details
 		AddressDTO address = addressClient.getAddressById(addressId);
+		if(address == null) {
+            throw new ResourceNotFoundException("Address not found with ID: " + addressId);
+        }
 		
+		// Create Order
 		Order order = new Order();
 		order.setEmail(emailId);
 		order.setOrderDate(LocalDate.now());
@@ -65,18 +80,16 @@ public class OrderServiceImpl implements OrderService{
 		order.setOrderStatus("order Accepted");
 		order.setAddressId(addressId);
 		
+		// Create Payment
 		Payment payment = new Payment(paymentMethod, pgPaymentId, pgStatus, pgResponseMessage);
 		payment.setOrder(order);
 		payment = paymentRepo.save(payment);
 		order.setPayment(payment);
 		
 		Order savedOrder = orderRepo.save(order);
-		
-//		List<CartItem> cartItems = cart.getCartItems();
-//		if(cartItems.isEmpty()) {
-//			throw new ResourceNotFoundException("Cart is Empty");
-//		}
-		
+		log.info("Order created with Id: {}", savedOrder.getOrderId());
+
+		// Convert cart items to order items
 		List<OrderItem> orderItems = new ArrayList<>();
 		for(CartItemDTO cartItem : cart.getCartItems()) {
 			OrderItem orderItem = new OrderItem();
@@ -88,12 +101,16 @@ public class OrderServiceImpl implements OrderService{
 			orderItems.add(orderItem);
 		}
 		orderItems = orderItemRepo.saveAll(orderItems);
+		log.info("Saved {} order items", orderItems.size());
 		
-//		cart.getCartItems().forEach(item -> {
-//			int quantity = item.getQuantity();
-//			Product product = item.getProduct();
-//			cartService .deleteProductFromCart(cart.getCartId(), item.getProduct());
-//		});
+		// Clear Cart after successful order placement
+		try {
+		    cartClient.deleteProductsForUserByEmail(emailId, token);
+		    log.info("Cart cleared for user: {}", emailId);
+		} catch (Exception e) {
+		    log.error("Failed to clear cart for user: {}. Error: {}", emailId, e.getMessage());
+		    // We don't throw here as order is already placed
+		}
 		
 		OrderDTO orderDto = modelMapper.map(savedOrder, OrderDTO.class);
 		orderItems.forEach(item -> orderDto.getOrderItems().add(modelMapper.map(item, OrderItemDTO.class)));
