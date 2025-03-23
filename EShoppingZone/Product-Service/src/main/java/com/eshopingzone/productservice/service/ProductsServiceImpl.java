@@ -1,7 +1,7 @@
 package com.eshopingzone.productservice.service;
 
-import java.io.IOException;
 import java.util.List;
+
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -10,7 +10,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import com.eshopingzone.productservice.exception.APIException;
 import com.eshopingzone.productservice.exception.ResourceNotFoundException;
@@ -33,11 +32,20 @@ public class ProductsServiceImpl implements ProductsService {
 	@Autowired
 	private ModelMapper modelMapper;
 
-//	@Autowired
-//	private FileService fileService;
+	@Value("${image-service.url:http://image-service}")
+	private String imageServiceUrl;
 
-//	@Value("${project.image}")
-//	private String path;
+	// Helper method to map Product to ProductDTO with image URL
+	private ProductDTO mapToDTO(Products product) {
+		ProductDTO productDTO = modelMapper.map(product, ProductDTO.class);
+		
+		// Set image URL if imageId exists
+		if (product.getImageId() != null && !product.getImageId().isEmpty()) {
+			productDTO.setImageUrl(imageServiceUrl + "/api/" + product.getImageId());
+		}
+		
+		return productDTO;
+	}
 
 	@Override
 	public ProductDTO addProducts(Long categoryId, ProductDTO productDto) {
@@ -54,28 +62,28 @@ public class ProductsServiceImpl implements ProductsService {
 		}
 		if (isProductNotPresent) {
 			Products products = modelMapper.map(productDto, Products.class);
-			products.setImage("default.png");
 			products.setCategory(category);
 			double specialPrice = products.getPrice() - ((products.getDiscount() * 0.01) * products.getPrice());
 			products.setSpecialPrice(specialPrice);
 
 			Products savedProduct = prodRepo.save(products);
-			return modelMapper.map(savedProduct, ProductDTO.class);
+			return mapToDTO(savedProduct); // Use mapToDTO instead of direct mapping
 		} else {
 			throw new APIException("Product already exist!!");
 		}
-
 	}
 
 	@Override
 	public ProductResponse viewAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
-		
-		Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+
+		Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending()
+				: Sort.by(sortBy).descending();
 		Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
 		Page<Products> pageProducts = prodRepo.findAll(pageDetails);
-		
+
 		List<Products> products = pageProducts.getContent();
-		List<ProductDTO> productsDto = products.stream().map(product -> modelMapper.map(product, ProductDTO.class))
+		List<ProductDTO> productsDto = products.stream()
+				.map(this::mapToDTO) // Use mapToDTO for consistent image URL handling
 				.toList();
 
 		ProductResponse prodResponse = new ProductResponse();
@@ -89,17 +97,20 @@ public class ProductsServiceImpl implements ProductsService {
 	}
 
 	@Override
-	public ProductResponse searchByCategory(Long categoryId, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
-		
+	public ProductResponse searchByCategory(Long categoryId, Integer pageNumber, Integer pageSize, String sortBy,
+			String sortOrder) {
+
 		Category category = categoryRepo.findById(categoryId)
 				.orElseThrow(() -> new ResourceNotFoundException("Category", "categoryId", categoryId));
-		
-		Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+
+		Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending()
+				: Sort.by(sortBy).descending();
 		Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
 		Page<Products> pageProducts = prodRepo.findByCategoryOrderByPriceAsc(category, pageDetails);
-		
+
 		List<Products> products = pageProducts.getContent();
-		List<ProductDTO> productsDto = products.stream().map(product -> modelMapper.map(product, ProductDTO.class))
+		List<ProductDTO> productsDto = products.stream()
+				.map(this::mapToDTO) // Use mapToDTO for consistent image URL handling
 				.toList();
 
 		ProductResponse prodResponse = new ProductResponse();
@@ -113,14 +124,17 @@ public class ProductsServiceImpl implements ProductsService {
 	}
 
 	@Override
-	public ProductResponse searchProductsByKeyword(String keyword, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder) {
+	public ProductResponse searchProductsByKeyword(String keyword, Integer pageNumber, Integer pageSize, String sortBy,
+			String sortOrder) {
 
-		Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending() : Sort.by(sortBy).descending();
+		Sort sortByAndOrder = sortOrder.equalsIgnoreCase("asc") ? Sort.by(sortBy).ascending()
+				: Sort.by(sortBy).descending();
 		Pageable pageDetails = PageRequest.of(pageNumber, pageSize, sortByAndOrder);
 		Page<Products> pageProducts = prodRepo.findByProductNameLikeIgnoreCase('%' + keyword + '%', pageDetails);
-		
+
 		List<Products> products = pageProducts.getContent();
-		List<ProductDTO> productsDto = products.stream().map(product -> modelMapper.map(product, ProductDTO.class))
+		List<ProductDTO> productsDto = products.stream()
+				.map(this::mapToDTO) // Use mapToDTO for consistent image URL handling
 				.toList();
 
 		ProductResponse prodResponse = new ProductResponse();
@@ -138,7 +152,7 @@ public class ProductsServiceImpl implements ProductsService {
 	public ProductDTO viewProductsById(Long productId) {
 		Products prod = prodRepo.findById(productId)
 				.orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
-		return modelMapper.map(prod, ProductDTO.class);
+		return mapToDTO(prod); // Use mapToDTO instead of direct mapping
 	}
 
 	@Override
@@ -146,19 +160,27 @@ public class ProductsServiceImpl implements ProductsService {
 		Products existingProduct = prodRepo.findById(productId)
 				.orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
 
+		// Preserve imageId when updating other fields
+		String existingImageId = existingProduct.getImageId();
+		
 		Products products = modelMapper.map(productDto, Products.class);
 		existingProduct.setProductName(products.getProductName());
 		existingProduct.setDescription(products.getDescription());
 		existingProduct.setQuantity(products.getQuantity());
 		existingProduct.setPrice(products.getPrice());
 		existingProduct.setDiscount(products.getDiscount());
+		
+		// Keep existing imageId if not explicitly changed
+		if (existingImageId != null && !existingImageId.isEmpty()) {
+			existingProduct.setImageId(existingImageId);
+		}
 
-		double specialPrice = products.getPrice() - ((products.getDiscount() * 0.01) * products.getPrice());
-		products.setSpecialPrice(specialPrice);
+		double specialPrice = existingProduct.getPrice() - ((existingProduct.getDiscount() * 0.01) * existingProduct.getPrice());
+		existingProduct.setSpecialPrice(specialPrice);
 
 		Products savedProduct = prodRepo.save(existingProduct);
 
-		return modelMapper.map(savedProduct, ProductDTO.class);
+		return mapToDTO(savedProduct); // Use mapToDTO for consistent image URL handling
 	}
 
 	@Override
@@ -166,21 +188,29 @@ public class ProductsServiceImpl implements ProductsService {
 		Products product = prodRepo.findById(productId)
 				.orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
 
+		// Get the product DTO before deleting
+		ProductDTO productDTO = mapToDTO(product);
+		
 		prodRepo.delete(product);
-		return modelMapper.map(product, ProductDTO.class);
+		return productDTO;
 	}
 
-//	@Override
-//	public ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException {
-//		Products existingProduct = prodRepo.findById(productId)
-//				.orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
-//
-//		// upload image to server and get file name of uploaded image
-//		String fileName = fileService.uploadImage(path, image);
-//
-//		existingProduct.setImage(fileName);
-//		Products updatedProduct = prodRepo.save(existingProduct);
-//
-//		return modelMapper.map(updatedProduct, ProductDTO.class);
-//	}
+	@Override
+	public ProductDTO updateProductImageReference(Long productId, String imageId) {
+		Products existingProduct = prodRepo.findById(productId)
+				.orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+
+		existingProduct.setImageId(imageId);
+		Products updatedProduct = prodRepo.save(existingProduct);
+
+		return mapToDTO(updatedProduct); // Use mapToDTO for consistent image URL handling
+	}
+
+	@Override
+	public String getProductImageId(Long productId) {
+		Products product = prodRepo.findById(productId)
+				.orElseThrow(() -> new ResourceNotFoundException("Product", "productId", productId));
+
+		return product.getImageId();
+	}
 }

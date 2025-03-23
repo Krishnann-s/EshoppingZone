@@ -2,6 +2,7 @@ package com.eshopingzone.profileservice;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.ComponentScan;
 
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.annotations.info.License;
 
 @SpringBootApplication
+@EnableFeignClients
 @ComponentScan(basePackages = "com.eshopingzone.profileservice")
 @OpenAPIDefinition(
 		info = @Info(

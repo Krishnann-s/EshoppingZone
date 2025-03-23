@@ -19,7 +19,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"userName\": \"Spider\",\r\n    \"email\": \"spider@example.com\",\r\n    \"mobileNumber\": 9821758483,\r\n    \"dob\": \"2012-08-01\",\r\n    \"gender\": \"Male\",\r\n    \"role\": \"user\",\r\n    \"password\": \"spider12\",\r\n    \"address\": [\r\n        {\r\n            \"street\": \"456 big St\",\r\n            \"city\": \"chennai\",\r\n            \"state\": \"TamilNadu\",\r\n            \"country\": \"India\",\r\n            \"pincode\": \"600005\"\r\n        }\r\n    ]\r\n}",
+							"raw": "{\r\n    \"userName\": \"krishnan s\",\r\n    \"email\": \"krishnan@example.com\",\r\n    \"mobileNumber\": 8939764561,\r\n    \"dob\": \"2002-06-01\",\r\n    \"gender\": \"Male\",\r\n    \"role\": \"admin\",\r\n    \"password\": \"krishnans\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -27,14 +27,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8000/profile-service-config/api/user/register",
+							"raw": "http://localhost:8000/profile-service/api/user/register",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8000",
 							"path": [
-								"profile-service-config",
+								"profile-service",
 								"api",
 								"user",
 								"register"
@@ -61,14 +61,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8000/profile-service-config/api/user/login",
+							"raw": "http://localhost:8000/profile-service/api/user/login",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8000",
 							"path": [
-								"profile-service-config",
+								"profile-service",
 								"api",
 								"user",
 								"login"
@@ -104,16 +104,40 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8001/api/user/3",
+							"raw": "http://localhost:8000/profile-service/api/user/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8001",
+							"port": "8000",
 							"path": [
+								"profile-service",
 								"api",
 								"user",
-								"3"
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get user id by email",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/profile-service/api/users/profile/spider@example.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"profile-service",
+								"api",
+								"users",
+								"profile",
+								"spider@example.com"
 							]
 						}
 					},
@@ -171,6 +195,238 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "Upload Image for user",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/ks74/OneDrive - Capgemini/Pictures/krishnan-s.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/profile-service/api/users/1/profile-picture",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"profile-service",
+								"api",
+								"users",
+								"1",
+								"profile-picture"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get profile picture",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/profile-service/api/users/1/profile-picture",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"profile-service",
+								"api",
+								"users",
+								"1",
+								"profile-picture"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete use pfp",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/profile-service/api/users/1/profile-picture",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"profile-service",
+								"api",
+								"users",
+								"1",
+								"profile-picture"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Address-Service",
+			"item": [
+				{
+					"name": "Create Address",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"street\": \"New York Street\",\r\n    \"city\": \"New York City\",\r\n    \"state\": \"New Tork State\",\r\n    \"country\": \"New York\",\r\n    \"pincode\": \"102938\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/address-service/api/address",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"address-service",
+								"api",
+								"address"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all address",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/address-service/api/addresses",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"address-service",
+								"api",
+								"addresses"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get address by id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/address-service/api/address/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"address-service",
+								"api",
+								"address",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get address by user",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/address-service/api/user/address",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"address-service",
+								"api",
+								"user",
+								"address"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update address",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"street\": \"2nd cross\",\r\n    \"city\": \"Bengaluru\",\r\n    \"state\": \"Karnataka\",\r\n    \"country\": \"India\",\r\n    \"pincode\": \"560064\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/address-service/api/address/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"address-service",
+								"api",
+								"address",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete address by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/address-service/api/address/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"address-service",
+								"api",
+								"address",
+								"2"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -195,14 +451,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8000/product-service-config/api/public/products?sortBy=productId",
+							"raw": "http://localhost:8000/product-service/api/public/products?sortBy=productId",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8000",
 							"path": [
-								"product-service-config",
+								"product-service",
 								"api",
 								"public",
 								"products"
@@ -218,21 +474,213 @@
 					"response": []
 				},
 				{
+					"name": "Add Products by Category",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"productName\":\"ROG Strix G16 (2024) G614JIR-N4062WS\",\r\n    \"quantity\":30,\r\n    \"description\":\"Windows 11 Home NVIDIA® GeForce RTX™ 4070 Laptop GPU Intel® Core™ i9-14900HX Processor 16inch QHD+ (2560 x 1600,16:10 240Hz ROG Nebula Display 1TB M.2 NVMe™ PCIe® 4.0 SSD storage\",\r\n    \"price\":199990,\r\n    \"discount\":10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/product-service/api/admin/categories/1/product",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"product-service",
+								"api",
+								"admin",
+								"categories",
+								"1",
+								"product"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "upload product image",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "formdata",
+							"formdata": [
+								{
+									"key": "image",
+									"type": "file",
+									"src": "/C:/Users/ks74/OneDrive - Capgemini/Pictures/asus-rog.jpg"
+								}
+							]
+						},
+						"url": {
+							"raw": "http://localhost:8000/product-service/api/admin/product/2/image",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"product-service",
+								"api",
+								"admin",
+								"product",
+								"2",
+								"image"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get all products using keyword",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/product-service/api/public/products/keyword/lap?sortBy=productId",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"product-service",
+								"api",
+								"public",
+								"products",
+								"keyword",
+								"lap"
+							],
+							"query": [
+								{
+									"key": "sortBy",
+									"value": "productId"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get products by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/product-service/api/public/products/2",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"product-service",
+								"api",
+								"public",
+								"products",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update products by id",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"productName\":\"Asus Rog Strix gaming laptop\",\r\n    \"quantity\":30,\r\n    \"description\":\"Asus Laptop Intel i7-13650HX, RTX 4070\",\r\n    \"price\":149000,\r\n    \"discount\":10\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8002/api/admin/product/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8002",
+							"path": [
+								"api",
+								"admin",
+								"product",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete products by id",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8002/api/admin/products/1",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8002",
+							"path": [
+								"api",
+								"admin",
+								"products",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get product image",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/product-service/api/public/product/2/image",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"product-service",
+								"api",
+								"public",
+								"product",
+								"2",
+								"image"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Category-Service",
+			"item": [
+				{
 					"name": "get all Products by category",
 					"protocolProfileBehavior": {
 						"disableBodyPruning": true
 					},
 					"request": {
-						"auth": {
-							"type": "bearer",
-							"bearer": [
-								{
-									"key": "token",
-									"value": "",
-									"type": "string"
-								}
-							]
-						},
 						"method": "GET",
 						"header": [],
 						"body": {
@@ -245,13 +693,14 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8002/api/public/categories/1/products?sortBy=productId",
+							"raw": "http://localhost:8000/product-service/api/public/categories/1/products?sortBy=productId",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8002",
+							"port": "8000",
 							"path": [
+								"product-service",
 								"api",
 								"public",
 								"categories",
@@ -275,7 +724,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\r\n    \"categoryName\":\"DIY & Tools\"\r\n}",
+							"raw": "{\r\n    \"categoryName\":\"DIY and hardware\"\r\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -283,49 +732,17 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8002/api/public/categories",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8002",
-							"path": [
-								"api",
-								"public",
-								"categories"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Add Products by Category",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"productName\":\"Nerf Gun\",\r\n    \"quantity\":30,\r\n    \"description\":\"Nerf Gun with 30 Bullets\",\r\n    \"price\":4000,\r\n    \"discount\":15\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8000/product-service-config/api/admin/categories/2/product",
+							"raw": "http://localhost:8000/product-service/api/public/categories",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8000",
 							"path": [
-								"product-service-config",
+								"product-service",
 								"api",
-								"admin",
-								"categories",
-								"2",
-								"product"
+								"public",
+								"categories"
 							]
 						}
 					},
@@ -337,14 +754,14 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/product-service-config/api/public/categories?pageNumber=0",
+							"raw": "http://localhost:8000/product-service/api/public/categories?pageNumber=0",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8000",
 							"path": [
-								"product-service-config",
+								"product-service",
 								"api",
 								"public",
 								"categories"
@@ -411,132 +828,6 @@
 						}
 					},
 					"response": []
-				},
-				{
-					"name": "get all products using keyword",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8000/product-service/api/public/products/keyword/phone?sortBy=productId",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
-							"path": [
-								"product-service",
-								"api",
-								"public",
-								"products",
-								"keyword",
-								"phone"
-							],
-							"query": [
-								{
-									"key": "sortBy",
-									"value": "productId"
-								}
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Get products by ID",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8000/product-service-config/api/public/products/2",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8000",
-							"path": [
-								"product-service-config",
-								"api",
-								"public",
-								"products",
-								"2"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "update products by id",
-					"request": {
-						"method": "PUT",
-						"header": [],
-						"body": {
-							"mode": "raw",
-							"raw": "{\r\n    \"productName\":\"Asus Rog Strix gaming laptop\",\r\n    \"quantity\":30,\r\n    \"description\":\"Asus Laptop Intel i7-13650HX, RTX 4070\",\r\n    \"price\":149000,\r\n    \"discount\":10\r\n}",
-							"options": {
-								"raw": {
-									"language": "json"
-								}
-							}
-						},
-						"url": {
-							"raw": "http://localhost:8002/api/admin/product/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8002",
-							"path": [
-								"api",
-								"admin",
-								"product",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Delete products by id",
-					"request": {
-						"method": "DELETE",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8002/api/admin/products/1",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8002",
-							"path": [
-								"api",
-								"admin",
-								"products",
-								"1"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "Add products to Cart",
-					"request": {
-						"method": "POST",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8002/api/cart",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8002",
-							"path": [
-								"api",
-								"cart"
-							]
-						}
-					},
-					"response": []
 				}
 			]
 		},
@@ -544,21 +835,46 @@
 			"name": "Cart-Service",
 			"item": [
 				{
-					"name": "view cart",
+					"name": "get cart by id",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8000/cart-service-config/api/carts",
+							"raw": "http://localhost:8000/cart-service/api/carts/users/cart",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8000",
 							"path": [
-								"cart-service-config",
+								"cart-service",
 								"api",
-								"carts"
+								"carts",
+								"users",
+								"cart"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get cart by email",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/cart-service/api/carts/user/spider@example.com",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"cart-service",
+								"api",
+								"carts",
+								"user",
+								"spider@example.com"
 							]
 						}
 					},
@@ -579,62 +895,104 @@
 							}
 						},
 						"url": {
-							"raw": "http://localhost:8003/api/carts/products/1/quantity/2",
-							"protocol": "http",
-							"host": [
-								"localhost"
-							],
-							"port": "8003",
-							"path": [
-								"api",
-								"carts",
-								"products",
-								"1",
-								"quantity",
-								"2"
-							]
-						}
-					},
-					"response": []
-				},
-				{
-					"name": "checking auth",
-					"request": {
-						"method": "GET",
-						"header": [],
-						"url": {
-							"raw": "http://localhost:8000/cart-service-config/api/test-auth",
+							"raw": "http://localhost:8000/cart-service/api/carts/products/1/quantity/1",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
 							"port": "8000",
 							"path": [
-								"cart-service-config",
+								"cart-service",
 								"api",
-								"test-auth"
+								"carts",
+								"products",
+								"1",
+								"quantity",
+								"1"
 							]
 						}
 					},
 					"response": []
 				},
 				{
-					"name": "get cart by user id",
+					"name": "get all carts",
 					"request": {
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "http://localhost:8003/api/carts/users/cart",
+							"raw": "http://localhost:8000/cart-service/api/carts",
 							"protocol": "http",
 							"host": [
 								"localhost"
 							],
-							"port": "8003",
+							"port": "8000",
 							"path": [
+								"cart-service",
 								"api",
-								"carts",
+								"carts"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Products in Cart",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8000/cart-service/api/cart/products/2/quantity/add",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"cart-service",
+								"api",
+								"cart",
+								"products",
+								"2",
+								"quantity",
+								"add"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Order-Service",
+			"item": [
+				{
+					"name": "Place order",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"addressId\":1,\r\n    \"pgName\":\"Stripe\",\r\n    \"pgPaymentId\": \"aasvas\",\r\n    \"pgStatus\":\"success\",\r\n    \"pgResponseMessage\":\"Payment successful\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8000/order-service/api/order/users/payments/CARD",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8000",
+							"path": [
+								"order-service",
+								"api",
+								"order",
 								"users",
-								"cart"
+								"payments",
+								"CARD"
 							]
 						}
 					},
@@ -648,7 +1006,7 @@
 		"bearer": [
 			{
 				"key": "token",
-				"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUk9MRV91c2VyIiwidXNlcklkIjoiNCIsImVtYWlsIjoic3BpZGVyQGV4YW1wbGUuY29tIiwic3ViIjoic3BpZGVyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzQyNDY3MTU3LCJleHAiOjE3NDI0Njg5NTd9.gRl189m81_YSfxJtsviAAe2t28Qgi6pp6NUtAa923uI",
+				"value": "eyJhbGciOiJIUzI1NiJ9.eyJyb2xlIjoiUk9MRV91c2VyIiwidXNlcklkIjoiMSIsImVtYWlsIjoic3BpZGVyQGV4YW1wbGUuY29tIiwic3ViIjoic3BpZGVyQGV4YW1wbGUuY29tIiwiaWF0IjoxNzQyNzY1OTA2LCJleHAiOjE3NDI3Njk1MDZ9.MH_DxUFgYDcazL2NCLH2MZCpPBaYDW5V5b4kA-VRmqs",
 				"type": "string"
 			}
 		]

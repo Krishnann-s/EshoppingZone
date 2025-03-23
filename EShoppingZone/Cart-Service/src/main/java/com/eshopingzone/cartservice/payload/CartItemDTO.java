@@ -16,6 +16,7 @@ public class CartItemDTO {
 	private CartDTO cartDto;
 	@JsonIgnore
 	private ProductDTO productDto;
+	private Long productId;
 	private Integer quantity;
 	private Double discount;
 	private Double productPrice;

@@ -17,4 +17,6 @@ public interface UserProfileService {
 	String generateToken(String userId, String email, String role);
 	void validateToken(String token);
 	Long getProfileIdByEmail(String email);
+	UserProfile updateProfilePicture(Integer userId, String imageId);
+	String getProfilePictureId(Integer userId);
 }

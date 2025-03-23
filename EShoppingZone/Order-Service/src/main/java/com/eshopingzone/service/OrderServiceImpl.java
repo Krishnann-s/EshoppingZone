@@ -66,6 +66,19 @@ public class OrderServiceImpl implements OrderService{
 			throw new ResourceNotFoundException("Cart is emtpy");
 		}
 		
+		// Debug logging for cart items
+	    log.info("Cart items received from cart service:");
+	    for(CartItemDTO item : cart.getCartItems()) {
+	        log.info("Item - ProductId: {}, Name: {}, Quantity: {}, Price: {}", 
+	                item.getProductId(), item.getProductName(), item.getQuantity(), item.getProductPrice());
+	        
+	        // Additional check for null productId
+	        if(item.getProductId() == null) {
+	            log.error("Null productId found in cart item with name: {}", item.getProductName());
+	        }
+	    }
+
+		
 		// Fetch Address details
 		AddressDTO address = addressClient.getAddressById(addressId, request.getHeader(HttpHeaders.AUTHORIZATION));
 		if(address == null) {
@@ -81,7 +94,7 @@ public class OrderServiceImpl implements OrderService{
 		order.setAddressId(addressId);
 		
 		// Create Payment
-		Payment payment = new Payment(paymentMethod, pgPaymentId, pgStatus, pgResponseMessage);
+		Payment payment = new Payment(paymentMethod, pgPaymentId, pgStatus, pgResponseMessage, pgName);
 		payment.setOrder(order);
 		payment = paymentRepo.save(payment);
 		order.setPayment(payment);

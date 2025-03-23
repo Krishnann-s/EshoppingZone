@@ -1,23 +1,28 @@
 package com.eshopingzone.productservice.service;
 
-
-import java.io.IOException;
-import org.springframework.web.multipart.MultipartFile;
-
-import com.eshopingzone.productservice.model.Products;
 import com.eshopingzone.productservice.payload.ProductDTO;
 import com.eshopingzone.productservice.payload.ProductResponse;
-
 
 public interface ProductsService {
 
 	ProductDTO addProducts(Long categoryId, ProductDTO productDto);
+
 	ProductResponse viewAllProducts(Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
+
 	ProductDTO viewProductsById(Long id);
+
 	ProductDTO updateProducts(ProductDTO productDto, Long id);
+
 	ProductDTO deleteProducts(Long id);
-	ProductResponse searchByCategory(Long categoryId, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
-	ProductResponse searchProductsByKeyword(String keyword, Integer pageNumber, Integer pageSize, String sortBy, String sortOrder);
-//	ProductDTO updateProductImage(Long productId, MultipartFile image) throws IOException;
+
+	ProductResponse searchByCategory(Long categoryId, Integer pageNumber, Integer pageSize, String sortBy,
+			String sortOrder);
+
+	ProductResponse searchProductsByKeyword(String keyword, Integer pageNumber, Integer pageSize, String sortBy,
+			String sortOrder);
+
+	ProductDTO updateProductImageReference(Long productId, String imageId);
+
+	String getProductImageId(Long productId);
 
 }

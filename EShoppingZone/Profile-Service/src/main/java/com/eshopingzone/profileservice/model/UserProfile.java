@@ -62,6 +62,8 @@ public class UserProfile {
 	private LocalDate dateOfBirth;
 
 	private String gender;
+	
+	private String profilePictureId;
 
 	private String role;
 

@@ -33,7 +33,8 @@ public class JwtAuthenticationFilter implements WebFilter {
             path.startsWith("/profile-service/api/user/login") || 
             path.startsWith("/profile-service/api/user/register") || 
             path.startsWith("/product-service/api/public/products") ||
-        	path.startsWith("/address-service/api/address")) {
+        	path.startsWith("/address-service/api/address") ||
+        	path.startsWith("/profile-service/api/users/**")) {
             return chain.filter(exchange);
         }
 

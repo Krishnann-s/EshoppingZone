@@ -2,6 +2,7 @@ package com.eshopingzone.productservice.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,10 +16,11 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.eshopingzone.productservice.config.AppConstants;
-import com.eshopingzone.productservice.model.Products;
+import com.eshopingzone.productservice.payload.ImageResponse;
 import com.eshopingzone.productservice.payload.ProductDTO;
 import com.eshopingzone.productservice.payload.ProductResponse;
 import com.eshopingzone.productservice.proxy.CartClient;
+import com.eshopingzone.productservice.proxy.ImageClient;
 import com.eshopingzone.productservice.proxy.UserProfileClient;
 import com.eshopingzone.productservice.service.ProductsService;
 
@@ -36,6 +38,10 @@ public class ProductsController {
 
 	@Autowired
 	private UserProfileClient userProfileClient;
+	
+	@Autowired
+	private ImageClient imageClient;
+
 
 	// Add new Products
 	@PostMapping("/admin/categories/{categoryId}/product")
@@ -108,7 +114,7 @@ public class ProductsController {
 			@RequestParam int quantity) {
 		int userId = userProfileClient.getUserId(email);
 		ProductDTO product = prodService.viewProductsById(productId);
-		cartClient.addProductsToCart(userId, productId, product.getProductName(), product.getImage(),
+		cartClient.addProductsToCart(userId, productId, product.getProductName(), product.getImageId(),
 				product.getPrice(), quantity);
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
@@ -121,12 +127,49 @@ public class ProductsController {
 		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
-//	@PutMapping("/products/{productId}/image")
-//	public ResponseEntity<ProductDTO> updateProductImage(@PathVariable Long productId,
-//			@RequestParam("image") MultipartFile image) throws IOException {
-//
-//		ProductDTO updatedProduct = prodService.updateProductImage(productId, image);
-//
-//		return new ResponseEntity<ProductDTO>(updatedProduct, HttpStatus.OK);
-//	}
+	// Upload Product image
+	@PostMapping(value = "/admin/product/{productId}/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	public ResponseEntity<ProductDTO> uploadProductImage(
+	        @PathVariable Long productId,
+	        @RequestParam("image") MultipartFile image) {
+	    
+	    // First, upload image to image-service
+	    ResponseEntity<ImageResponse> imageResponse = imageClient.uploadImage(image, "product");
+	    
+	    // Get the image ID from the response
+	    String imageId = imageResponse.getBody().getId();
+	    
+	    // If you decide to store image dimensions, you could update your Products entity
+	    // to include width and height fields, and set them here
+	    
+	    // Update product with image reference
+	    ProductDTO updatedProduct = prodService.updateProductImageReference(productId, imageId);
+	    
+	    return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
+	}
+    
+    // Method to get product image
+    @GetMapping(value = "/public/product/{productId}/image", produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<byte[]> getProductImage(@PathVariable Long productId) {
+        // Get image ID from product
+        String imageId = prodService.getProductImageId(productId);
+        
+        // Get image data from image-service
+        return imageClient.getImage(imageId);
+    }
+    
+    // Method to delete product image
+    @DeleteMapping("/admin/product/{productId}/image")
+    public ResponseEntity<ProductDTO> deleteProductImage(@PathVariable Long productId) {
+        // Get image ID from product
+        String imageId = prodService.getProductImageId(productId);
+        
+        // Delete image from image-service
+        imageClient.deleteImage(imageId);
+        
+        // Update product to remove image reference
+        ProductDTO updatedProduct = prodService.updateProductImageReference(productId, null);
+        
+        return new ResponseEntity<>(updatedProduct, HttpStatus.OK);
+    }
 }

@@ -1,6 +1,7 @@
 package com.eshopingzone.profileservice.service;
 
 import java.util.List;
+
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -99,5 +100,22 @@ public class UserProfileServiceImpl implements UserProfileService {
 	@Override
 	public Long getProfileIdByEmail(String email) {
 		return userRepo.findByEmail(email).get().getProfileId();
+	}
+	
+	public UserProfile updateProfilePicture(Integer userId, String imageId) {
+	    UserProfile userProfile = userRepo.findById(userId)
+	            .orElseThrow(() -> new ResourceNotFoundException("User Profile not found"));
+	    
+	    userProfile.setProfilePictureId(imageId);
+	    UserProfile updatedProfile = userRepo.save(userProfile);
+	    
+	    return updatedProfile;
+	}
+
+	public String getProfilePictureId(Integer userId) {
+	    UserProfile userProfile = userRepo.findById(userId)
+	            .orElseThrow(() -> new ResourceNotFoundException("User Profile not found"));
+	    
+	    return userProfile.getProfilePictureId();
 	}
 }

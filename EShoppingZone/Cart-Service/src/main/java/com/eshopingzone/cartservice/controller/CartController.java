@@ -102,8 +102,7 @@ public class CartController {
 	    if (cart == null) {
 	        throw new APIException("Cart not found for user: " + email);
 	    }
-	    
-	    // Call the service method instead of a non-existent controller method
+
 	    CartDTO cartDto = cartService.getCart(profileId, cart.getCartId());
 	    if (cartDto.getCartItems() == null) {
 	        cartDto.setCartItems(new ArrayList<>());

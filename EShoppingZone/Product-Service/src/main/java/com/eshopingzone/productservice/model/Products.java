@@ -44,7 +44,7 @@ public class Products {
     private Integer quantity;
     
     @Column(columnDefinition = "LONGTEXT")
-    private String image;
+    private String imageId;
     
     @ManyToOne
     @JoinColumn(name = "category_id")
