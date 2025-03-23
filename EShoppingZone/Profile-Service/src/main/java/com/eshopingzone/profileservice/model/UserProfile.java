@@ -69,7 +69,4 @@ public class UserProfile {
 //	@Size(min = 8, max = 50, message = "Password must contain atleast 8 characters")
 	private String password;
 
-	@OneToMany(mappedBy = "userProfile" , cascade = {CascadeType.PERSIST, CascadeType.MERGE, }, orphanRemoval = true, fetch = FetchType.EAGER)
-	private List<Address> address;
-
 }

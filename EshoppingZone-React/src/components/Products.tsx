@@ -14,7 +14,7 @@ export default function Products() {
   }, [dispatch]);
 
   return (
-    <div className="lg:px-14 sm:px-8 px-4 py-14 2xl:w-[90%] 2xl:mx-auto bg-custom-background">
+    <div className="lg:px-14 sm:px-8 px-4 py-14 2xl:w-[90%] 2xl:mx-auto">
       {loading ? (
         <div className="flex justify-center mt-14">
           <p>Loading products...</p>

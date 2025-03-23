@@ -32,7 +32,8 @@ public class JwtAuthenticationFilter implements WebFilter {
         if (request.getMethod() == HttpMethod.OPTIONS || 
             path.startsWith("/profile-service/api/user/login") || 
             path.startsWith("/profile-service/api/user/register") || 
-            path.startsWith("/product-service/api/public/products")) {
+            path.startsWith("/product-service/api/public/products") ||
+        	path.startsWith("/address-service/api/address")) {
             return chain.filter(exchange);
         }
 

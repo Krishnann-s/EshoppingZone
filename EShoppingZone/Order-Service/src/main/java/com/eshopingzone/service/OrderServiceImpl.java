@@ -67,7 +67,7 @@ public class OrderServiceImpl implements OrderService{
 		}
 		
 		// Fetch Address details
-		AddressDTO address = addressClient.getAddressById(addressId);
+		AddressDTO address = addressClient.getAddressById(addressId, request.getHeader(HttpHeaders.AUTHORIZATION));
 		if(address == null) {
             throw new ResourceNotFoundException("Address not found with ID: " + addressId);
         }

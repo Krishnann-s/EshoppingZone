@@ -23,7 +23,6 @@ import com.eshopingzone.profileservice.Dto.LoginDto;
 import com.eshopingzone.profileservice.Dto.ProfileUpdate;
 import com.eshopingzone.profileservice.Dto.ResponseDto;
 import com.eshopingzone.profileservice.exception.ResourceNotFoundException;
-import com.eshopingzone.profileservice.model.Address;
 import com.eshopingzone.profileservice.model.UserProfile;
 import com.eshopingzone.profileservice.repository.UserProfileRepository;
 import com.eshopingzone.profileservice.service.JwtService;
@@ -57,11 +56,6 @@ public class UserProfileController {
 		try {
 			if (userProfile.getEmail() == null || userProfile.getEmail().isEmpty()) {
 				throw new ResourceNotFoundException("Email cannot be nul or empty");
-			}
-			if (userProfile.getAddress() != null) {
-				for (Address addr : userProfile.getAddress()) {
-					addr.setUserProfile(userProfile);
-				}
 			}
 
 			UserProfile newUser = userService.addNewCustomerProfile(userProfile);

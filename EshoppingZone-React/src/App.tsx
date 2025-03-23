@@ -2,9 +2,9 @@ import Products from "./components/Products";
 
 function App() {
   return (
-    <>
+    <div className="bg-custom-background">
       <Products />
-    </>
+    </div>
   );
 }
 

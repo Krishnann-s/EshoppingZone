@@ -47,13 +47,21 @@ public class SecurityConfig {
                 .pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
                 // Public APIs
-                .pathMatchers("/profile-service/api/user/login", "/profile-service/api/user/register", "/product-service/api/public/products/**").permitAll()
+                .pathMatchers("/profile-service/api/user/login", "/profile-service/api/user/register", "/product-service/api/public/products/**", "/address-service/api/address").permitAll()
 
                 // Profile Service Authorization
                 .pathMatchers(HttpMethod.GET, "/profile-service/api/users").hasRole("admin")
                 .pathMatchers(HttpMethod.GET, "/profile-service/api/user/**").hasRole("user")
                 .pathMatchers(HttpMethod.PUT, "/profile-service/api/update/user/**").hasRole("user")
                 .pathMatchers(HttpMethod.DELETE, "/profile-service/api/delete/user/**").hasAnyRole("user", "admin")
+                
+                // Address Service Authorization
+//                .pathMatchers(HttpMethod.POST, "/address-service/api/address").hasRole("user")
+                .pathMatchers(HttpMethod.GET, "/address-service/api/address/**").hasRole("user")
+                .pathMatchers(HttpMethod.GET, "/address-service/api/addresses").hasRole("admin")
+                .pathMatchers(HttpMethod.GET, "/address-service/api/user/address").hasRole("user")
+                .pathMatchers(HttpMethod.PUT, "/address-service/api/address/**").hasRole("user")
+                .pathMatchers(HttpMethod.DELETE, "/address-service/api/address/**").hasAnyRole("admind", "user")
 
                 // Product Service Authorization
 //                .pathMatchers(HttpMethod.GET, "/product-service/api/public/products/**").hasAnyRole("user", "admin")

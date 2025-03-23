@@ -1,4 +1,4 @@
-package com.eshopingzone.profileservice.controller;
+package com.eshoppingzone.address_service.controller;
 
 import java.util.List;
 
@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.eshopingzone.profileservice.Dto.AddressDTO;
-import com.eshopingzone.profileservice.model.UserProfile;
-import com.eshopingzone.profileservice.service.AddressService;
-import com.eshopingzone.profileservice.util.AuthUtil;
+import com.eshoppingzone.address_service.payload.AddressDTO;
+import com.eshoppingzone.address_service.service.AddressService;
+import com.eshoppingzone.address_service.util.AuthUtil;
 
 import jakarta.validation.Valid;
+
 @RestController
 @RequestMapping("/api")
 public class AddressController {
@@ -32,15 +32,16 @@ public class AddressController {
 	
 	@PostMapping("/address")
 	public ResponseEntity<AddressDTO> createAddress(@Valid @RequestBody AddressDTO addressDto) {
-		UserProfile user = authUtil.loggedInUser();
-		AddressDTO savedAddressDto = addressService.createAddress(addressDto, user);
+		Long userId = authUtil.loggedInUserId();
+		addressDto.setProfileId(userId);
+		AddressDTO savedAddressDto = addressService.createAddress(addressDto, userId);
 		
 		return new ResponseEntity<>(savedAddressDto, HttpStatus.CREATED);
 	}
 	
 	@GetMapping("/addresses")
 	public ResponseEntity<List<AddressDTO>> getAllAddress() {
-		List<AddressDTO> addressDtoList = addressService.getAllAddressess();
+		List<AddressDTO> addressDtoList = addressService.getAllAddresses();
 		
 		return new ResponseEntity<>(addressDtoList, HttpStatus.OK);
 	}
@@ -54,8 +55,8 @@ public class AddressController {
 	
 	@GetMapping("/user/address")
 	public ResponseEntity<List<AddressDTO>> getAddressesByUser() {
-		UserProfile user = authUtil.loggedInUser();
-		List<AddressDTO> addressDtoList = addressService.getAddressesByUser(user);
+		Long userId = authUtil.loggedInUserId();
+		List<AddressDTO> addressDtoList = addressService.getAddressesByUserId(userId);
 		
 		return new ResponseEntity<>(addressDtoList, HttpStatus.OK);
 	}
