@@ -11,7 +11,7 @@ const ProductCart = ({
   price,
   description,
   category,
-  image,
+  imageUrl, // Use imageUrl instead of image
   specialPrice,
 }) => {
   const [openProductViewModal, setOpenProductViewModal] = useState(false);
@@ -40,14 +40,14 @@ const ProductCart = ({
             price,
             description,
             category,
-            image,
+            imageUrl, // Use imageUrl here
           });
         }}
         className="w-full overflow-hidden aspect-[3/2]"
       >
         <img
           className="w-full h-full cursor-pointer transition-transform duration-300 transform hover:scale-105"
-          src={image}
+          src={imageUrl} // Use imageUrl here
           alt={productName}
         />
       </div>
@@ -60,7 +60,7 @@ const ProductCart = ({
               price,
               description,
               category,
-              image,
+              imageUrl, // Use imageUrl here
               specialPrice,
             });
           }}

@@ -41,7 +41,7 @@ public class ProductsServiceImpl implements ProductsService {
 		
 		// Set image URL if imageId exists
 		if (product.getImageId() != null && !product.getImageId().isEmpty()) {
-			productDTO.setImageUrl(imageServiceUrl + "/api/" + product.getImageId());
+			productDTO.setImageUrl(imageServiceUrl + "/api/public/product/" + product.getImageId() + "/image");
 		}
 		
 		return productDTO;
