@@ -86,7 +86,7 @@ public class SecurityConfig {
 
 						// Image Service Authorization
 						.pathMatchers(HttpMethod.POST, "/image-service/api/**").hasAnyRole("user", "admin")
-						.pathMatchers(HttpMethod.GET, "/image-service/api/**").hasAnyRole("user", "admin")
+						.pathMatchers(HttpMethod.GET, "/image-service/api/**").permitAll()
 						.pathMatchers(HttpMethod.DELETE, "/image-service/api/**").hasAnyRole("user", "admin")
 
 						// Everything else requires authentication

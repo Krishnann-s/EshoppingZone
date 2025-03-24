@@ -1,9 +1,9 @@
 import React, { useEffect } from "react";
 import Alert from "@mui/material/Alert";
-import ProductCart from "./ProductCard";
 import { AlertTitle } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../store/action";
+import ProductCard from "./ProductCard";
 
 export default function Products() {
   const { products, loading, error } = useSelector((state) => state.products);
@@ -31,7 +31,7 @@ export default function Products() {
           {products && products.length > 0 ? (
             <div className="pb-6 pt-14 grid 2xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-y-6 gap-x-6">
               {products.map((item, i) => (
-                <ProductCart key={i} {...item} />
+                <ProductCard key={i} {...item} />
               ))}
             </div>
           ) : (

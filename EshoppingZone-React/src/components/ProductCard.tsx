@@ -3,15 +3,14 @@ import { useState } from "react";
 import { FaCartShopping } from "react-icons/fa6";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-// import SaveIcon from "@mui/icons-material/Save";
 import ProductViewModel from "./ProductViewModal";
 
-const ProductCart = ({
+const ProductCard = ({
   productName,
   price,
   description,
   category,
-  imageUrl, // Use imageUrl instead of image
+  imageUrl,
   specialPrice,
 }) => {
   const [openProductViewModal, setOpenProductViewModal] = useState(false);
@@ -27,6 +26,7 @@ const ProductCart = ({
   };
 
   const handleProductView = (products) => {
+    console.log("Product being passed to modal:", products);
     setSelectedViewProduct(products);
     setOpenProductViewModal(true);
   };
@@ -40,14 +40,15 @@ const ProductCart = ({
             price,
             description,
             category,
-            imageUrl, // Use imageUrl here
+            imageUrl,
+            specialPrice // Use imageUrl here
           });
         }}
         className="w-full overflow-hidden aspect-[3/2]"
       >
         <img
           className="w-full h-full cursor-pointer transition-transform duration-300 transform hover:scale-105"
-          src={imageUrl} // Use imageUrl here
+          src={`${import.meta.env.VITE_BACK_END_URL}/image-service/api/${imageUrl.split("/").pop()}`}
           alt={productName}
         />
       </div>
@@ -118,4 +119,4 @@ const ProductCart = ({
   );
 };
 
-export default ProductCart;
+export default ProductCard;
