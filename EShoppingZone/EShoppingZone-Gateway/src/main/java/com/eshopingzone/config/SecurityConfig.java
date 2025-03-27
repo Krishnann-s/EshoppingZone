@@ -91,7 +91,6 @@ public class SecurityConfig {
 
 						// Everything else requires authentication
 						.anyExchange().authenticated())
-//            .oauth2ResourceServer(oauth2 -> oauth2.jwt())
 				.addFilterAt(filter, SecurityWebFiltersOrder.AUTHENTICATION).build();
 	}
 

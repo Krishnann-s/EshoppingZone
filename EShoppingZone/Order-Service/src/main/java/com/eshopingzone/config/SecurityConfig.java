@@ -19,7 +19,7 @@ import io.jsonwebtoken.security.Keys;
 @EnableWebSecurity
 public class SecurityConfig {
 
-    private String jwtSecret = "a25b2770a7b1a7f9ee971bfe7e5a9eda12c3d3f022b1a5373d472afca0561316";
+    private String jwtSecret = "${SECRET_KEY}";
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
