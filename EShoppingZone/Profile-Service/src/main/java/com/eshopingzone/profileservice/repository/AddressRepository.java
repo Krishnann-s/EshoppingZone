@@ -12,5 +12,5 @@ import com.eshopingzone.profileservice.model.UserProfile;
 @Repository
 public interface AddressRepository extends JpaRepository<Address, Long>{
 
-	List<Address> findByProfileId(UserProfile userId);
+	List<Address> findByUserId(UserProfile userId);
 }

@@ -3,15 +3,12 @@ package com.eshopingzone.profileservice.service;
 import java.util.List;
 
 import com.eshopingzone.profileservice.Dto.AddressDTO;
-import com.eshopingzone.profileservice.model.UserProfile;
-
 
 public interface AddressService {
-
-	AddressDTO createAddress(AddressDTO addressDto, UserProfile userId);
+    AddressDTO createAddress(AddressDTO addressDto, Long userId);
     List<AddressDTO> getAllAddresses();
     AddressDTO getAddressById(Long addressId);
-    List<AddressDTO> getAddressesByUserId(UserProfile userId);
+    List<AddressDTO> getAddressesByUserId(Long userId);
     AddressDTO updateAddressById(Long addressId, AddressDTO addressDto);
     String deleteAddress(Long addressId);
 }

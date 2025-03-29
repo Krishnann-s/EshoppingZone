@@ -1,12 +1,7 @@
 package com.eshopingzone.profileservice.model;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -46,7 +41,9 @@ public class Address {
 	@NotBlank
 	@Digits(integer = 6, fraction = 0, message = "Pincode must be a 6-Digit number")
 	private String pincode;
-	
-	@ManyToOne(cascade = {CascadeType.MERGE, CascadeType.PERSIST})
+
+	@JsonBackReference
+	@ManyToOne
+	@JoinColumn(name = "user_id")
 	private UserProfile userId;
 }

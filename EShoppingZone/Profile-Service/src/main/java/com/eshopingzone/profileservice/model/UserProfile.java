@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 
@@ -42,7 +43,7 @@ public class UserProfile {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long profileId;
+	private Long userId;
 
 	@NotBlank
 	@Size(min = 5 , max = 25)
@@ -70,8 +71,9 @@ public class UserProfile {
 	@Column(name = "password",nullable = false)
 //	@Size(min = 8, max = 50, message = "Password must contain atleast 8 characters")
 	private String password;
-	
-	@OneToMany(mappedBy = "address")
-	private Address address;
+
+	@JsonManagedReference
+	@OneToMany(mappedBy = "userId", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+	private List<Address> address;
 
 }

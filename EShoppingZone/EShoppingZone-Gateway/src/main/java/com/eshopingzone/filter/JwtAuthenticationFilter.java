@@ -1,6 +1,7 @@
 package com.eshopingzone.filter;
 
 import io.jsonwebtoken.Claims;
+import org.springframework.beans.factory.annotation.Autowired;
 import reactor.core.publisher.Mono;
 
 import java.util.ArrayList;
@@ -23,18 +24,21 @@ import com.eshopingzone.util.JwtUtil;
 @Component
 public class JwtAuthenticationFilter implements WebFilter {
 
+    @Autowired
+    private JwtUtil jwtUtil;
+
     @Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         ServerHttpRequest request = exchange.getRequest();
         String path = request.getURI().getPath();
 
         // Skip JWT validation for public paths and OPTIONS requests
-        if (request.getMethod() == HttpMethod.OPTIONS || 
-            path.startsWith("/profile-service/api/user/login") || 
-            path.startsWith("/profile-service/api/user/register") || 
-            path.startsWith("/product-service/api/public/products") ||
-        	path.startsWith("/address-service/api/address") ||
-        	path.startsWith("/profile-service/api/users/**")) {
+        if (request.getMethod() == HttpMethod.OPTIONS ||
+                path.startsWith("/profile-service/api/user/login") ||
+                path.startsWith("/profile-service/api/user/register") ||
+                path.startsWith("/product-service/api/public/products") ||
+                path.startsWith("/address-service/api/address") ||
+                path.startsWith("/profile-service/api/users/**")) {
             return chain.filter(exchange);
         }
 
@@ -43,11 +47,11 @@ public class JwtAuthenticationFilter implements WebFilter {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
             try {
-                Claims claims = JwtUtil.validateToken(token);
+                Claims claims = jwtUtil.validateToken(token);
 
-                if (!JwtUtil.isTokenExpired(claims)) {
-                    String username = JwtUtil.getEmail(claims);
-                    String role = JwtUtil.getRoles(claims);
+                if (!jwtUtil.isTokenExpired(claims)) {
+                    String username = jwtUtil.getEmail(claims);
+                    String role = jwtUtil.getRoles(claims);
 
                     List<SimpleGrantedAuthority> authorities = new ArrayList<>();
                     authorities.add(new SimpleGrantedAuthority(role));

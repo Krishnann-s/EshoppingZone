@@ -2,6 +2,8 @@ package com.eshopingzone.util;
 
 import java.security.Key;
 import java.util.Date;
+
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Claims;
@@ -11,16 +13,16 @@ import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtUtil {
-
-    private static final String SECRET_KEY = "${SECRET_KEY}";
+	@Value("${jwt.secret-key}")
+	private String secretKey;
     
    
-	public static Claims validateToken(String token) {
+	public Claims validateToken(String token) {
 		return Jwts.parserBuilder().setSigningKey(getSignKey()).build().parseClaimsJws(token).getBody();
 	}
 
-	private static Key getSignKey() {
-		byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+	private Key getSignKey() {
+		byte[] keyBytes = Decoders.BASE64.decode(secretKey);
 		return Keys.hmacShaKeyFor(keyBytes);
 	}
 

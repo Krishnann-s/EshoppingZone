@@ -61,7 +61,7 @@ public class SecurityConfig {
 						.pathMatchers(HttpMethod.GET, "/address-service/api/addresses").hasRole("admin")
 						.pathMatchers(HttpMethod.GET, "/address-service/api/user/address").hasRole("user")
 						.pathMatchers(HttpMethod.PUT, "/address-service/api/address/**").hasRole("user")
-						.pathMatchers(HttpMethod.DELETE, "/address-service/api/address/**").hasAnyRole("admind", "user")
+						.pathMatchers(HttpMethod.DELETE, "/address-service/api/address/**").hasAnyRole("admin", "user")
 
 						// Product Service Authorization
 						.pathMatchers(HttpMethod.GET, "/product-service/api/public/categories/**")

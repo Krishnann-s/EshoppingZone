@@ -5,6 +5,8 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.jsonwebtoken.Claims;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import io.jsonwebtoken.Jwts;
@@ -14,14 +16,18 @@ import io.jsonwebtoken.security.Keys;
 
 @Component
 public class JwtService {
+    // Fix the secret key issue - use @Value annotation
+    @Value("${jwt.secret-key}")
+    private String secretKey;
 
-    private static final String SECRET_KEY = "${SECRET_KEY}";
+    // Remove this line
+    // private static final String SECRET_KEY = "${SECRET_KEY}";
 
     public String generateToken(String userId, String email, String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("role", "ROLE_" + role);
-        claims.put("userId", userId); // Add userId to the claims
-        claims.put("email", email); // Add email to the claims
+        claims.put("userId", userId);
+        claims.put("email", email);
         return createToken(claims, email);
     }
 
@@ -35,8 +41,9 @@ public class JwtService {
                 .compact();
     }
 
-    public void validateToken(final String token) {
-        Jwts.parserBuilder()
+    // Change return type to Claims
+    public Claims validateToken(final String token) {
+        return Jwts.parserBuilder()
                 .setSigningKey(getSignKey())
                 .build()
                 .parseClaimsJws(token)
@@ -44,7 +51,7 @@ public class JwtService {
     }
 
     private Key getSignKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
+        byte[] keyBytes = Decoders.BASE64.decode(secretKey);
         return Keys.hmacShaKeyFor(keyBytes);
     }
 }

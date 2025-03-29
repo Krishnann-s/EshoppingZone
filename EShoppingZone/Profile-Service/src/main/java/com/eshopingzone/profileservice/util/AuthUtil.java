@@ -13,15 +13,15 @@ import com.eshopingzone.profileservice.repository.UserProfileRepository;
 public class AuthUtil {
 
     @Autowired
-    UserProfileRepository userRepository;
+    private UserProfileRepository userRepo;
 
-    public UserProfile loggedInUser(){
+    public Long loggedInUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        String email = authentication.getName();
 
-        return userRepository.findByUserName(authentication.getName())
-                .orElseThrow(() -> new ResourceNotFoundException("User Not Found with username: " + authentication.getName()));
+        UserProfile user = userRepo.findByEmail(email)
+                .orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
+        return user.getUserId();
     }
-
-
 }

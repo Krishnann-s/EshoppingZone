@@ -36,5 +36,5 @@ public class AddressDTO {
     @Digits(integer = 6, fraction = 0, message = "Pincode must be a 6-Digit number")
     private String pincode;
     
-    private UserProfile userId;
+    private Long userId;
 }

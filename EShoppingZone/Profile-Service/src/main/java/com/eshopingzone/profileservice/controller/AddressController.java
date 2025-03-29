@@ -27,53 +27,53 @@ public class AddressController {
 
 	@Autowired
 	private AddressService addressService;
-	
+
 	@Autowired
 	private AuthUtil authUtil;
-	
+
 	@PostMapping("/address")
 	public ResponseEntity<AddressDTO> createAddress(@Valid @RequestBody AddressDTO addressDto) {
-		UserProfile userId = authUtil.loggedInUser();
+		Long userId = authUtil.loggedInUser();
 		addressDto.setUserId(userId);
 		AddressDTO savedAddressDto = addressService.createAddress(addressDto, userId);
-		
+
 		return new ResponseEntity<>(savedAddressDto, HttpStatus.CREATED);
 	}
-	
+
 	@GetMapping("/addresses")
 	public ResponseEntity<List<AddressDTO>> getAllAddress() {
 		List<AddressDTO> addressDtoList = addressService.getAllAddresses();
-		
+
 		return new ResponseEntity<>(addressDtoList, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/address/{addressId}")
 	public ResponseEntity<AddressDTO> getAddressById(@PathVariable Long addressId) {
 		AddressDTO addressDto = addressService.getAddressById(addressId);
-		
+
 		return new ResponseEntity<>(addressDto, HttpStatus.OK);
 	}
-	
+
 	@GetMapping("/user/address")
 	public ResponseEntity<List<AddressDTO>> getAddressesByUser() {
-		UserProfile userId = authUtil.loggedInUser();
+		Long userId = authUtil.loggedInUser();
 		List<AddressDTO> addressDtoList = addressService.getAddressesByUserId(userId);
-		
+
 		return new ResponseEntity<>(addressDtoList, HttpStatus.OK);
 	}
-	
+
 	@PutMapping("/address/{addressId}")
-	public ResponseEntity<AddressDTO> updateAddressById(@PathVariable Long addressId, 
+	public ResponseEntity<AddressDTO> updateAddressById(@PathVariable Long addressId,
 			@RequestBody AddressDTO addressDto) {
 		AddressDTO updatedAddressDto = addressService.updateAddressById(addressId, addressDto);
-		
+
 		return new ResponseEntity<>(updatedAddressDto, HttpStatus.OK);
 	}
-	
+
 	@DeleteMapping("/address/{addressId}")
 	public ResponseEntity<String> deleteAddressById(@PathVariable Long addressId) {
 		String status = addressService.deleteAddress(addressId);
-		
+
 		return new ResponseEntity<>(status, HttpStatus.OK);
 	}
 }

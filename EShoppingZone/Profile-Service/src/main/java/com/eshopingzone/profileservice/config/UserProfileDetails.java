@@ -10,21 +10,21 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import com.eshopingzone.profileservice.model.UserProfile;
 
-public class UserProfileDetails implements UserDetails{
-	
+public class UserProfileDetails implements UserDetails {
+
 	private String email;
 	private String password;
 	private String role;
-	
-	public UserProfileDetails(UserProfile credentials) {
-		this.email = credentials.getEmail();
-		this.password = credentials.getPassword();
-		this.role = credentials.getRole();
+
+	public UserProfileDetails(UserProfile userProfile) {
+		this.email = userProfile.getEmail();
+		this.password = userProfile.getPassword();
+		this.role = userProfile.getRole();
 	}
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		List<SimpleGrantedAuthority> roles = Arrays.asList(new SimpleGrantedAuthority(role));
+		List<SimpleGrantedAuthority> roles = Arrays.asList(new SimpleGrantedAuthority("ROLE_" + role));
 		return roles;
 	}
 
@@ -37,25 +37,24 @@ public class UserProfileDetails implements UserDetails{
 	public String getUsername() {
 		return email;
 	}
-	
+
 	@Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
+	public boolean isAccountNonExpired() {
+		return true;
+	}
 
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
+	@Override
+	public boolean isAccountNonLocked() {
+		return true;
+	}
 
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
+	@Override
+	public boolean isCredentialsNonExpired() {
+		return true;
+	}
 
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
-
+	@Override
+	public boolean isEnabled() {
+		return true;
+	}
 }
