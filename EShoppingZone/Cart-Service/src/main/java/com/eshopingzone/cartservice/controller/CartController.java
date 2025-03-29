@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.eshopingzone.cartservice.client.UserClient;
-import com.eshopingzone.cartservice.exception.APIException;
+import com.eshopingzone.cartservice.exception.ResourceNotFoundException;
 import com.eshopingzone.cartservice.model.Cart;
 import com.eshopingzone.cartservice.payload.CartDTO;
 import com.eshopingzone.cartservice.repository.CartRepository;
@@ -100,7 +100,7 @@ public class CartController {
 	    Cart cart = cartRepo.findCartByProfileId(profileId);
 	    
 	    if (cart == null) {
-	        throw new APIException("Cart not found for user: " + email);
+	        throw new ResourceNotFoundException("Cart not found for user: " + email);
 	    }
 
 	    CartDTO cartDto = cartService.getCart(profileId, cart.getCartId());

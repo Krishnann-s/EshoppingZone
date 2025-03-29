@@ -1,5 +1,7 @@
 package com.eshopingzone.profileservice.Dto;
 
+import com.eshopingzone.profileservice.model.UserProfile;
+
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Size;
@@ -34,5 +36,5 @@ public class AddressDTO {
     @Digits(integer = 6, fraction = 0, message = "Pincode must be a 6-Digit number")
     private String pincode;
     
-    private Long userId;
+    private UserProfile userId;
 }

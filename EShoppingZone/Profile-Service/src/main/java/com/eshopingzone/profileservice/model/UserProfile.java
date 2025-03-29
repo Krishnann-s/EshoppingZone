@@ -70,5 +70,8 @@ public class UserProfile {
 	@Column(name = "password",nullable = false)
 //	@Size(min = 8, max = 50, message = "Password must contain atleast 8 characters")
 	private String password;
+	
+	@OneToMany(mappedBy = "address")
+	private Address address;
 
 }

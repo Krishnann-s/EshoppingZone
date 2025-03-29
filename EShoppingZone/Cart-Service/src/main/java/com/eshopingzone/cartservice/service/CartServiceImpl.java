@@ -11,7 +11,7 @@ import org.springframework.stereotype.Service;
 
 import com.eshopingzone.cartservice.client.ProductClient;
 import com.eshopingzone.cartservice.client.UserClient;
-import com.eshopingzone.cartservice.exception.APIException;
+import com.eshopingzone.cartservice.exception.ResourceNotFoundException;
 import com.eshopingzone.cartservice.model.Cart;
 import com.eshopingzone.cartservice.model.CartItem;
 import com.eshopingzone.cartservice.payload.CartDTO;
@@ -77,12 +77,12 @@ public class CartServiceImpl implements CartService {
 
 	    // Check if the Product added by the user is 0
 	    if (product.getQuantity() == 0) {
-	        throw new APIException(product.getProductName() + " is not available");
+	        throw new ResourceNotFoundException(product.getProductName() + " is not available");
 	    }
 	    
 	    // Check if Product quantity in database is greater than the user requested quantity
 	    if (product.getQuantity() < quantity) {
-	        throw new APIException("Please make an order of " + product.getProductName()
+	        throw new ResourceNotFoundException("Please make an order of " + product.getProductName()
 	                + " less than or equal to the quantity " + product.getQuantity() + ".");
 	    }
 
@@ -163,7 +163,7 @@ public class CartServiceImpl implements CartService {
 		List<Cart> carts = cartRepo.findAll();
 
 		if (carts.isEmpty()) {
-			throw new APIException("No Cart Exists.");
+			throw new ResourceNotFoundException("No Cart Exists.");
 		}
 
 		return carts.stream().map(cart -> {
@@ -188,7 +188,7 @@ public class CartServiceImpl implements CartService {
 		Cart cart = cartRepo.findCartByProfileIdAndCartId(profileId, cartId);
 
 		if (cart == null) {
-			throw new APIException("CartId not found");
+			throw new ResourceNotFoundException("CartId not found");
 		}
 
 		CartDTO cartDto = modelMapper.map(cart, CartDTO.class);
@@ -226,18 +226,18 @@ public class CartServiceImpl implements CartService {
 	    Cart userCart = cartRepo.findCartByProfileId(profileId);
 	    Long cartId = userCart.getCartId();
 
-	    Cart cart = cartRepo.findById(cartId).orElseThrow(() -> new APIException("Cart Id not found"));
+	    Cart cart = cartRepo.findById(cartId).orElseThrow(() -> new ResourceNotFoundException("Cart Id not found"));
 
 	    ProductDTO productDto = productClient.getProductById(productId, request.getHeader(HttpHeaders.AUTHORIZATION));
 
 	    if (productDto.getQuantity() == 0) {
-	        throw new APIException(productDto.getProductName() + " is not available.");
+	        throw new ResourceNotFoundException(productDto.getProductName() + " is not available.");
 	    }
 	    
 	    CartItem cartItem = cartItemRepository.findByProductIdAndCart_CartId(productId, cartId);
 
 	    if (cartItem == null) {
-	        throw new APIException("Product" + productDto.getProductName() + " not available in cart");
+	        throw new ResourceNotFoundException("Product" + productDto.getProductName() + " not available in cart");
 	    }
 
 	    int newQuantity = cartItem.getQuantity() + quantity;
@@ -247,7 +247,7 @@ public class CartServiceImpl implements CartService {
 	        deleteProductFromCart(cartId, productId);
 	        
 	        // Refresh the cart after deletion
-	        cart = cartRepo.findById(cartId).orElseThrow(() -> new APIException("Cart Id not found"));
+	        cart = cartRepo.findById(cartId).orElseThrow(() -> new ResourceNotFoundException("Cart Id not found"));
 	        
 	        // Map to DTO and return
 	        CartDTO cartDto = modelMapper.map(cart, CartDTO.class);
@@ -280,7 +280,7 @@ public class CartServiceImpl implements CartService {
 	        cartRepo.save(cart);
 	        
 	        // Refresh cart from database to ensure up-to-date state
-	        cart = cartRepo.findById(cartId).orElseThrow(() -> new APIException("Cart Id not found"));
+	        cart = cartRepo.findById(cartId).orElseThrow(() -> new ResourceNotFoundException("Cart Id not found"));
 	        
 	        // Map to DTO and return
 	        CartDTO cartDto = modelMapper.map(cart, CartDTO.class);
@@ -299,11 +299,11 @@ public class CartServiceImpl implements CartService {
 	@Transactional
 	@Override
 	public String deleteProductFromCart(Long cartId, Long productId) {
-	    Cart cart = cartRepo.findById(cartId).orElseThrow(() -> new APIException("Cart Id not found"));
+	    Cart cart = cartRepo.findById(cartId).orElseThrow(() -> new ResourceNotFoundException("Cart Id not found"));
 	    CartItem cartItem = cartItemRepository.findByProductIdAndCart_CartId(productId, cartId);
 
 	    if (cartItem == null) {
-	        throw new APIException("Cart Item is Null");
+	        throw new ResourceNotFoundException("Cart Item is Null");
 	    }
 
 	    // Get product name before deletion for message
@@ -338,7 +338,7 @@ public class CartServiceImpl implements CartService {
 	    Cart cart = cartRepo.findCartByProfileId(profileId);
 	    
 	    if (cart == null) {
-	        throw new APIException("Cart not found for user: " + email);
+	        throw new ResourceNotFoundException("Cart not found for user: " + email);
 	    }
 	    
 	    // Get item count before clearing
