@@ -21,7 +21,7 @@ public class OrderItem {
 	private Long orderItemId;
 	
 	private Long productId;
-	
+
 	@ManyToOne
 	@JoinColumn
 	private Order order;

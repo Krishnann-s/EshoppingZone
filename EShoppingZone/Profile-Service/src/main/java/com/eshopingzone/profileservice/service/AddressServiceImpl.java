@@ -28,20 +28,21 @@ public class AddressServiceImpl implements AddressService {
 
 	@Override
 	public AddressDTO createAddress(AddressDTO addressDto, Long userId) {
-		// Get the UserProfile entity
-		UserProfile user = userRepo.findById(userId)
-				.orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+		// Get the UserProfile entity if not already set
+		if (addressDto.getUserId() == null) {
+			UserProfile user = userRepo.findById(userId)
+					.orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
+			addressDto.setUserId(user);
+		}
 
 		// Map AddressDTO to Address entity
 		Address address = modelMapper.map(addressDto, Address.class);
-		address.setUserId(user);
 
 		// Save the address entity
 		Address savedAddress = addressRepo.save(address);
 
 		// Map the saved Address entity back to AddressDTO
 		AddressDTO savedDto = modelMapper.map(savedAddress, AddressDTO.class);
-		savedDto.setUserId(userId); // Set the user ID in the DTO
 
 		return savedDto;
 	}
@@ -53,9 +54,7 @@ public class AddressServiceImpl implements AddressService {
 		return addresses.stream()
 				.map(address -> {
 					AddressDTO dto = modelMapper.map(address, AddressDTO.class);
-					if (address.getUserId() != null) {
-						dto.setUserId(address.getUserId().getUserId());
-					}
+					// No need to set userId separately as it's already mapped correctly
 					return dto;
 				})
 				.collect(Collectors.toList());
@@ -66,11 +65,8 @@ public class AddressServiceImpl implements AddressService {
 		Address address = addressRepo.findById(addressId)
 				.orElseThrow(() -> new ResourceNotFoundException("Address with id: " + addressId + " not found."));
 
+		// Direct mapping should work now
 		AddressDTO dto = modelMapper.map(address, AddressDTO.class);
-		if (address.getUserId() != null) {
-			dto.setUserId(address.getUserId().getUserId());
-		}
-
 		return dto;
 	}
 
@@ -84,8 +80,8 @@ public class AddressServiceImpl implements AddressService {
 
 		return addresses.stream()
 				.map(address -> {
+					// Direct mapping should work now
 					AddressDTO dto = modelMapper.map(address, AddressDTO.class);
-					dto.setUserId(userId);
 					return dto;
 				})
 				.collect(Collectors.toList());
@@ -96,19 +92,23 @@ public class AddressServiceImpl implements AddressService {
 		Address addressFromDB = addressRepo.findById(addressId)
 				.orElseThrow(() -> new ResourceNotFoundException("Address with id: " + addressId + " not found."));
 
+		// Preserve the original userId
+		UserProfile originalUser = addressFromDB.getUserId();
+
+		// Update fields
 		addressFromDB.setCity(addressDto.getCity());
 		addressFromDB.setCountry(addressDto.getCountry());
 		addressFromDB.setPincode(addressDto.getPincode());
 		addressFromDB.setState(addressDto.getState());
 		addressFromDB.setStreet(addressDto.getStreet());
 
+		// Ensure userId is not changed
+		addressFromDB.setUserId(originalUser);
+
 		Address updatedAddress = addressRepo.save(addressFromDB);
 
+		// Direct mapping should work now
 		AddressDTO dto = modelMapper.map(updatedAddress, AddressDTO.class);
-		if (updatedAddress.getUserId() != null) {
-			dto.setUserId(updatedAddress.getUserId().getUserId());
-		}
-
 		return dto;
 	}
 

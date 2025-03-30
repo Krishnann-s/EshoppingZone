@@ -126,7 +126,7 @@ public class CartServiceImpl implements CartService {
 	    currentProductDto.setDiscount(product.getDiscount());
 	    currentProductDto.setSpecialPrice(product.getSpecialPrice());
 	    currentProductDto.setDescription(product.getDescription());
-	    currentProductDto.setImage(product.getImage());
+	    currentProductDto.setImageUrl(product.getImageUrl());
 	    
 	    // Set the quantity based on whether it's a new item or existing one
 	    if (existingCartItem != null) {
@@ -192,17 +192,25 @@ public class CartServiceImpl implements CartService {
 		}
 
 		CartDTO cartDto = modelMapper.map(cart, CartDTO.class);
-		
+
 		if (cartDto.getCartItems() == null) {
-	        cartDto.setCartItems(new ArrayList<>());
-	    }
-		
+			cartDto.setCartItems(new ArrayList<>());
+		}
+
 		List<CartItemDTO> cartItemDTOs = cart.getCartItems().stream().map(cartItem -> {
-	        CartItemDTO cartItemDTO = modelMapper.map(cartItem, CartItemDTO.class);
-	        // Set additional properties if needed
-	        return cartItemDTO;
-	    }).collect(Collectors.toList());
-		
+			CartItemDTO cartItemDTO = modelMapper.map(cartItem, CartItemDTO.class);
+			// Get product details from product client
+			ProductDTO productDTO = productClient.getProductById(cartItem.getProductId(),
+					request.getHeader(HttpHeaders.AUTHORIZATION));
+
+			// Set product name from product details
+			cartItemDTO.setProductName(productDTO.getProductName());
+			return cartItemDTO;
+		}).collect(Collectors.toList());
+
+		// Set the cartItems in the cartDto
+		cartDto.setCartItems(cartItemDTOs);
+
 		// Map CartItems to ProductDTOs
 		List<ProductDTO> productDTOs = cart.getCartItems().stream().map(cartItem -> {
 			ProductDTO productDTO = productClient.getProductById(cartItem.getProductId(),

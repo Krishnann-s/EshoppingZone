@@ -38,75 +38,45 @@ public class UserProfileServiceImpl implements UserProfileService {
 
 	@Override
 	public UserProfileDTO addNewCustomerProfile(UserProfileDTO userProfileDto) {
-		// Manual mapping from DTO to entity
-		UserProfile userProfile = new UserProfile();
-		userProfile.setUserName(userProfileDto.getUserName());
-		userProfile.setEmail(userProfileDto.getEmail());
-		userProfile.setMobileNumber(userProfileDto.getMobileNumber());
-		userProfile.setDateOfBirth(userProfileDto.getDateOfBirth());
-		userProfile.setGender(userProfileDto.getGender());
-		userProfile.setRole(userProfileDto.getRole());
-		userProfile.setProfilePictureId(userProfileDto.getProfilePictureId());
+		// Create a new UserProfile entity and map from DTO
+		UserProfile userProfile = modelMapper.map(userProfileDto, UserProfile.class);
 
-		// Encode password
+		// Encode the password
 		userProfile.setPassword(passwordEncoder.encode(userProfileDto.getPassword()));
 
-		// Initialize empty address list
-		userProfile.setAddress(new ArrayList<>());
+		// Initialize empty address list if null
+		if (userProfile.getAddress() == null) {
+			userProfile.setAddress(new ArrayList<>());
+		}
 
-		// Save user first to get the ID
+		// Save user to get the ID
 		UserProfile savedUser = userRepo.save(userProfile);
 
-		// Process addresses if they exist
+		// If addresses exist in the DTO, process them
 		if (userProfileDto.getAddress() != null && !userProfileDto.getAddress().isEmpty()) {
+			// Create a list to hold the address entities
 			List<Address> addresses = new ArrayList<>();
+
+			// For each address DTO, create an address entity
 			for (AddressDTO addressDto : userProfileDto.getAddress()) {
-				Address address = new Address();
-				address.setStreet(addressDto.getStreet());
-				address.setCity(addressDto.getCity());
-				address.setState(addressDto.getState());
-				address.setCountry(addressDto.getCountry());
-				address.setPincode(addressDto.getPincode());
+				// Map the DTO to an entity
+				Address address = modelMapper.map(addressDto, Address.class);
+				// Set the user reference
 				address.setUserId(savedUser);
+				// Add to the list
 				addresses.add(address);
 			}
+
+			// Set the addresses on the user and save again
 			savedUser.setAddress(addresses);
 			savedUser = userRepo.save(savedUser);
 		}
 
-		// Manual mapping from entity to DTO for response
-		UserProfileDTO responseDto = new UserProfileDTO();
-		responseDto.setUserId(savedUser.getUserId());
-		responseDto.setUserName(savedUser.getUserName());
-		responseDto.setEmail(savedUser.getEmail());
-		responseDto.setMobileNumber(savedUser.getMobileNumber());
-		responseDto.setDateOfBirth(savedUser.getDateOfBirth());
-		responseDto.setGender(savedUser.getGender());
-		responseDto.setRole(savedUser.getRole());
-		responseDto.setProfilePictureId(savedUser.getProfilePictureId());
-
-		// Map addresses to DTOs
-		if (savedUser.getAddress() != null) {
-			final Long userId = savedUser.getUserId(); // Make it final for lambda
-			List<AddressDTO> addressDtos = savedUser.getAddress().stream()
-					.map(address -> {
-						AddressDTO dto = new AddressDTO();
-						dto.setAddressId(address.getAddressId());
-						dto.setStreet(address.getStreet());
-						dto.setCity(address.getCity());
-						dto.setState(address.getState());
-						dto.setCountry(address.getCountry());
-						dto.setPincode(address.getPincode());
-						dto.setUserId(userId); // Use the final variable
-						return dto;
-					})
-					.collect(Collectors.toList());
-			responseDto.setAddress(addressDtos);
-		}
+		// Map the saved entity back to a DTO for the response
+		UserProfileDTO responseDto = modelMapper.map(savedUser, UserProfileDTO.class);
 
 		return responseDto;
 	}
-
 	@Override
 	public UserProfile loginProfile(LoginDto loginDto) {
 		UserProfile user = userRepo.findByEmail(loginDto.getEmail())

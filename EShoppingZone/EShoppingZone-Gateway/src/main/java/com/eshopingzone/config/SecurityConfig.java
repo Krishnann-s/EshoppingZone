@@ -57,11 +57,12 @@ public class SecurityConfig {
 						.hasAnyRole("user", "admin")
 
 						// Address Service Authorization
-						.pathMatchers(HttpMethod.GET, "/address-service/api/address/**").hasRole("user")
-						.pathMatchers(HttpMethod.GET, "/address-service/api/addresses").hasRole("admin")
-						.pathMatchers(HttpMethod.GET, "/address-service/api/user/address").hasRole("user")
-						.pathMatchers(HttpMethod.PUT, "/address-service/api/address/**").hasRole("user")
-						.pathMatchers(HttpMethod.DELETE, "/address-service/api/address/**").hasAnyRole("admin", "user")
+						.pathMatchers(HttpMethod.GET, "/profile-service/api/address/**").hasRole("user")
+						.pathMatchers(HttpMethod.POST, "/profile-service/api/**").hasRole("user")
+						.pathMatchers(HttpMethod.GET, "/profile-service/api/addresses").hasRole("admin")
+						.pathMatchers(HttpMethod.GET, "/profile-service/api/user/address").hasRole("user")
+						.pathMatchers(HttpMethod.PUT, "/profile-service/api/address/**").hasRole("user")
+						.pathMatchers(HttpMethod.DELETE, "/profile-service/api/address/**").hasAnyRole("admin", "user")
 
 						// Product Service Authorization
 						.pathMatchers(HttpMethod.GET, "/product-service/api/public/categories/**")
