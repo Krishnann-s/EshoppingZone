@@ -83,7 +83,7 @@ public class SecurityConfig {
 						.pathMatchers(HttpMethod.DELETE, "/cart-service/api/carts/**").hasRole("user") // Authorization for deleting products in Cart
 
 						// Order Service Authorization
-						.pathMatchers(HttpMethod.POST, "/order-service/api/order/users/payments/**").hasRole("user")
+						.pathMatchers(HttpMethod.POST, "/cart-service/api/order/users/payments/**").hasRole("user")
 
 						// Image Service Authorization
 						.pathMatchers(HttpMethod.POST, "/image-service/api/**").hasAnyRole("user", "admin")
