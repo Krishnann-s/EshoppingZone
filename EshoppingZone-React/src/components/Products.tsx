@@ -1,13 +1,17 @@
-import React, { useEffect } from "react";
+import { useEffect } from "react";
 import Alert from "@mui/material/Alert";
 import { AlertTitle } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../store/action";
 import ProductCard from "./ProductCard";
+import { RootState } from "../entity/types";
+import { AppDispatch } from "../store/reducers/store";
 
 export default function Products() {
-  const { products, loading, error } = useSelector((state) => state.products);
-  const dispatch = useDispatch();
+  const { products, loading, error } = useSelector(
+    (state: RootState) => state.products
+  );
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     dispatch(fetchProducts());

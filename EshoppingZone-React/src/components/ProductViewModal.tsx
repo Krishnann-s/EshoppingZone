@@ -7,31 +7,45 @@ import {
 import { useEffect, useState } from "react";
 import { Divider } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
+import { Product } from "../entity/types";
 
-export default function ProductViewModel({ open, setOpen, product }) {
+interface ProductViewModelProps {
+  open: boolean;
+  setOpen: (open: boolean) => void;
+  product: Product;
+}
+
+export default function ProductViewModel({
+  open,
+  setOpen,
+  product,
+}: ProductViewModelProps) {
   const [loading, setLoading] = useState(false);
 
-  const { productName, price, description, category, imageUrl, specialPrice } = product;
+  const { productName, price, description, category, imageUrl, specialPrice } =
+    product;
   // Format the image URL properly
-  const formattedImageUrl = imageUrl 
-    ? `${import.meta.env.VITE_BACK_END_URL}/image-service/api/${imageUrl.split("/").pop()}`
-    : '';
+  const formattedImageUrl = imageUrl
+    ? `${import.meta.env.VITE_BACK_END_URL}/image-service/api/${imageUrl
+        .split("/")
+        .pop()}`
+    : "";
 
-    useEffect(() => {
-      if (open) {
-        setLoading(true);
-        // Simulate loading time or actual image loading
-        const timer = setTimeout(() => {
-          setLoading(false);
-        }, 1000);
-        
-        return () => clearTimeout(timer);
-      }
-    }, [open]);
+  useEffect(() => {
+    if (open) {
+      setLoading(true);
+      // Simulate loading time or actual image loading
+      const timer = setTimeout(() => {
+        setLoading(false);
+      }, 1000);
 
-    const handleImageLoad = () => {
-      setLoading(false);
-    };
+      return () => clearTimeout(timer);
+    }
+  }, [open]);
+
+  const handleImageLoad = () => {
+    setLoading(false);
+  };
 
   console.log(product);
   return (
@@ -54,11 +68,15 @@ export default function ProductViewModel({ open, setOpen, product }) {
                   <CircularProgress color="primary" />
                 </div>
               )}
-              <img 
-                src={formattedImageUrl} 
-                alt={productName} 
+              <img
+                src={formattedImageUrl}
+                alt={productName}
                 onLoad={handleImageLoad}
-                className={loading ? "opacity-0" : "opacity-100 transition-opacity duration-300"}
+                className={
+                  loading
+                    ? "opacity-0"
+                    : "opacity-100 transition-opacity duration-300"
+                }
               />
             </div>
 

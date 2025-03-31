@@ -1,9 +1,10 @@
-import * as React from "react";
+// Project: e-commerce-frontend
 import { useState } from "react";
 import { FaCartShopping } from "react-icons/fa6";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import ProductViewModel from "./ProductViewModal";
+import { Product } from "../entity/types";
 
 const ProductCard = ({
   productName,
@@ -12,9 +13,10 @@ const ProductCard = ({
   category,
   imageUrl,
   specialPrice,
-}) => {
+}: Product) => {
   const [openProductViewModal, setOpenProductViewModal] = useState(false);
-  const [selectedViewProduct, setSelectedViewProduct] = useState("");
+  const [selectedViewProduct, setSelectedViewProduct] =
+    useState<Product | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleClick = () => {
@@ -25,7 +27,7 @@ const ProductCard = ({
     }, 2000);
   };
 
-  const handleProductView = (products) => {
+  const handleProductView = (products: Product) => {
     console.log("Product being passed to modal:", products);
     setSelectedViewProduct(products);
     setOpenProductViewModal(true);
@@ -115,7 +117,16 @@ const ProductCard = ({
       <ProductViewModel
         open={openProductViewModal}
         setOpen={setOpenProductViewModal}
-        product={selectedViewProduct}
+        product={
+          selectedViewProduct || {
+            productName: "",
+            price: 0,
+            description: "",
+            category: "",
+            imageUrl: "",
+            specialPrice: undefined,
+          }
+        }
       />
     </div>
   );

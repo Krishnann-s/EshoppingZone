@@ -1,4 +1,6 @@
-const initialState = {
+import { ProductAction, ProductState } from "../../entity/types";
+
+const initialState: ProductState = {
   products: null,
   categories: null,
   loading: false,
@@ -6,7 +8,7 @@ const initialState = {
   pagination: {},
 };
 
-export const productReducer = (state = initialState, action) => {
+export const productReducer = (state = initialState, action: ProductAction) => {
   switch (action.type) {
     case "FETCH_PRODUCTS_REQUEST":
       return {
