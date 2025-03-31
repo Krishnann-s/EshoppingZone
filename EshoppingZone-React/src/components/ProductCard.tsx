@@ -41,14 +41,16 @@ const ProductCard = ({
             description,
             category,
             imageUrl,
-            specialPrice // Use imageUrl here
+            specialPrice, // Use imageUrl here
           });
         }}
         className="w-full overflow-hidden aspect-[3/2]"
       >
         <img
           className="w-full h-full cursor-pointer transition-transform duration-300 transform hover:scale-105"
-          src={`${import.meta.env.VITE_BACK_END_URL}/image-service/api/${imageUrl.split("/").pop()}`}
+          src={`${
+            import.meta.env.VITE_BACK_END_URL
+          }/image-service/api/${imageUrl.split("/").pop()}`}
           alt={productName}
         />
       </div>
