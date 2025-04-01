@@ -6,9 +6,7 @@ import { ProductAction } from "../../entity/types";
 export const fetchProducts =
   () => async (dispatch: Dispatch<ProductAction>) => {
     try {
-      const { data } = await product_api.get(
-        "/public/products?sortBy=productId"
-      );
+      const { data } = await product_api.get("/public/products");
       dispatch({
         type: "FETCH_PRODUCTS",
         payload: data.content,

@@ -17,6 +17,7 @@ import com.eshopingzone.profileservice.Dto.LoginDto;
 import com.eshopingzone.profileservice.Dto.ProfileUpdate;
 import com.eshopingzone.profileservice.exception.ResourceNotFoundException;
 import com.eshopingzone.profileservice.model.UserProfile;
+import com.eshopingzone.profileservice.repository.AddressRepository;
 import com.eshopingzone.profileservice.repository.UserProfileRepository;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -30,53 +31,49 @@ public class UserProfileServiceImpl implements UserProfileService {
 	@Autowired
 	private ModelMapper modelMapper;
 
+	@Autowired
+	private AddressRepository addressRepo;
+
 	public UserProfileServiceImpl(UserProfileRepository userRepo, PasswordEncoder passwordEncoder, JwtService jwtService) {
 		this.userRepo = userRepo;
 		this.passwordEncoder = passwordEncoder;
 		this.jwtService = jwtService;
 	}
 
-	@Override
-	public UserProfileDTO addNewCustomerProfile(UserProfileDTO userProfileDto) {
-		// Create a new UserProfile entity and map from DTO
-		UserProfile userProfile = modelMapper.map(userProfileDto, UserProfile.class);
+	 @Override
+	    public UserProfileDTO addNewCustomerProfile(UserProfileDTO userProfileDto) {
+	        // Create a new UserProfile entity and map from DTO
+	        UserProfile userProfile = modelMapper.map(userProfileDto, UserProfile.class);
 
-		// Encode the password
-		userProfile.setPassword(passwordEncoder.encode(userProfileDto.getPassword()));
+	        // Encode the password
+	        userProfile.setPassword(passwordEncoder.encode(userProfileDto.getPassword()));
 
-		// Initialize empty address list if null
-		if (userProfile.getAddress() == null) {
-			userProfile.setAddress(new ArrayList<>());
-		}
+	        // Save user to get the ID
+	        UserProfile savedUser = userRepo.save(userProfile);
 
-		// Save user to get the ID
-		UserProfile savedUser = userRepo.save(userProfile);
+	        // If addresses exist in the DTO, process them
+	        if (userProfileDto.getAddress() != null && !userProfileDto.getAddress().isEmpty()) {
+	            // For each address DTO, create an address entity
+	            for (AddressDTO addressDto : userProfileDto.getAddress()) {
+	                // Map the DTO to an entity
+	                Address address = modelMapper.map(addressDto, Address.class);
+	                // Set the user reference
+	                address.setUserId(savedUser);
+	                // Save the address
+	                addressRepo.save(address);
+	            }
+	        }
 
-		// If addresses exist in the DTO, process them
-		if (userProfileDto.getAddress() != null && !userProfileDto.getAddress().isEmpty()) {
-			// Create a list to hold the address entities
-			List<Address> addresses = new ArrayList<>();
+	        // Fetch the saved user with addresses to ensure correct mapping
+	        savedUser = userRepo.findById(savedUser.getUserId()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
 
-			// For each address DTO, create an address entity
-			for (AddressDTO addressDto : userProfileDto.getAddress()) {
-				// Map the DTO to an entity
-				Address address = modelMapper.map(addressDto, Address.class);
-				// Set the user reference
-				address.setUserId(savedUser);
-				// Add to the list
-				addresses.add(address);
-			}
+	        // Map the saved entity back to a DTO for the response
+	        UserProfileDTO responseDto = modelMapper.map(savedUser, UserProfileDTO.class);
 
-			// Set the addresses on the user and save again
-			savedUser.setAddress(addresses);
-			savedUser = userRepo.save(savedUser);
-		}
-
-		// Map the saved entity back to a DTO for the response
-		UserProfileDTO responseDto = modelMapper.map(savedUser, UserProfileDTO.class);
-
-		return responseDto;
+	        return responseDto;
 	}
+	
+	// Login user
 	@Override
 	public UserProfile loginProfile(LoginDto loginDto) {
 		UserProfile user = userRepo.findByEmail(loginDto.getEmail())
