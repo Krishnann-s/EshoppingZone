@@ -2,8 +2,7 @@ package com.eshopingzone.profileservice.controller;
 
 import java.util.List;
 
-import com.eshopingzone.profileservice.exception.ResourceNotFoundException;
-import com.eshopingzone.profileservice.repository.UserProfileRepository;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -31,17 +30,14 @@ public class AddressController {
 	private AddressService addressService;
 
 	@Autowired
-	private UserProfileRepository userRepo;
-
-	@Autowired
 	private AuthUtil authUtil;
+    @Autowired
+    private ModelMapper modelMapper;
 
 	@PostMapping("/address")
 	public ResponseEntity<AddressDTO> createAddress(@Valid @RequestBody AddressDTO addressDto) {
 		Long userId = authUtil.loggedInUser();
-		UserProfile userProfileId = userRepo.findById(userId)
-				.orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
-		addressDto.setUserId(userProfileId);
+		addressDto.setUserId(userId);  // Set the userId directly
 		AddressDTO savedAddressDto = addressService.createAddress(addressDto, userId);
 
 		return new ResponseEntity<>(savedAddressDto, HttpStatus.CREATED);

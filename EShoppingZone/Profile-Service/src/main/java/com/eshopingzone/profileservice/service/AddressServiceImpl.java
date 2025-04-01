@@ -32,7 +32,7 @@ public class AddressServiceImpl implements AddressService {
 		if (addressDto.getUserId() == null) {
 			UserProfile user = userRepo.findById(userId)
 					.orElseThrow(() -> new ResourceNotFoundException("User not found with id: " + userId));
-			addressDto.setUserId(user);
+			addressDto.setUserId(userId);
 		}
 
 		// Map AddressDTO to Address entity

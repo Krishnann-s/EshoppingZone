@@ -40,37 +40,73 @@ public class UserProfileServiceImpl implements UserProfileService {
 		this.jwtService = jwtService;
 	}
 
-	 @Override
-	    public UserProfileDTO addNewCustomerProfile(UserProfileDTO userProfileDto) {
-	        // Create a new UserProfile entity and map from DTO
-	        UserProfile userProfile = modelMapper.map(userProfileDto, UserProfile.class);
+	@Override
+	public UserProfileDTO addNewCustomerProfile(UserProfileDTO userProfileDto) {
+		// Create a new UserProfile entity but DON'T map addresses yet
+		UserProfile userProfile = new UserProfile();
+		userProfile.setUserName(userProfileDto.getUserName());
+		userProfile.setEmail(userProfileDto.getEmail());
+		userProfile.setMobileNumber(userProfileDto.getMobileNumber());
+		userProfile.setDateOfBirth(userProfileDto.getDateOfBirth());
+		userProfile.setGender(userProfileDto.getGender());
+		userProfile.setRole(userProfileDto.getRole());
+		userProfile.setPassword(passwordEncoder.encode(userProfileDto.getPassword()));
 
-	        // Encode the password
-	        userProfile.setPassword(passwordEncoder.encode(userProfileDto.getPassword()));
+		// Save user to get the ID
+		UserProfile savedUser = userRepo.save(userProfile);
 
-	        // Save user to get the ID
-	        UserProfile savedUser = userRepo.save(userProfile);
+		// If addresses exist in the DTO, process them
+		if (userProfileDto.getAddress() != null && !userProfileDto.getAddress().isEmpty()) {
+			List<Address> addresses = new ArrayList<>();
+			for (AddressDTO addressDto : userProfileDto.getAddress()) {
+				// Create address entity manually
+				Address address = new Address();
+				address.setStreet(addressDto.getStreet());
+				address.setCity(addressDto.getCity());
+				address.setState(addressDto.getState());
+				address.setCountry(addressDto.getCountry());
+				address.setPincode(addressDto.getPincode());
+				address.setUserId(savedUser);
+				addresses.add(address);
+			}
+			addressRepo.saveAll(addresses);
+		}
 
-	        // If addresses exist in the DTO, process them
-	        if (userProfileDto.getAddress() != null && !userProfileDto.getAddress().isEmpty()) {
-	            // For each address DTO, create an address entity
-	            for (AddressDTO addressDto : userProfileDto.getAddress()) {
-	                // Map the DTO to an entity
-	                Address address = modelMapper.map(addressDto, Address.class);
-	                // Set the user reference
-	                address.setUserId(savedUser);
-	                // Save the address
-	                addressRepo.save(address);
-	            }
-	        }
+		// Explicitly fetch addresses for the user
+		List<Address> addresses = addressRepo.findByUserId(savedUser);
+		savedUser.setAddress(addresses);
 
-	        // Fetch the saved user with addresses to ensure correct mapping
-	        savedUser = userRepo.findById(savedUser.getUserId()).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+		// Create response DTO manually without using ModelMapper
+		UserProfileDTO responseDto = new UserProfileDTO();
+		responseDto.setUserId(savedUser.getUserId());
+		responseDto.setUserName(savedUser.getUserName());
+		responseDto.setEmail(savedUser.getEmail());
+		responseDto.setMobileNumber(savedUser.getMobileNumber());
+		responseDto.setDateOfBirth(savedUser.getDateOfBirth());
+		responseDto.setGender(savedUser.getGender());
+		responseDto.setRole(savedUser.getRole());
+		responseDto.setProfilePictureId(savedUser.getProfilePictureId());
 
-	        // Map the saved entity back to a DTO for the response
-	        UserProfileDTO responseDto = modelMapper.map(savedUser, UserProfileDTO.class);
+		// Map addresses manually
+		if (addresses != null && !addresses.isEmpty()) {
+			List<AddressDTO> addressDTOs = new ArrayList<>();
+			for (Address address : addresses) {
+				AddressDTO dto = new AddressDTO();
+				dto.setAddressId(address.getAddressId());
+				dto.setStreet(address.getStreet());
+				dto.setCity(address.getCity());
+				dto.setState(address.getState());
+				dto.setCountry(address.getCountry());
+				dto.setPincode(address.getPincode());
+				dto.setUserId(savedUser.getUserId());
+				addressDTOs.add(dto);
+			}
+			responseDto.setAddress(addressDTOs);
+		} else {
+			responseDto.setAddress(new ArrayList<>());
+		}
 
-	        return responseDto;
+		return responseDto;
 	}
 	
 	// Login user
