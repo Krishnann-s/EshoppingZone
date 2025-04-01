@@ -51,7 +51,7 @@ public class SecurityConfig {
 
 						// Profile Service Authorization
 						.pathMatchers(HttpMethod.GET, "/profile-service/api/users").hasRole("admin")
-						.pathMatchers(HttpMethod.GET, "/profile-service/api/user/**").hasRole("user")
+						.pathMatchers(HttpMethod.GET, "/profile-service/api/user/**").hasAnyRole("user", "admin")
 						.pathMatchers(HttpMethod.PUT, "/profile-service/api/update/user/**").hasRole("user")
 						.pathMatchers(HttpMethod.DELETE, "/profile-service/api/delete/user/**")
 						.hasAnyRole("user", "admin")

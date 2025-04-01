@@ -1,26 +1,14 @@
-import { ProductAction, ProductState } from "../../entity/types";
-
-const initialState: ProductState = {
+const initialState = {
   products: null,
   categories: null,
-  loading: false,
-  error: null,
   pagination: {},
 };
 
-export const productReducer = (state = initialState, action: ProductAction) => {
+export const productsReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "FETCH_PRODUCTS_REQUEST":
-      return {
-        ...state,
-        loading: true,
-        error: null,
-      };
     case "FETCH_PRODUCTS":
       return {
         ...state,
-        loading: false,
-        error: null,
         products: action.payload,
         pagination: {
           ...state.pagination,
@@ -31,12 +19,21 @@ export const productReducer = (state = initialState, action: ProductAction) => {
           lastPage: action.lastPage,
         },
       };
-    case "FETCH_PRODUCTS_ERROR":
+
+    case "FETCH_CATEGORIES":
       return {
         ...state,
-        loading: false,
-        error: action.payload,
+        categories: action.payload,
+        pagination: {
+          ...state.pagination,
+          pageNumber: action.pageNumber,
+          pageSize: action.pageSize,
+          totalElements: action.totalElements,
+          totalPages: action.totalPages,
+          lastPage: action.lastPage,
+        },
       };
+
     default:
       return state;
   }

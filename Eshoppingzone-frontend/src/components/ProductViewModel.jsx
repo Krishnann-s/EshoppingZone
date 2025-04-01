@@ -7,19 +7,8 @@ import {
 import { useEffect, useState } from "react";
 import { Divider } from "@mui/material";
 import CircularProgress from "@mui/material/CircularProgress";
-import { Product } from "../entity/types";
 
-interface ProductViewModelProps {
-  open: boolean;
-  setOpen: (open: boolean) => void;
-  product: Product;
-}
-
-export default function ProductViewModel({
-  open,
-  setOpen,
-  product,
-}: ProductViewModelProps) {
+export default function ProductViewModel({ open, setOpen, product }) {
   const [loading, setLoading] = useState(false);
 
   const { productName, price, description, category, imageUrl, specialPrice } =
