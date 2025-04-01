@@ -3,11 +3,13 @@ import Alert from "@mui/material/Alert";
 import { AlertTitle, Box, CircularProgress } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../store/action";
+import { FaExclamationTriangle } from "react-icons/fa";
 
 export default function Products() {
-  const { products, isLoading, errorMessage } = useSelector(
-    (state) => state.products
-  );
+  const products = useSelector((state) => state.products.products);
+  const isLoading = useSelector((state) => state.error.isLoading);
+  const errorMessage = useSelector((state) => state.error.errorMessage);
+
   const dispatch = useDispatch();
 
   useEffect(() => {
