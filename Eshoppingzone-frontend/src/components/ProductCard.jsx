@@ -3,7 +3,7 @@ import { useState } from "react";
 import { FaCartShopping } from "react-icons/fa6";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
-import ProductViewModel from "./ProductViewModal";
+import ProductViewModel from "./ProductViewModel";
 
 const ProductCard = ({
   productName,
@@ -101,7 +101,6 @@ const ProductCard = ({
                 my: 4,
                 borderRadius: "2rem", // equivalent to rounded-4xl
                 padding: "0.5rem 1rem", // equivalent to px-4 py-2
-                backgroundColor: "#ff5c5c",
                 "&:hover": {
                   backgroundColor: "#BE3144",
                 },

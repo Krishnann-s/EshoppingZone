@@ -4,6 +4,8 @@ import { AlertTitle, Box, CircularProgress } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../store/action";
 import { FaExclamationTriangle } from "react-icons/fa";
+import ProductCard from "./ProductCard";
+import Filter from "./Filter";
 
 export default function Products() {
   const products = useSelector((state) => state.products.products);
@@ -18,6 +20,7 @@ export default function Products() {
 
   return (
     <div className="lg:px-14 sm:px-8 px-4 py-14 2xl:w-[90%] 2xl:mx-auto">
+      <Filter />
       {isLoading ? (
         // Show CircularProgress when loading is true
         <div className="flex items-center justify-center min-h-screen bg-amber-50">

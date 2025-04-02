@@ -100,7 +100,7 @@ export default function ProductViewModel({ open, setOpen, product }) {
             <div className="px-6 py-4 flex justify-end gap-4">
               <button
                 onClick={() => setOpen(false)}
-                className="px-4 py-2 text-sm font-semibold text-banner-color4 cursor-pointer bg-banner-color6 rounded-4xl"
+                className="px-4 py-2 text-sm font-semibold text-banner-color4 cursor-pointer bg-amber-500 rounded-4xl"
               >
                 Close
               </button>

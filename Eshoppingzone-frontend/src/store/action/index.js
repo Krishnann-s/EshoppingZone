@@ -3,7 +3,7 @@ import { product_api } from "../../api/api";
 export const fetchProducts = (queryString) => async (dispatch) => {
   try {
     dispatch({ type: "IS_FETCHING" });
-    const { data } = await product_api.get(`/public/products?${queryString}`);
+    const { data } = await product_api.get(`/public/products?sortBy=productId`);
     dispatch({
       type: "FETCH_PRODUCTS",
       payload: data.content,
