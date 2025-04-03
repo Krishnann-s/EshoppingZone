@@ -1,7 +1,20 @@
 const initialState = {
   products: null,
   categories: [],
-  pagination: {},
+  pagination: {
+    pageNumber: 0,
+    pageSize: 4,
+    totalElements: 0,
+    totalPages: 1,
+    lastPage: true,
+  },
+  categoriesPagination: {
+    pageNumber: 0,
+    pageSize: 50,
+    totalElements: 0,
+    totalPages: 1,
+    lastPage: true,
+  },
 };
 
 export const productsReducer = (state = initialState, action) => {
@@ -11,7 +24,6 @@ export const productsReducer = (state = initialState, action) => {
         ...state,
         products: action.payload,
         pagination: {
-          ...state.pagination,
           pageNumber: action.pageNumber,
           pageSize: action.pageSize,
           totalElements: action.totalElements,
@@ -24,8 +36,8 @@ export const productsReducer = (state = initialState, action) => {
       return {
         ...state,
         categories: action.payload,
-        pagination: {
-          ...state.pagination,
+        categoriesPagination: {
+          // Store categories pagination separately
           pageNumber: action.pageNumber,
           pageSize: action.pageSize,
           totalElements: action.totalElements,

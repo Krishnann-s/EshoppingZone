@@ -1,8 +1,10 @@
 import { product_api } from "../../api/api";
 
+// index.js - fetchProducts action
 export const fetchProducts = (queryString) => async (dispatch) => {
   try {
     dispatch({ type: "IS_FETCHING" });
+
     const response = await product_api.get(`/public/products?${queryString}`);
 
     const { data } = response;
@@ -27,14 +29,12 @@ export const fetchProducts = (queryString) => async (dispatch) => {
     });
     dispatch({ type: "IS_SUCCESS" });
   } catch (error) {
-    console.error("Error fetching products:", error);
     dispatch({
       type: "IS_ERROR",
       payload: error?.response?.data?.message || "Failed to fetch products",
     });
   }
 };
-
 export const fetchCategories = () => async (dispatch) => {
   try {
     dispatch({ type: "CATEGORY_LOADER" });
@@ -48,7 +48,7 @@ export const fetchCategories = () => async (dispatch) => {
       totalPages: data.totalPages,
       lastPage: data.lastPage,
     });
-    dispatch({ type: "IS_ERROR" });
+    dispatch({ type: "CATEGORY_SUCCESS" }); // Change to CATEGORY_SUCCESS
   } catch (error) {
     console.log(error);
     dispatch({
