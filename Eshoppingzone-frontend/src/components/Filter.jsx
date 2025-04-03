@@ -10,18 +10,9 @@ import { useEffect, useState } from "react";
 import { FiArrowDown, FiArrowUp, FiRefreshCcw, FiSearch } from "react-icons/fi";
 import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
-function Filter() {
-  const categories = [
-    { categoryId: 1, categoryName: "Electronics" },
-    { categoryId: 2, categoryName: "Clothing" },
-    { categoryId: 3, categoryName: "Home Appliances" },
-    { categoryId: 4, categoryName: "Books" },
-    { categoryId: 5, categoryName: "Sports" },
-  ];
-
+function Filter({ categories }) {
   const [searchParams] = useSearchParams();
   const pathName = useLocation().pathname;
-  const params = new URLSearchParams(searchParams);
   const navigate = useNavigate();
 
   const [category, setCategory] = useState("all");
@@ -41,20 +32,24 @@ function Filter() {
   useEffect(() => {
     const handler = setTimeout(() => {
       if (searchTerm) {
-        searchParams.set("keyword", searchTerm);
+        const params = new URLSearchParams(searchParams);
+        params.set("keyword", searchTerm);
+        navigate(`${pathName}?${params.toString()}`);
       } else {
-        searchParams.delete("keyword");
+        const params = new URLSearchParams(searchParams);
+        params.delete("keyword");
+        navigate(`${pathName}?${params.toString()}`);
       }
-      navigate(`${pathName}?${searchParams.toString()}`);
     }, 500);
 
     return () => {
       clearTimeout(handler);
     };
-  }, [searchParams, searchTerm, navigate, pathName]);
+  }, [searchTerm, searchParams, navigate, pathName]);
 
   const handleCategoryChange = (e) => {
     const selectedCategory = e.target.value;
+    const params = new URLSearchParams(searchParams);
 
     if (selectedCategory === "all") {
       params.delete("category");
@@ -62,18 +57,20 @@ function Filter() {
       params.set("category", selectedCategory);
     }
     navigate(`${pathName}?${params}`);
-    setCategory(e.target.value);
+    setCategory(selectedCategory);
   };
+
   const toggleSortOrder = () => {
-    setSortOrder((prev) => {
-      const newOrder = prev === "asc" ? "desc" : "asc";
-      params.set("sortOrder", newOrder);
-      navigate(`${pathName}?${params}`);
-      return newOrder;
-    });
+    const newOrder = sortOrder === "asc" ? "desc" : "asc";
+    setSortOrder(newOrder);
+
+    const params = new URLSearchParams(searchParams);
+    params.set("sortOrder", newOrder);
+    navigate(`${pathName}?${params}`);
   };
+
   const handleClearFilter = () => {
-    navigate({ pathName: window.location.pathname });
+    navigate(pathName);
   };
 
   return (
@@ -96,7 +93,7 @@ function Filter() {
           size="small"
           className="text-amber-600 border border-amber-600"
         >
-          <InputLabel Id="category-select-label">Category</InputLabel>
+          <InputLabel id="category-select-label">Category</InputLabel>
           <Select
             labelId="category-select-label"
             value={category}
@@ -122,6 +119,7 @@ function Filter() {
             onClick={toggleSortOrder}
             variant="contained"
             className="flex items-center gap-2 h-10 bg-amber-600"
+            color="primary"
           >
             Sort by
             {sortOrder === "asc" ? (

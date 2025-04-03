@@ -3,7 +3,19 @@ import { product_api } from "../../api/api";
 export const fetchProducts = (queryString) => async (dispatch) => {
   try {
     dispatch({ type: "IS_FETCHING" });
-    const { data } = await product_api.get(`/public/products?sortBy=productId`);
+    const response = await product_api.get(`/public/products?${queryString}`);
+
+    const { data } = response;
+
+    if (!data || !data.content) {
+      console.error("Invalid data format received:", data);
+      dispatch({
+        type: "IS_ERROR",
+        payload: "Invalid data format received from API",
+      });
+      return;
+    }
+
     dispatch({
       type: "FETCH_PRODUCTS",
       payload: data.content,
@@ -15,7 +27,7 @@ export const fetchProducts = (queryString) => async (dispatch) => {
     });
     dispatch({ type: "IS_SUCCESS" });
   } catch (error) {
-    console.log(error);
+    console.error("Error fetching products:", error);
     dispatch({
       type: "IS_ERROR",
       payload: error?.response?.data?.message || "Failed to fetch products",
@@ -23,28 +35,28 @@ export const fetchProducts = (queryString) => async (dispatch) => {
   }
 };
 
-// export const fetchCategories = () => async (dispatch) => {
-//   try {
-//     dispatch({ type: "CATEGORY_LOADER" });
-//     const { data } = await api.get(`/public/categories`);
-//     dispatch({
-//       type: "FETCH_CATEGORIES",
-//       payload: data.content,
-//       pageNumber: data.pageNumber,
-//       pageSize: data.pageSize,
-//       totalElements: data.totalElements,
-//       totalPages: data.totalPages,
-//       lastPage: data.lastPage,
-//     });
-//     dispatch({ type: "IS_ERROR" });
-//   } catch (error) {
-//     console.log(error);
-//     dispatch({
-//       type: "IS_ERROR",
-//       payload: error?.response?.data?.message || "Failed to fetch categories",
-//     });
-//   }
-// };
+export const fetchCategories = () => async (dispatch) => {
+  try {
+    dispatch({ type: "CATEGORY_LOADER" });
+    const { data } = await product_api.get(`/public/categories`);
+    dispatch({
+      type: "FETCH_CATEGORIES",
+      payload: data.content,
+      pageNumber: data.pageNumber,
+      pageSize: data.pageSize,
+      totalElements: data.totalElements,
+      totalPages: data.totalPages,
+      lastPage: data.lastPage,
+    });
+    dispatch({ type: "IS_ERROR" });
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: "IS_ERROR",
+      payload: error?.response?.data?.message || "Failed to fetch categories",
+    });
+  }
+};
 
 // export const addToCart =
 //   (data, qty = 1, toast) =>

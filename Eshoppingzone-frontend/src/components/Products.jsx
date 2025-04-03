@@ -1,33 +1,39 @@
-import { useEffect } from "react";
-import Alert from "@mui/material/Alert";
-import { AlertTitle, Box, CircularProgress } from "@mui/material";
 import { useDispatch, useSelector } from "react-redux";
-import { fetchProducts } from "../store/action";
+import { fetchCategories } from "../store/action";
 import { FaExclamationTriangle } from "react-icons/fa";
 import ProductCard from "./ProductCard";
 import Filter from "./Filter";
+import useProductsFilter from "./useProductsFilter";
+import { useEffect } from "react";
+import {
+  getCategories,
+  getErrorMessage,
+  getIsLoading,
+  getPagination,
+  getProducts,
+} from "../store/selector";
+import Loader from "./Loader";
+import Paginations from "./Paginations";
 
 export default function Products() {
-  const products = useSelector((state) => state.products.products);
-  const isLoading = useSelector((state) => state.error.isLoading);
-  const errorMessage = useSelector((state) => state.error.errorMessage);
+  const products = useSelector(getProducts);
+  const categories = useSelector(getCategories);
+  const isLoading = useSelector(getIsLoading);
+  const errorMessage = useSelector(getErrorMessage);
+  const pagination = useSelector(getPagination);
 
   const dispatch = useDispatch();
+  useProductsFilter();
 
   useEffect(() => {
-    dispatch(fetchProducts());
+    dispatch(fetchCategories());
   }, [dispatch]);
 
   return (
-    <div className="lg:px-14 sm:px-8 px-4 py-14 2xl:w-[90%] 2xl:mx-auto">
-      <Filter />
+    <div className="lg:px-14 sm:px-8 px-4 py-14 2xl:w-[90%] 2xl:mx-auto bg-amber-50">
+      <Filter categories={categories} />
       {isLoading ? (
-        // Show CircularProgress when loading is true
-        <div className="flex items-center justify-center min-h-screen bg-amber-50">
-          <Box sx={{ display: "flex" }}>
-            <CircularProgress size="6rem" />
-          </Box>
-        </div>
+        <Loader text={"Loading Products ..."} />
       ) : errorMessage ? (
         <div className="flex justify-center items-center h-[200px]">
           <FaExclamationTriangle className="text-slate-800 text-3xl mr-2" />
@@ -41,12 +47,12 @@ export default function Products() {
             {products &&
               products.map((item, i) => <ProductCard key={i} {...item} />)}
           </div>
-          {/* <div className="flex justify-center pt-10">
+          <div className="flex justify-center pt-10">
             <Paginations
               numberOfPage={pagination?.totalPages}
               totalProducts={pagination?.totalElements}
             />
-          </div> */}
+          </div>
         </div>
       )}
     </div>

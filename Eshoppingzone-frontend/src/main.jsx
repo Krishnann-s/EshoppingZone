@@ -5,13 +5,19 @@ import "./index.css";
 import App from "./App.jsx";
 import store from "./store/reducer/store.js";
 import { BrowserRouter } from "react-router-dom";
+import { ThemeProvider } from "@emotion/react";
+import theme from "./theme.js";
+import { CssBaseline } from "@mui/material";
 
 createRoot(document.getElementById("root")).render(
   <Provider store={store}>
     <StrictMode>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ThemeProvider>
     </StrictMode>
   </Provider>
 );

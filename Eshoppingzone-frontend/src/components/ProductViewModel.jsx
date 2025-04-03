@@ -11,8 +11,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 export default function ProductViewModel({ open, setOpen, product }) {
   const [loading, setLoading] = useState(false);
 
-  const { productName, price, description, category, imageUrl, specialPrice } =
-    product;
+  const { productName, price, description, imageUrl, specialPrice } = product;
   // Format the image URL properly
   const formattedImageUrl = imageUrl
     ? `${import.meta.env.VITE_BACK_END_URL}/image-service/api/${imageUrl
@@ -36,7 +35,6 @@ export default function ProductViewModel({ open, setOpen, product }) {
     setLoading(false);
   };
 
-  console.log(product);
   return (
     <Dialog
       open={open}
