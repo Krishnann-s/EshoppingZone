@@ -15,6 +15,7 @@ const useProductsFilter = () => {
       : 1;
 
     params.set("pageNumber", currectPage - 1);
+    params.set("pageSize", "5");
 
     const sortOrder = searchParams.get("sortOrder") || "asc";
     const categoryParams = searchParams.get("category") || null;
