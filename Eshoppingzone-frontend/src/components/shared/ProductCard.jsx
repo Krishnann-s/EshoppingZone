@@ -3,6 +3,7 @@ import { useState } from "react";
 import { FaCartShopping } from "react-icons/fa6";
 import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
+import { truncateText } from "../../utils/truncateText";
 import ProductViewModel from "./ProductViewModel";
 
 const ProductCard = ({
@@ -68,10 +69,12 @@ const ProductCard = ({
             });
           }}
         >
-          {productName}
+          {truncateText(productName, 30)}
         </h2>
         <div className="min-h-20 max-h-20">
-          <p className="text-gray-600 text-sm">{description}</p>
+          <p className="text-gray-600 text-sm">
+            {truncateText(description, 80)}
+          </p>
         </div>
 
         <div className="flex items-center justify-between mt-4">

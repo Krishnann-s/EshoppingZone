@@ -31,12 +31,11 @@ function Filter({ categories }) {
 
   useEffect(() => {
     const handler = setTimeout(() => {
+      const params = new URLSearchParams(searchParams);
       if (searchTerm) {
-        const params = new URLSearchParams(searchParams);
         params.set("keyword", searchTerm);
         navigate(`${pathName}?${params.toString()}`);
       } else {
-        const params = new URLSearchParams(searchParams);
         params.delete("keyword");
         navigate(`${pathName}?${params.toString()}`);
       }
@@ -50,6 +49,8 @@ function Filter({ categories }) {
   const handleCategoryChange = (e) => {
     const selectedCategory = e.target.value;
     const params = new URLSearchParams(searchParams);
+
+    params.delete("page");
 
     if (selectedCategory === "all") {
       params.delete("category");

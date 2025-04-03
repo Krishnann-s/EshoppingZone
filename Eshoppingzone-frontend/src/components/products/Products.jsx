@@ -1,9 +1,8 @@
 import { useDispatch, useSelector } from "react-redux";
-import { fetchCategories } from "../store/action";
+import { fetchCategories } from "../../store/action";
 import { FaExclamationTriangle } from "react-icons/fa";
-import ProductCard from "./ProductCard";
+import ProductCard from "../shared/ProductCard";
 import Filter from "./Filter";
-import useProductsFilter from "./useProductsFilter";
 import { useEffect } from "react";
 import {
   getCategories,
@@ -11,9 +10,10 @@ import {
   getIsLoading,
   getPagination,
   getProducts,
-} from "../store/selector";
-import Loader from "./Loader";
-import Paginations from "./Paginations";
+} from "../../store/selector";
+import Loader from "../shared/Loader";
+import Paginations from "../shared/Paginations";
+import useProductsFilter from "../../hooks/useProductsFilter";
 
 export default function Products() {
   const products = useSelector(getProducts);
@@ -49,7 +49,7 @@ export default function Products() {
           </div>
           <div className="flex justify-center pt-10">
             <Paginations
-              numberOfPage={pagination?.totalPages}
+              numberOfPage={pagination?.totalPages || 1}
               totalProducts={pagination?.totalElements}
             />
           </div>

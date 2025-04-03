@@ -1,23 +1,26 @@
+// Paginations.jsx
 import { Pagination } from "@mui/material";
 import { useSearchParams, useNavigate, useLocation } from "react-router-dom";
 
 const Paginations = ({ numberOfPage, totalProducts }) => {
   const [searchParams] = useSearchParams();
-  const pathName = useLocation();
-  const params = new URLSearchParams(searchParams);
+  const location = useLocation();
   const navigate = useNavigate();
+
+  // Get current page, default to 1
   const paramValue = searchParams.get("page")
     ? Number(searchParams.get("page"))
     : 1;
 
   const onChangeHandler = (event, value) => {
-    params.set("page", value);
-    navigate(`${pathName.pathname}?${params}`);
+    const newParams = new URLSearchParams(searchParams.toString());
+    newParams.set("page", value.toString());
+    navigate(`${location.pathname}?${newParams.toString()}`);
   };
 
   return (
     <Pagination
-      count={numberOfPage}
+      count={numberOfPage || 1}
       page={paramValue}
       defaultPage={1}
       siblingCount={1}
