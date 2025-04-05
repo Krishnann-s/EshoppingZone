@@ -5,8 +5,12 @@ import Button from "@mui/material/Button";
 import Box from "@mui/material/Box";
 import { truncateText } from "../../utils/truncateText";
 import ProductViewModel from "./ProductViewModel";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../store/action";
 
 const ProductCard = ({
+  productId,
+  quantity,
   productName,
   price,
   description,
@@ -17,19 +21,21 @@ const ProductCard = ({
   const [openProductViewModal, setOpenProductViewModal] = useState(false);
   const [selectedViewProduct, setSelectedViewProduct] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  const handleClick = () => {
-    setLoading(true);
-    // Simulate a network request
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-  };
+  const dispatch = useDispatch();
 
   const handleProductView = (products) => {
     console.log("Product being passed to modal:", products);
     setSelectedViewProduct(products);
     setOpenProductViewModal(true);
+  };
+
+  const addToCartHandler = (cartItems) => {
+    setLoading(true);
+    // Simulate a network request
+    setTimeout(() => {
+      setLoading(false);
+    }, 2000);
+    dispatch(addToCart(cartItems, 1));
   };
 
   return (
@@ -95,7 +101,18 @@ const ProductCard = ({
           <Box sx={{ "& > button": { m: 1 } }}>
             <Button
               size="small"
-              onClick={handleClick}
+              onClick={() =>
+                addToCartHandler({
+                  productId,
+                  productName,
+                  price,
+                  description,
+                  category,
+                  imageUrl,
+                  specialPrice,
+                  quantity,
+                })
+              }
               loading={loading}
               loadingIndicator="Adding…"
               variant="contained"
