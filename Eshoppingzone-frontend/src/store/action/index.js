@@ -1,23 +1,9 @@
 import { product_api } from "../../api/api";
 
-// index.js - fetchProducts action
 export const fetchProducts = (queryString) => async (dispatch) => {
   try {
     dispatch({ type: "IS_FETCHING" });
-
-    const response = await product_api.get(`/public/products?${queryString}`);
-
-    const { data } = response;
-
-    if (!data || !data.content) {
-      console.error("Invalid data format received:", data);
-      dispatch({
-        type: "IS_ERROR",
-        payload: "Invalid data format received from API",
-      });
-      return;
-    }
-
+    const { data } = await product_api.get(`/public/products?${queryString}`);
     dispatch({
       type: "FETCH_PRODUCTS",
       payload: data.content,
@@ -29,12 +15,14 @@ export const fetchProducts = (queryString) => async (dispatch) => {
     });
     dispatch({ type: "IS_SUCCESS" });
   } catch (error) {
+    console.log(error);
     dispatch({
       type: "IS_ERROR",
       payload: error?.response?.data?.message || "Failed to fetch products",
     });
   }
 };
+
 export const fetchCategories = () => async (dispatch) => {
   try {
     dispatch({ type: "CATEGORY_LOADER" });
@@ -48,7 +36,7 @@ export const fetchCategories = () => async (dispatch) => {
       totalPages: data.totalPages,
       lastPage: data.lastPage,
     });
-    dispatch({ type: "CATEGORY_SUCCESS" }); // Change to CATEGORY_SUCCESS
+    dispatch({ type: "IS_ERROR" });
   } catch (error) {
     console.log(error);
     dispatch({
@@ -58,6 +46,7 @@ export const fetchCategories = () => async (dispatch) => {
   }
 };
 
+// Action creator
 export const addToCart =
   (data, qty = 1, toast) =>
   (dispatch, getState) => {
@@ -72,7 +61,10 @@ export const addToCart =
 
     // If in stock -> add
     if (isQuantityExist) {
-      dispatch({ type: "ADD_CART", payload: { ...data, quantity: qty } });
+      dispatch({
+        type: "ADD_CART",
+        payload: { ...data, quantity: qty }, // Pass the correct quantity
+      });
       toast.success(`${data?.productName} added to the cart`);
       localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
     } else {

@@ -6,41 +6,56 @@ const initialState = {
 
 export const cartReducer = (state = initialState, action) => {
   switch (action.type) {
-    case "ADD_TO_CART": {
+    case "ADD_CART": {
       const productToAdd = action.payload;
+
+      // Check if the product already exists in the cart
       const existingProduct = state.cart.find(
         (item) => item.productId === productToAdd.productId
       );
+
       if (existingProduct) {
+        // If the product exists, update its quantity
         const updatedCart = state.cart.map((item) => {
           if (item.productId === productToAdd.productId) {
-            return productToAdd;
-          } else {
-            return item;
+            return {
+              ...item,
+              quantity: item.quantity + productToAdd.quantity, // Increment quantity
+            };
           }
+          return item;
         });
+
         return {
           ...state,
           cart: updatedCart,
         };
       } else {
-        const newCart = [...state.cart, productToAdd];
+        // If the product doesn't exist, add it to the cart
+        const newCart = [...state.cart, { ...productToAdd }];
         return {
           ...state,
           cart: newCart,
         };
       }
     }
-    case "REMOVE_FROM_CART":
+
+    case "REMOVE_CART":
       return {
         ...state,
-        cart: state.cart.filter((item) => item.id !== action.payload),
+        cart: state.cart.filter(
+          (item) => item.productId !== action.payload.productId
+        ),
       };
-    case "SET_CART_ID":
+    case "GET_USER_CART_PRODUCTS":
       return {
         ...state,
-        cartId: action.payload,
+        cart: action.payload,
+        totalPrice: action.totalPrice,
+        cartId: action.cartId,
       };
+    case "CLEAR_CART":
+      return { cart: [], totalPrice: 0, cartId: null };
     default:
       return state;
   }

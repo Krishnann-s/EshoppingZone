@@ -45,7 +45,16 @@ export default function Products() {
         <div className="min-h-[700px]">
           <div className="pb-6 pt-14 grid 2xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-y-6 gap-x-6">
             {products &&
-              products.map((item, i) => <ProductCard key={i} {...item} />)}
+              products.map((item, i) => {
+                console.log("Product being passed to ProductCard:", item); // Debugging
+                return (
+                  <ProductCard
+                    key={i}
+                    productId={item.productId} // Ensure productId is passed correctly
+                    {...item}
+                  />
+                );
+              })}
           </div>
           <div className="flex justify-center pt-10">
             <Paginations
