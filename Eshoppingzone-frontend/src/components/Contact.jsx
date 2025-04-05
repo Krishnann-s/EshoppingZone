@@ -4,7 +4,7 @@ function Contact() {
       <div class="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8 lg:py-20">
         <div class="mb-4">
           <div class="mb-6 max-w-3xl text-center sm:text-center md:mx-auto md:mb-12">
-            <p class="text-base font-semibold uppercase tracking-wide text-blue-600">
+            <p class="text-base font-semibold uppercase tracking-wide text-amber-800">
               Contact
             </p>
             <h2 class="font-heading mb-4 font-bold tracking-tight text-gray-900  text-3xl sm:text-5xl">
@@ -25,7 +25,7 @@ function Contact() {
               </p>
               <ul class="mb-6 md:mb-0">
                 <li class="flex">
-                  <div class="flex h-10 w-10 items-center justify-center rounded bg-blue-900 text-gray-50">
+                  <div class="flex h-10 w-10 items-center justify-center rounded bg-amber-800 text-gray-50">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -53,7 +53,7 @@ function Contact() {
                   </div>
                 </li>
                 <li class="flex">
-                  <div class="flex h-10 w-10 items-center justify-center rounded bg-blue-900 text-gray-50">
+                  <div class="flex h-10 w-10 items-center justify-center rounded bg-amber-900 text-gray-50">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -80,7 +80,7 @@ function Contact() {
                   </div>
                 </li>
                 <li class="flex">
-                  <div class="flex h-10 w-10 items-center justify-center rounded bg-blue-900 text-gray-50">
+                  <div class="flex h-10 w-10 items-center justify-center rounded bg-amber-900 text-gray-50">
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       width="24"
@@ -161,7 +161,7 @@ function Contact() {
                 <div class="text-center">
                   <button
                     type="submit"
-                    class="w-full bg-blue-800 text-white px-6 py-3 font-xl rounded-md sm:mb-0"
+                    class="w-full bg-amber-800 text-white px-6 py-3 font-xl rounded-md sm:mb-0"
                   >
                     Send Message
                   </button>

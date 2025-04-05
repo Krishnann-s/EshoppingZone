@@ -75,7 +75,7 @@ function About() {
 
         {/* Image */}
         <div className="w-full lg:w-1/2 flex justify-center">
-          <div className="rounded-xl shadow-2xl overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-blue-200">
+          <div className="rounded-xl shadow-2xl overflow-hidden transform transition-all duration-300 hover:scale-105 hover:shadow-amber-100">
             <img
               src="/home-page1.jpg"
               alt="EShoppingZone storefront"
