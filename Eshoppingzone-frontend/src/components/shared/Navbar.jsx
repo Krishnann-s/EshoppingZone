@@ -1,17 +1,26 @@
+// src/components/Navbar.jsx
 import { Badge } from "@mui/material";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { FaCartShopping } from "react-icons/fa6";
-import { useState, useEffect, Fragment } from "react";
+import { useState, useEffect } from "react";
 import Hamburger from "hamburger-react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import Avatar from "@mui/material/Avatar";
+import Person from "@mui/icons-material/Person";
+import Settings from "@mui/icons-material/Settings";
+import Logout from "@mui/icons-material/Logout";
+import UserMenu from "../UserMenu";
 
 function NavBar() {
   const path = useLocation().pathname;
   const [navBarOpen, setNavBarOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false); // Toggle this based on user authentication state
-  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  // Get cart and user from Redux state
   const { cart } = useSelector((state) => state.carts);
+  const { user } = useSelector((state) => state.auth);
 
   // Handle scroll effect
   useEffect(() => {
@@ -34,23 +43,19 @@ function NavBar() {
     setNavBarOpen(false);
   }, [path]);
 
-  // Close profile menu when clicking outside
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (profileMenuOpen && !event.target.closest(".profile-menu-container")) {
-        setProfileMenuOpen(false);
-      }
-    };
+  // Handle logout
+  const handleLogout = () => {
+    dispatch({ type: "LOG_OUT" });
+    localStorage.removeItem("auth");
+    navigate("/login");
+  };
 
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-    };
-  }, [profileMenuOpen]);
-
-  // Toggle for demo purposes - remove in production
-  const toggleLogin = () => {
-    setIsLoggedIn(!isLoggedIn);
+  // Get first letter of email for avatar
+  const getInitial = () => {
+    if (user && user.email) {
+      return user.email.charAt(0).toUpperCase();
+    }
+    return user?.role?.charAt(0).toUpperCase() || "U";
   };
 
   return (
@@ -58,7 +63,7 @@ function NavBar() {
       className={`h-[70px] ${
         scrolled ? "bg-amber-600 shadow-md" : "bg-amber-500"
       } 
-        text-white flex items-center sticky top-0 z-50 transition-all duration-300`}
+      text-white flex items-center sticky top-0 z-50 transition-all duration-300`}
     >
       <div className="container mx-auto lg:px-8 px-4 w-full flex justify-between items-center">
         <Link to="/" className="flex items-center text-2xl font-bold">
@@ -144,59 +149,15 @@ function NavBar() {
               </Badge>
             </Link>
           </li>
-
-          {/* Conditional rendering based on login status */}
-          {isLoggedIn ? (
+          {user && user.userId ? (
             <li className="ml-4 relative profile-menu-container">
-              <button
-                onClick={() => setProfileMenuOpen(!profileMenuOpen)}
-                className="flex rounded-full focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-amber-600"
-                aria-expanded={profileMenuOpen}
-                aria-haspopup="true"
-              >
-                <span className="sr-only">Open user menu</span>
-                <img
-                  className="h-10 w-10 rounded-full object-cover border-2 border-white"
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  alt="User profile"
-                />
-              </button>
-
-              {/* Profile dropdown menu */}
-              {profileMenuOpen && (
-                <div className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
-                  <Link
-                    to="/profile"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => setProfileMenuOpen(false)}
-                  >
-                    Your Profile
-                  </Link>
-                  <Link
-                    to="/settings"
-                    className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                    onClick={() => setProfileMenuOpen(false)}
-                  >
-                    Settings
-                  </Link>
-                  <button
-                    onClick={() => {
-                      setIsLoggedIn(false);
-                      setProfileMenuOpen(false);
-                    }}
-                    className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                  >
-                    Sign out
-                  </button>
-                </div>
-              )}
+              <UserMenu />
             </li>
           ) : (
             <li className="ml-4">
               <Link
                 className="flex items-center space-x-2 px-5 py-2 text-amber-800 rounded-full font-semibold bg-white hover:bg-amber-50 transition-all duration-300 shadow-sm"
                 to="/login"
-                onClick={toggleLogin} // For demo only - remove in production
               >
                 <span>Login</span>
               </Link>
@@ -205,18 +166,40 @@ function NavBar() {
         </ul>
 
         {/* Mobile hamburger button */}
-        <button
-          onClick={() => setNavBarOpen(!navBarOpen)}
-          className="md:hidden flex items-center"
-          aria-label="Toggle menu"
-        >
-          <Hamburger
-            toggled={navBarOpen}
-            toggle={setNavBarOpen}
-            size={20}
-            color="#fff"
-          />
-        </button>
+        <div className="md:hidden flex items-center space-x-4">
+          {/* Add cart icon for mobile */}
+          <Link
+            to="/cart"
+            className="relative p-2 rounded-full hover:bg-amber-400 transition-all duration-200"
+            aria-label="Shopping Cart"
+          >
+            <Badge
+              showZero
+              badgeContent={cart?.length || 0}
+              color="error"
+              overlap="circular"
+              anchorOrigin={{
+                vertical: "top",
+                horizontal: "right",
+              }}
+            >
+              <FaCartShopping size={20} />
+            </Badge>
+          </Link>
+
+          <button
+            onClick={() => setNavBarOpen(!navBarOpen)}
+            className="flex items-center"
+            aria-label="Toggle menu"
+          >
+            <Hamburger
+              toggled={navBarOpen}
+              toggle={setNavBarOpen}
+              size={20}
+              color="#fff"
+            />
+          </button>
+        </div>
       </div>
 
       {/* Mobile Navigation */}
@@ -228,6 +211,32 @@ function NavBar() {
         } overflow-hidden z-40`}
       >
         <ul className="container mx-auto py-4 px-6 flex flex-col space-y-4">
+          {/* User profile section at the top for mobile */}
+          {user && user.userId && (
+            <li className="pt-2 pb-4 border-b border-amber-400">
+              <div className="flex items-center">
+                <Avatar
+                  sx={{
+                    width: 40,
+                    height: 40,
+                    bgcolor: "#f59e0b",
+                    color: "white",
+                    border: "2px solid white",
+                    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+                  }}
+                >
+                  {getInitial()}
+                </Avatar>
+                <div className="ml-3">
+                  <div className="text-white font-medium">
+                    {user.email?.split("@")[0] || user.role}
+                  </div>
+                  <div className="text-amber-100 text-sm">{user.email}</div>
+                </div>
+              </div>
+            </li>
+          )}
+
           <li className="font-medium">
             <Link
               className={`block py-2 px-3 rounded-lg ${
@@ -276,58 +285,34 @@ function NavBar() {
               Contact
             </Link>
           </li>
-          <li className="font-medium">
-            <Link
-              className={`flex items-center py-2 px-3 rounded-lg ${
-                path === "/cart"
-                  ? "bg-amber-400 text-white"
-                  : "text-white hover:bg-amber-400/30"
-              }`}
-              to="/cart"
-            >
-              Cart
-              <Badge
-                showZero
-                badgeContent={cart?.length || 0}
-                color="error"
-                overlap="circular"
-                className="ml-2"
-              />
-            </Link>
-          </li>
 
-          {/* Mobile login/profile section */}
-          {isLoggedIn ? (
+          {/* User account options for mobile */}
+          {user && user.userId ? (
             <>
-              <li className="pt-2 flex items-center">
-                <img
-                  className="h-10 w-10 rounded-full object-cover border-2 border-white mr-4"
-                  src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
-                  alt="User profile"
-                />
-                <span className="text-white font-medium">John Doe</span>
-              </li>
-              <li>
+              <li className="font-medium">
                 <Link
                   to="/profile"
-                  className="block py-2 px-3 rounded-lg text-white hover:bg-amber-400/30"
+                  className="flex items-center py-2 px-3 rounded-lg text-white hover:bg-amber-400/30"
                 >
+                  <Person className="mr-2" fontSize="small" />
                   Your Profile
                 </Link>
               </li>
-              <li>
+              <li className="font-medium">
                 <Link
                   to="/settings"
-                  className="block py-2 px-3 rounded-lg text-white hover:bg-amber-400/30"
+                  className="flex items-center py-2 px-3 rounded-lg text-white hover:bg-amber-400/30"
                 >
+                  <Settings className="mr-2" fontSize="small" />
                   Settings
                 </Link>
               </li>
-              <li>
+              <li className="font-medium">
                 <button
-                  onClick={() => setIsLoggedIn(false)}
-                  className="block w-full text-left py-2 px-3 rounded-lg text-white hover:bg-amber-400/30"
+                  onClick={handleLogout}
+                  className="flex items-center w-full text-left py-2 px-3 rounded-lg text-white hover:bg-amber-400/30"
                 >
+                  <Logout className="mr-2" fontSize="small" />
                   Sign out
                 </button>
               </li>
@@ -337,7 +322,6 @@ function NavBar() {
               <Link
                 className="block w-full text-center py-3 text-amber-800 rounded-lg font-semibold bg-white hover:bg-amber-50 transition-all duration-300"
                 to="/login"
-                onClick={toggleLogin} // For demo only - remove in production
               >
                 Login
               </Link>

@@ -164,7 +164,7 @@ public class UserProfileController {
 	}
 
 	// Get profile picture
-	@GetMapping("/users/{userId}/profile-picture")
+	@GetMapping("/users/profile-picture/{userId}")
 	public ResponseEntity<byte[]> getProfilePicture(@PathVariable Long userId) {
 		// Get the image ID from user profile
 		String imageId = userService.getProfilePictureId(userId);

@@ -46,7 +46,7 @@ public class SecurityConfig {
 						.pathMatchers("/profile-service/api/user/login", "/profile-service/api/user/register",
 								"/product-service/api/public/products/**",
 								"/product-service/api/public/product/{productId}/image", "/address-service/api/address",
-								"/profile-service/api/users/**")
+								"/profile-service/api/users/**", "/profile-service/api/users/profile-picture")
 						.permitAll()
 
 						// Profile Service Authorization

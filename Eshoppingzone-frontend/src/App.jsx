@@ -2,12 +2,13 @@ import "./App.css";
 import Home from "./components/home/Home";
 import Products from "./components/products/Products";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import NavBar from "./components/shared/NavBar";
 import About from "./components/About";
 import Contact from "./components/Contact";
 import { ToastContainer } from "react-toastify";
 import Cart from "./components/cart/Cart";
 import Login from "./components/auth/Login";
+import Register from "./components/auth/Register";
+import NavBar from "./components/shared/Navbar";
 
 function App() {
   return (
@@ -32,6 +33,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/signup" element={<Register />} />
         </Routes>
       </Router>
     </div>

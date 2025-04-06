@@ -1,4 +1,5 @@
-import { product_api } from "../../api/api";
+import { product_api, profile_api } from "../../api/api";
+import { parseJwt } from "../../utils/jwtDecoder";
 
 export const fetchProducts = (queryString) => async (dispatch) => {
   try {
@@ -115,49 +116,79 @@ export const removeFromCart = (data, toast) => (dispatch, getState) => {
   localStorage.setItem("cartItems", JSON.stringify(getState().carts.cart));
 };
 
-// export const authenticateSignInUser =
-//   (sendData, toast, reset, navigate, setLoader) => async (dispatch) => {
-//     try {
-//       setLoader(true);
-//       const { data } = await api.post("/auth/signin", sendData);
-//       dispatch({ type: "LOGIN_USER", payload: data });
-//       localStorage.setItem("auth", JSON.stringify(data));
-//       reset();
-//       toast.success("Login Success");
-//       navigate("/");
-//     } catch (error) {
-//       console.log(error);
-//       toast.error(error?.response?.data?.message || "Internal Server Error");
-//     } finally {
-//       setLoader(false);
-//     }
-//   };
+export const authenticateSignInUser =
+  (sendData, toast, reset, navigate, setLoader) => async (dispatch) => {
+    try {
+      setLoader(true);
+      const { data } = await profile_api.post("/user/login", sendData);
 
-// export const registerNewUser =
-//   (sendData, toast, reset, navigate, setLoader) => async (dispatch) => {
-//     try {
-//       setLoader(true);
-//       const { data } = await api.post("/auth/signup", sendData);
-//       reset();
-//       toast.success(data?.message || "User Registered Successfully");
-//       navigate("/login");
-//     } catch (error) {
-//       console.log(error);
-//       toast.error(
-//         error?.response?.data?.message ||
-//           error?.response?.data?.password ||
-//           "Internal Server Error"
-//       );
-//     } finally {
-//       setLoader(false);
-//     }
-//   };
+      // Decode the JWT token to get user info
+      const decoded = parseJwt(data.token); // Ensure you have the token here
+      const userId = decoded?.userId; // Extract userId from the decoded token
 
-// export const logOutUser = (navigate) => (dispatch) => {
-//   dispatch({ type: "LOG_OUT" });
-//   localStorage.removeItem("auth");
-//   navigate("/login");
-// };
+      if (!userId) {
+        throw new Error("User ID is not available in the token");
+      }
+      dispatch({
+        type: "LOGIN_USER",
+        payload: { ...data }, // Include userId
+      });
+      localStorage.setItem("auth", JSON.stringify(data));
+      reset();
+      toast.success("Logged in Successfully");
+      navigate("/");
+    } catch (error) {
+      console.log(error);
+      toast.error(error?.response?.data?.message || "Internal Server Error");
+    } finally {
+      setLoader(false);
+    }
+  };
+
+export const registerNewUser =
+  (sendData, toast, reset, navigate, setLoader) => async (dispatch) => {
+    try {
+      setLoader(true);
+      const formattedData = {
+        userName: sendData.userName,
+        email: sendData.email,
+        mobileNumber: sendData.mobileNumber,
+        dob: sendData.dob,
+        gender: sendData.gender,
+        role: sendData.role,
+        password: sendData.password,
+        address: [
+          {
+            street: sendData.street,
+            city: sendData.city,
+            state: sendData.state,
+            country: sendData.country,
+            pincode: sendData.pincode,
+          },
+        ],
+      };
+      const { data } = await profile_api.post("/user/register", formattedData);
+      reset();
+      toast.success(data?.message || "User Registered Successfully");
+      navigate("/login");
+    } catch (error) {
+      console.log(error);
+      toast.error(
+        error?.response?.data?.message ||
+          error?.response?.data?.password ||
+          "Internal Server Error"
+      );
+    } finally {
+      setLoader(false);
+    }
+  };
+
+export const logOutUser = (navigate) => (dispatch) => {
+  dispatch({ type: "LOG_OUT" });
+  localStorage.removeItem("auth");
+  localStorage.removeItem("cartItems");
+  navigate("/");
+};
 
 // export const addUpdateUserAddress =
 //   (sendData, toast, addressId, setOpenAddressModal) =>
