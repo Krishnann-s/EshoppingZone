@@ -18,8 +18,8 @@ const CartEmpty = () => {
           to="/"
           className="flex gap-2 items-center text-blue-500 hover:text-blue-600 transition"
         >
-          <MdArrowBack size={24} />
-          <span className="font-medium">Start Shopping</span>
+          <MdArrowBack size={24} color="#FE9A00" />
+          <span className="font-medium text-amber-500">Start Shopping</span>
         </Link>
       </div>
     </div>

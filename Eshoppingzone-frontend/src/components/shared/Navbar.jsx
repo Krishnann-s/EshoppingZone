@@ -3,6 +3,7 @@ import { Link, useLocation } from "react-router-dom";
 import { FaCartShopping } from "react-icons/fa6";
 import { useState, useEffect, Fragment } from "react";
 import Hamburger from "hamburger-react";
+import { useSelector } from "react-redux";
 
 function NavBar() {
   const path = useLocation().pathname;
@@ -10,7 +11,7 @@ function NavBar() {
   const [scrolled, setScrolled] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false); // Toggle this based on user authentication state
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
-  const [cartCount, setCartCount] = useState(0); // Cart items count - connect to your cart state
+  const { cart } = useSelector((state) => state.carts);
 
   // Handle scroll effect
   useEffect(() => {
@@ -131,7 +132,7 @@ function NavBar() {
             >
               <Badge
                 showZero
-                badgeContent={cartCount}
+                badgeContent={cart?.length || 0}
                 color="error"
                 overlap="circular"
                 anchorOrigin={{
@@ -287,7 +288,7 @@ function NavBar() {
               Cart
               <Badge
                 showZero
-                badgeContent={cartCount}
+                badgeContent={cart?.length || 0}
                 color="error"
                 overlap="circular"
                 className="ml-2"

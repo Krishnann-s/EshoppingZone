@@ -55,6 +55,7 @@ export const addToCart =
     const getProduct = products.find(
       (item) => item.productId === data.productId
     );
+    console.log(getProduct, "getProduct");
 
     // Check for stocks
     const isQuantityExist = getProduct.quantity >= qty;
