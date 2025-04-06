@@ -46,7 +46,6 @@ export default function Products() {
           <div className="pb-6 pt-14 grid 2xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 gap-y-6 gap-x-6">
             {products &&
               products.map((item, i) => {
-                console.log("Product being passed to ProductCard:", item); // Debugging
                 return (
                   <ProductCard
                     key={i}

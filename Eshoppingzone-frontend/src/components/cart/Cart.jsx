@@ -47,7 +47,7 @@ const Cart = () => {
           cart.map((item, i) => <ItemContent key={i} {...item} />)}
       </div>
 
-      <div className="border-t-[1.5px] border-slate-200 py-4 flex sm:flex-row sm:px-0 px-2 flex-col sm:justify-between gap-4">
+      <div className="py-4 flex sm:flex-row sm:px-0 px-2 flex-col sm:justify-between gap-4">
         <div></div>
         <div className="flex text-sm gap-1 flex-col">
           <div className="flex justify-between w-full md:text-lg text-sm font-semibold">
@@ -62,7 +62,7 @@ const Cart = () => {
           <Link className="w-full flex justify-end" to="/checkout">
             <button
               onClick={() => {}}
-              className="font-semibold w-[300px] py-2 px-4 rounded-sm bg-customBlue text-white flex items-center justify-center gap-2 hover:text-gray-300 transition duration-500"
+              className="font-semibold w-[300px] py-2 px-4 rounded-sm bg-customBlue text-slate-800 flex items-center justify-center gap-2 hover:text-slate-300 transition duration-500"
             >
               <MdShoppingCart size={20} />
               Checkout
