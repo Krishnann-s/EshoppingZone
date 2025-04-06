@@ -7,6 +7,7 @@ import GithubLogo from "../../utils/GithubLogo";
 import { useDispatch } from "react-redux";
 import { registerNewUser } from "../../store/action";
 import { toast } from "react-toastify";
+import Spinner from "../shared/Spinner";
 
 export default function Register() {
   const navigate = useNavigate();
@@ -229,7 +230,14 @@ export default function Register() {
               type="submit"
               className="flex w-full justify-center rounded-md bg-amber-600 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-amber-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
             >
-              {loader ? <>Loading...</> : <>Register</>}
+              {loader ? (
+                <>
+                  {" "}
+                  <Spinner /> Loading...
+                </>
+              ) : (
+                <>Register</>
+              )}
             </button>
           </div>
           <p className="text-center text-sm text-slate-700 mt-6">
