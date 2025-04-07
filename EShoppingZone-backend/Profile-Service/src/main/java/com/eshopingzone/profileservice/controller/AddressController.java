@@ -31,15 +31,15 @@ public class AddressController {
 
 	@Autowired
 	private AuthUtil authUtil;
+
     @Autowired
     private ModelMapper modelMapper;
 
+	/// Create Address for the user
 	@PostMapping("/address")
 	public ResponseEntity<AddressDTO> createAddress(@Valid @RequestBody AddressDTO addressDto) {
 		Long userId = authUtil.loggedInUser();
-		addressDto.setUserId(userId);  // Set the userId directly
 		AddressDTO savedAddressDto = addressService.createAddress(addressDto, userId);
-
 		return new ResponseEntity<>(savedAddressDto, HttpStatus.CREATED);
 	}
 

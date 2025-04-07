@@ -77,6 +77,19 @@ export default function Register() {
 
           <div>
             <InputField
+              label="Password"
+              required={true}
+              message="Password is required"
+              id="password"
+              type="password"
+              register={register}
+              errors={errors}
+              placeHolder="Enter your password"
+            />
+          </div>
+
+          <div>
+            <InputField
               label="Mobile Number"
               required={true}
               message="Mobile number is required"
@@ -146,82 +159,6 @@ export default function Register() {
             {errors.role && (
               <span className="text-red-500">Role is required</span>
             )}
-          </div>
-
-          <div>
-            <InputField
-              label="Password"
-              required={true}
-              message="Password is required"
-              id="password"
-              type="password"
-              register={register}
-              errors={errors}
-              className="hidden" // Hide the default label since we're using custom label above
-              placeHolder="Enter your password"
-            />
-          </div>
-
-          {/* Address Fields */}
-          <div>
-            <h3 className="text-md font-semibold leading-6 text-gray-900">
-              Address
-            </h3>
-            <InputField
-              label="Street"
-              required={true}
-              message="Street is required"
-              id="street"
-              type="text"
-              register={register}
-              errors={errors}
-              className="block w-full text-md font-semibold leading-6 text-gray-900"
-              placeHolder="Enter your street"
-            />
-            <InputField
-              label="City"
-              required={true}
-              message="City is required"
-              id="city"
-              type="text"
-              register={register}
-              errors={errors}
-              className="block w-full text-md font-semibold leading-6 text-gray-900"
-              placeHolder="Enter your city"
-            />
-            <InputField
-              label="State"
-              required={true}
-              message="State is required"
-              id="state"
-              type="text"
-              register={register}
-              errors={errors}
-              className="block w-full text-md font-semibold leading-6 text-gray-900"
-              placeHolder="Enter your state"
-            />
-            <InputField
-              label="Country"
-              required={true}
-              message="Country is required"
-              id="country"
-              type="text"
-              register={register}
-              errors={errors}
-              className="block w-full text-md font-semibold leading-6 text-gray-900"
-              placeHolder="Enter your country"
-            />
-            <InputField
-              label="Pincode"
-              required={true}
-              message="Pincode is required"
-              id="pincode"
-              type="text"
-              register={register}
-              errors={errors}
-              className="block w-full text-md font-semibold leading-6 text-gray-900"
-              placeHolder="Enter your pincode"
-            />
           </div>
 
           <div>

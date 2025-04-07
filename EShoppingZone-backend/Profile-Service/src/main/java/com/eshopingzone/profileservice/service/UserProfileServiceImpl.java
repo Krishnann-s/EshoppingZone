@@ -55,58 +55,9 @@ public class UserProfileServiceImpl implements UserProfileService {
 		// Save user to get the ID
 		UserProfile savedUser = userRepo.save(userProfile);
 
-		// If addresses exist in the DTO, process them
-		if (userProfileDto.getAddress() != null && !userProfileDto.getAddress().isEmpty()) {
-			List<Address> addresses = new ArrayList<>();
-			for (AddressDTO addressDto : userProfileDto.getAddress()) {
-				// Create address entity manually
-				Address address = new Address();
-				address.setStreet(addressDto.getStreet());
-				address.setCity(addressDto.getCity());
-				address.setState(addressDto.getState());
-				address.setCountry(addressDto.getCountry());
-				address.setPincode(addressDto.getPincode());
-				address.setUserId(savedUser);
-				addresses.add(address);
-			}
-			addressRepo.saveAll(addresses);
-		}
+		// No address handling here
 
-		// Explicitly fetch addresses for the user
-		List<Address> addresses = addressRepo.findByUserId(savedUser);
-		savedUser.setAddress(addresses);
-
-		// Create response DTO manually without using ModelMapper
-		UserProfileDTO responseDto = new UserProfileDTO();
-		responseDto.setUserId(savedUser.getUserId());
-		responseDto.setUserName(savedUser.getUserName());
-		responseDto.setEmail(savedUser.getEmail());
-		responseDto.setMobileNumber(savedUser.getMobileNumber());
-		responseDto.setDateOfBirth(savedUser.getDateOfBirth());
-		responseDto.setGender(savedUser.getGender());
-		responseDto.setRole(savedUser.getRole());
-		responseDto.setProfilePictureId(savedUser.getProfilePictureId());
-
-		// Map addresses manually
-		if (addresses != null && !addresses.isEmpty()) {
-			List<AddressDTO> addressDTOs = new ArrayList<>();
-			for (Address address : addresses) {
-				AddressDTO dto = new AddressDTO();
-				dto.setAddressId(address.getAddressId());
-				dto.setStreet(address.getStreet());
-				dto.setCity(address.getCity());
-				dto.setState(address.getState());
-				dto.setCountry(address.getCountry());
-				dto.setPincode(address.getPincode());
-				dto.setUserId(savedUser.getUserId());
-				addressDTOs.add(dto);
-			}
-			responseDto.setAddress(addressDTOs);
-		} else {
-			responseDto.setAddress(new ArrayList<>());
-		}
-
-		return responseDto;
+		return modelMapper.map(savedUser, UserProfileDTO.class);
 	}
 	
 	// Login user

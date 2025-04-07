@@ -190,33 +190,33 @@ export const logOutUser = (navigate) => (dispatch) => {
   navigate("/");
 };
 
-// export const addUpdateUserAddress =
-//   (sendData, toast, addressId, setOpenAddressModal) =>
-//   async (dispatch, getState) => {
-//     /*
-//     const { user } = getState().auth;
-//     await api.post(`/addresses`, sendData, {
-//           headers: { Authorization: "Bearer " + user.jwtToken },
-//         });
-//     */
-//     dispatch({ type: "BUTTON_LOADER" });
-//     try {
-//       if (!addressId) {
-//         const { data } = await api.post("/addresses", sendData);
-//       } else {
-//         await api.put(`/addresses/${addressId}`, sendData);
-//       }
-//       dispatch(getUserAddresses());
-//       toast.success("Address saved successfully");
-//       dispatch({ type: "IS_SUCCESS" });
-//     } catch (error) {
-//       console.log(error);
-//       toast.error(error?.response?.data?.message || "Internal Server Error");
-//       dispatch({ type: "IS_ERROR", payload: null });
-//     } finally {
-//       setOpenAddressModal(false);
-//     }
-//   };
+export const addUpdateUserAddress =
+  (sendData, toast, addressId, setOpenAddressModal) =>
+  async (dispatch, getState) => {
+    /*
+    const { user } = getState().auth;
+    await api.post(`/addresses`, sendData, {
+          headers: { Authorization: "Bearer " + user.jwtToken },
+        });
+    */
+    dispatch({ type: "BUTTON_LOADER" });
+    try {
+      if (!addressId) {
+        const { data } = await profile_api.post("/addresses", sendData);
+      } else {
+        await profile_api.put(`/addresses/${addressId}`, sendData);
+      }
+      dispatch(getUserAddresses());
+      toast.success("Address saved successfully");
+      dispatch({ type: "IS_SUCCESS" });
+    } catch (error) {
+      console.log(error);
+      toast.error(error?.response?.data?.message || "Internal Server Error");
+      dispatch({ type: "IS_ERROR", payload: null });
+    } finally {
+      setOpenAddressModal(false);
+    }
+  };
 
 // export const deleteUserAddress =
 //   (toast, addressId, setOpenDeleteModal) => async (dispatch, getState) => {
@@ -244,21 +244,21 @@ export const logOutUser = (navigate) => (dispatch) => {
 //   };
 // };
 
-// export const getUserAddresses = () => async (dispatch, getState) => {
-//   try {
-//     dispatch({ type: "IS_FETCHING" });
-//     const { data } = await api.get(`/addresses`);
-//     dispatch({ type: "USER_ADDRESS", payload: data });
-//     dispatch({ type: "IS_SUCCESS" });
-//   } catch (error) {
-//     console.log(error);
-//     dispatch({
-//       type: "IS_ERROR",
-//       payload:
-//         error?.response?.data?.message || "Failed to fetch user addresses",
-//     });
-//   }
-// };
+export const getUserAddresses = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: "IS_FETCHING" });
+    const { data } = await profile_api.get(`/addresses`);
+    dispatch({ type: "USER_ADDRESS", payload: data });
+    dispatch({ type: "IS_SUCCESS" });
+  } catch (error) {
+    console.log(error);
+    dispatch({
+      type: "IS_ERROR",
+      payload:
+        error?.response?.data?.message || "Failed to fetch user addresses",
+    });
+  }
+};
 
 // export const selectUserCheckoutAddress = (address) => {
 //   localStorage.setItem("CHECKOUT_ADDRESS", JSON.stringify(address));

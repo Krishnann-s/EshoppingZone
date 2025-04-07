@@ -1,7 +1,17 @@
 import { Alert, Skeleton } from "@mui/material";
+import { useState } from "react";
 import { FaAddressBook } from "react-icons/fa";
+import AddressInfoModal from "./AddressInfoModal";
+import AddAddressForm from "./AddAddressForm";
 
 function AddressInfo() {
+  const [openAddressModal, setOpenAddressModal] = useState(false);
+  const [selectedAddress, setSelectedAddress] = useState("");
+
+  const addNewAddressHandler = () => {
+    setSelectedAddress("");
+    setOpenAddressModal(true);
+  };
   const noAddress = true;
   const isLoading = false;
   return (
@@ -18,6 +28,12 @@ function AddressInfo() {
           <p className="text-gray-600 mt-4">
             Please add an Address to proceed.
           </p>
+          <button
+            onClick={addNewAddressHandler}
+            className="px-4 py-2 bg-amber-500 rounded-3xl font-semibold text-white hover:bg-amber-700 transition duration-200"
+          >
+            Add Address
+          </button>
         </div>
       ) : (
         <div className="relative p-6 rounded-lg max-w-md mx-auto">
@@ -31,6 +47,9 @@ function AddressInfo() {
           )}
         </div>
       )}
+      <AddressInfoModal open={openAddressModal} setOpen={setOpenAddressModal}>
+        <AddAddressForm />
+      </AddressInfoModal>
     </div>
   );
 }

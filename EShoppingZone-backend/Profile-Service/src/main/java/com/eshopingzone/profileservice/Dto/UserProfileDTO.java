@@ -26,6 +26,4 @@ public class UserProfileDTO {
     private String gender;
     private String role;
     private String profilePictureId;
-    private List<AddressDTO> address;
-
 }
