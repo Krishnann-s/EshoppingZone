@@ -9,6 +9,7 @@ import Cart from "./components/cart/Cart";
 import Login from "./components/auth/Login";
 import Register from "./components/auth/Register";
 import NavBar from "./components/shared/Navbar";
+import Checkout from "./components/checkout/Checkout";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
           <Route path="/cart" element={<Cart />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Register />} />
+          <Route path="/checkout" element={<Checkout />} />
         </Routes>
       </Router>
     </div>

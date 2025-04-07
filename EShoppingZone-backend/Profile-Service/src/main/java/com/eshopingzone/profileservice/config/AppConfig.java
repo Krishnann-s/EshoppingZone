@@ -1,8 +1,6 @@
 package com.eshopingzone.profileservice.config;
 
-import com.eshopingzone.profileservice.Dto.AddressDTO;
 import com.eshopingzone.profileservice.Dto.UserProfileDTO;
-import com.eshopingzone.profileservice.model.Address;
 import com.eshopingzone.profileservice.model.UserProfile;
 import org.modelmapper.Conditions;
 import org.modelmapper.ModelMapper;
