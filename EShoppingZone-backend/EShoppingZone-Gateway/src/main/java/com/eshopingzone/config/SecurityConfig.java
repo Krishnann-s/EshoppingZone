@@ -43,7 +43,7 @@ public class SecurityConfig {
 				.authorizeExchange(auth -> auth.pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
 						// Public APIs
-						.pathMatchers("/profile-service/api/user/login", "/profile-service/api/user/register",
+						.pathMatchers("/profile-service/api/user/register", "/profile-service/api/user/login",
 								"/product-service/api/public/products/**",
 								"/product-service/api/public/product/{productId}/image", "/address-service/api/address",
 								"/profile-service/api/users/**", "/profile-service/api/users/profile-picture")
