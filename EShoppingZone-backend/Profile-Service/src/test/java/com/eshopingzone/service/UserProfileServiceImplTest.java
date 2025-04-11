@@ -66,7 +66,7 @@ public class UserProfileServiceImplTest {
         addressDto.setPincode("123456");
         List<AddressDTO> addressList = new ArrayList<>();
         addressList.add(addressDto);
-        userProfileDto.setAddress(addressList);
+//        userProfileDto.setAddress(addressList);
 
         UserProfile userProfile = new UserProfile();
         userProfile.setUserId(1L);
