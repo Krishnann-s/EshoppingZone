@@ -28,8 +28,7 @@ public class SecurityConfig {
 	@Bean
 	public SecurityWebFilterChain securityWebFilterChain(ServerHttpSecurity http) {
 		CorsConfiguration config = new CorsConfiguration();
-		config.setAllowedOrigins(
-				Arrays.asList("http://localhost:5173", "http://localhost:3000", "http://localhost:5174"));
+		config.setAllowedOrigins(Arrays.asList("http://localhost:5173", "http://localhost:3000", "http://localhost:5174"));
 		config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
 		config.setAllowedHeaders(Arrays.asList("*"));
 		config.setExposedHeaders(Arrays.asList("Authorization"));
@@ -39,55 +38,58 @@ public class SecurityConfig {
 		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
 		source.registerCorsConfiguration("/**", config);
 
-		return http.cors(cors -> cors.configurationSource(source)).csrf(ServerHttpSecurity.CsrfSpec::disable)
+		return http.cors(cors -> cors.configurationSource(source))
+				.csrf(ServerHttpSecurity.CsrfSpec::disable)
 				.authorizeExchange(auth -> auth.pathMatchers(HttpMethod.OPTIONS, "/**").permitAll()
 
 						// Public APIs
-						.pathMatchers("/profile-service/api/user/register", "/profile-service/api/user/login",
-								"/product-service/api/public/products/**",
-								"/product-service/api/public/product/{productId}/image", "/address-service/api/address",
-								"/profile-service/api/users/**", "/profile-service/api/users/profile-picture")
+						.pathMatchers("/eshoppingzone/user-service/api/user/register",
+								"/eshoppingzone/user-service/api/user/login",
+								"/eshoppingzone/product-service/api/public/products/**",
+								"/eshoppingzone/product-service/api/public/product/{productId}/image",
+								"/eshoppingzone/address-service/api/address",
+								"/eshoppingzone/user-service/api/users/**",
+								"/eshoppingzone/user-service/api/users/profile-picture")
 						.permitAll()
 
 						// Profile Service Authorization
-						.pathMatchers(HttpMethod.GET, "/profile-service/api/users").hasRole("admin")
-						.pathMatchers(HttpMethod.GET, "/profile-service/api/user/**").hasAnyRole("user", "admin")
-						.pathMatchers(HttpMethod.PUT, "/profile-service/api/update/user/**").hasRole("user")
-						.pathMatchers(HttpMethod.DELETE, "/profile-service/api/delete/user/**")
-						.hasAnyRole("user", "admin")
+						.pathMatchers(HttpMethod.GET, "/eshoppingzone/user-service/api/users").hasRole("admin")
+						.pathMatchers(HttpMethod.GET, "/eshoppingzone/user-service/api/user/**").hasAnyRole("user", "admin")
+						.pathMatchers(HttpMethod.PUT, "/eshoppingzone/user-service/api/update/user/**").hasRole("user")
+						.pathMatchers(HttpMethod.DELETE, "/eshoppingzone/user-service/api/delete/user/**").hasAnyRole("user", "admin")
 
 						// Address Service Authorization
-						.pathMatchers(HttpMethod.GET, "/profile-service/api/address/**").hasRole("user")
-						.pathMatchers(HttpMethod.POST, "/profile-service/api/**").hasRole("user")
-						.pathMatchers(HttpMethod.GET, "/profile-service/api/addresses").hasRole("admin")
-						.pathMatchers(HttpMethod.GET, "/profile-service/api/user/address").hasRole("user")
-						.pathMatchers(HttpMethod.PUT, "/profile-service/api/address/**").hasRole("user")
-						.pathMatchers(HttpMethod.DELETE, "/profile-service/api/address/**").hasAnyRole("admin", "user")
+						.pathMatchers(HttpMethod.GET, "/eshoppingzone/user-service/api/address/**").hasRole("user")
+						.pathMatchers(HttpMethod.POST, "/eshoppingzone/user-service/api/**").hasRole("user")
+						.pathMatchers(HttpMethod.GET, "/eshoppingzone/user-service/api/addresses").hasRole("admin")
+						.pathMatchers(HttpMethod.GET, "/eshoppingzone/user-service/api/user/address").hasRole("user")
+						.pathMatchers(HttpMethod.PUT, "/eshoppingzone/user-service/api/address/**").hasRole("user")
+						.pathMatchers(HttpMethod.DELETE, "/eshoppingzone/user-service/api/address/**").hasAnyRole("admin", "user")
 
 						// Product Service Authorization
-						.pathMatchers(HttpMethod.GET, "/product-service/api/public/categories/**").permitAll()
-						.pathMatchers(HttpMethod.POST, "/product-service/api/admin/categories/**").hasRole("admin")
-						.pathMatchers(HttpMethod.PUT, "/product-service/api/public/categories/**").hasRole("admin")
-						.pathMatchers(HttpMethod.DELETE, "/product-service/api/admin/categories/**").hasRole("admin")
-						.pathMatchers(HttpMethod.PUT, "/product-service/api/admin/product/**").hasRole("admin")
-						.pathMatchers(HttpMethod.DELETE, "/product-service/api/admin/products/**").hasRole("admin")
-						.pathMatchers(HttpMethod.POST, "/product-service/api/admin/product/**").hasRole("admin") // add product image
-						.pathMatchers(HttpMethod.GET, "/product-service/api/admin/product/**").hasRole("admin") // get product image
-						.pathMatchers(HttpMethod.DELETE, "/product-service/api/admin/product/**").hasRole("admin") // delete product image
+						.pathMatchers(HttpMethod.GET, "/eshoppingzone/product-service/api/public/categories/**").permitAll()
+						.pathMatchers(HttpMethod.POST, "/eshoppingzone/product-service/api/admin/categories/**").hasRole("admin")
+						.pathMatchers(HttpMethod.PUT, "/eshoppingzone/product-service/api/public/categories/**").hasRole("admin")
+						.pathMatchers(HttpMethod.DELETE, "/eshoppingzone/product-service/api/admin/categories/**").hasRole("admin")
+						.pathMatchers(HttpMethod.PUT, "/eshoppingzone/product-service/api/admin/product/**").hasRole("admin")
+						.pathMatchers(HttpMethod.DELETE, "/eshoppingzone/product-service/api/admin/products/**").hasRole("admin")
+						.pathMatchers(HttpMethod.POST, "/eshoppingzone/product-service/api/admin/product/**").hasRole("admin") // add product image
+						.pathMatchers(HttpMethod.GET, "/eshoppingzone/product-service/api/admin/product/**").hasRole("admin") // get product image
+						.pathMatchers(HttpMethod.DELETE, "/eshoppingzone/product-service/api/admin/product/**").hasRole("admin") // delete product image
 
 						// Cart Service Authorization
-						.pathMatchers(HttpMethod.GET, "/cart-service/api/carts/**").hasRole("user") // Authorization for get all carts,get cart by id
-						.pathMatchers(HttpMethod.POST, "/cart-service/api/**").hasAnyRole("user", "admin") // Authorization for adding products to cart
-						.pathMatchers(HttpMethod.PUT, "/cart-service/api/cart/products/**").hasRole("user") // Authorization for updating products in cart
-						.pathMatchers(HttpMethod.DELETE, "/cart-service/api/carts/**").hasRole("user") // Authorization for deleting products in Cart
+						.pathMatchers(HttpMethod.GET, "/eshoppingzone/cart-service/api/carts/**").hasRole("user") // Authorization for get all carts,get cart by id
+						.pathMatchers(HttpMethod.POST, "/eshoppingzone/cart-service/api/**").hasAnyRole("user", "admin") // Authorization for adding products to cart
+						.pathMatchers(HttpMethod.PUT, "/eshoppingzone/cart-service/api/cart/products/**").hasRole("user") // Authorization for updating products in cart
+						.pathMatchers(HttpMethod.DELETE, "/eshoppingzone/cart-service/api/carts/**").hasRole("user") // Authorization for deleting products in Cart
 
 						// Order Service Authorization
-						.pathMatchers(HttpMethod.POST, "/cart-service/api/order/users/payments/**").hasRole("user")
+						.pathMatchers(HttpMethod.POST, "/eshoppingzone/cart-service/api/order/users/payments/**").hasRole("user")
 
 						// Image Service Authorization
-						.pathMatchers(HttpMethod.POST, "/image-service/api/**").hasAnyRole("user", "admin")
-						.pathMatchers(HttpMethod.GET, "/image-service/api/**").permitAll()
-						.pathMatchers(HttpMethod.DELETE, "/image-service/api/**").hasAnyRole("user", "admin")
+						.pathMatchers(HttpMethod.POST, "/eshoppingzone/image-service/api/**").hasAnyRole("user", "admin")
+						.pathMatchers(HttpMethod.GET, "/eshoppingzone/image-service/api/**").permitAll()
+						.pathMatchers(HttpMethod.DELETE, "/eshoppingzone/image-service/api/**").hasAnyRole("user", "admin")
 
 						// Everything else requires authentication
 						.anyExchange().authenticated())
