@@ -13,7 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import com.eshopingzone.profileservice.Dto.ImageResponse;
 
-@FeignClient(name = "image-service")
+@FeignClient(name = "image-service", fallback = ImageFallback.class)
 public interface ImageClient {
 
 	@PostMapping(value = "/api/upload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

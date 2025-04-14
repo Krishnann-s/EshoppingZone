@@ -141,9 +141,6 @@ public class ProductsController {
 	    // Get the image ID from the response
 	    String imageId = imageResponse.getBody().getId();
 	    
-	    // If you decide to store image dimensions, you could update your Products entity
-	    // to include width and height fields, and set them here
-	    
 	    // Update product with image reference
 	    ProductDTO updatedProduct = prodService.updateProductImageReference(productId, imageId);
 	    

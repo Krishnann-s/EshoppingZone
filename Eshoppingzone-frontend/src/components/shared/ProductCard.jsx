@@ -70,7 +70,7 @@ const ProductCard = ({
           className="w-full h-full cursor-pointer transition-transform duration-300 transform hover:scale-105"
           src={`${
             import.meta.env.VITE_BACK_END_URL
-          }/image-service/api/${imageUrl.split("/").pop()}`}
+          }/eshoppingzone/image-service/api/${imageUrl.split("/").pop()}`}
           alt={productName}
         ></img>
       </div>

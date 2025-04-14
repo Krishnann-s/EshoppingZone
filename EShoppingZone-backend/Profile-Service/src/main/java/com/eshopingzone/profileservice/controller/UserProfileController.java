@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.util.List;
 
 import com.eshopingzone.profileservice.Dto.*;
+import io.github.resilience4j.retry.annotation.Retry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +38,8 @@ import jakarta.validation.Valid;
 @RestController
 @RequestMapping("/api")
 public class UserProfileController {
+
+	private static final Logger logger = LoggerFactory.getLogger(UserProfileController.class);
 
 	@Autowired
 	private UserProfileService userService;
@@ -106,10 +111,17 @@ public class UserProfileController {
 	}
 
 	// Get User by ID
+	@Retry(name = "getProfileById", fallbackMethod = "getProfileByIdFallback")
 	@GetMapping("/user/{id}")
 	public ResponseEntity<UserProfile> getProfileById(@PathVariable Long id) {
+		logger.debug("Get user by id controller method called");
 		UserProfile profiles = userService.getByProfileId(id);
 		return ResponseEntity.ok(profiles);
+	}
+
+	public ResponseEntity<UserProfile> getProfileByIdFallback(Long id, Throwable throwable) {
+		UserProfile profile = userService.getByProfileId(id);
+		return ResponseEntity.status(HttpStatus.OK).body(profile);
 	}
 
 	// Get Profile Id by Email
@@ -139,7 +151,7 @@ public class UserProfileController {
 			@PathVariable Long userId,
 			@RequestParam("image") MultipartFile image) throws IOException {
 
-		try {
+		UserProfile updatedProfile = null;
 			// Check file type
 			String contentType = image.getContentType();
 			if (contentType == null || !contentType.startsWith("image/")) {
@@ -149,18 +161,14 @@ public class UserProfileController {
 			// Call image service to upload the image
 			ResponseEntity<ImageResponse> imageResponse =
 					imgClient.uploadImage(image, "profile");
+			if(null != imageResponse) {
+				// Get the image ID and update the user profile
+				String imageId = imageResponse.getBody().getId();
 
-			// Get the image ID and update the user profile
-			String imageId = imageResponse.getBody().getId();
-
-			// Update user profile with image ID reference
-			UserProfile updatedProfile = userService.updateProfilePicture(userId, imageId);
-
-			return new ResponseEntity<>(updatedProfile, HttpStatus.OK);
-		} catch (Exception e) {
-			return new ResponseEntity<>("Failed to update profile picture: " + e.getMessage(),
-					HttpStatus.INTERNAL_SERVER_ERROR);
-		}
+				// Update user profile with image ID reference
+				updatedProfile = userService.updateProfilePicture(userId, imageId);
+			}
+		return new ResponseEntity<>(updatedProfile, HttpStatus.OK);
 	}
 
 	// Get profile picture
