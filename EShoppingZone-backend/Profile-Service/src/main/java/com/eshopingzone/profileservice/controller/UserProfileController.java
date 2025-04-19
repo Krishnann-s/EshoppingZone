@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.List;
 
 import com.eshopingzone.profileservice.Dto.*;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import io.github.resilience4j.retry.annotation.Retry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -60,6 +61,7 @@ public class UserProfileController {
 	private ImageClient imgClient;
 
 	// Register User
+	@RateLimiter(name = "registerUser", fallbackMethod = "registerUserFallback")
 	@PostMapping("/user/register")
 	public ResponseEntity<UserProfileDTO> register(@Valid @RequestBody UserProfileDTO userProfileDto) {
 		try {
@@ -72,6 +74,11 @@ public class UserProfileController {
 		} catch (ResourceNotFoundException e) {
 			return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 		}
+	}
+	public ResponseEntity<UserProfileDTO> registerUserFallback(@Valid @RequestBody UserProfileDTO userProfileDto, Throwable throwable) {
+
+		UserProfileDTO newUser = userService.addNewCustomerProfile(userProfileDto);
+		return new ResponseEntity<>(newUser, HttpStatus.CREATED);
 	}
 
 	// Login User
